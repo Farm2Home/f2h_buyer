@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation"
+    app:startDestination="@id/dailyOrdersFragment">
+
+    <fragment
+        android:id="@+id/dailyOrdersFragment"
+        android:name="com.f2h.f2h_buyer.screens.daily_orders.DailyOrdersFragment"
+        android:label="@string/daily_orders" />
+    <fragment
+        android:id="@+id/contactUsFragment"
+        android:name="com.f2h.f2h_buyer.screens.contact_us.ContactUsFragment"
+        android:label="@string/contact_us" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.f2h.f2h_buyer.screens.settings.SettingsFragment"
+        android:label="@string/settings" />
+</navigation>

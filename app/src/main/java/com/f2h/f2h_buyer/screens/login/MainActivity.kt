@@ -1,16 +1,19 @@
 package com.f2h.f2h_buyer.screens.login
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.databinding.ActivityMainBinding
 import com.f2h.f2h_buyer.network.LoginApi
+import com.f2h.f2h_buyer.screens.groups.GroupsActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,9 +22,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this,
-            R.layout.activity_main
-        )
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.loginButton.setOnClickListener {
             tryLogin(it)
@@ -33,7 +34,8 @@ class MainActivity : AppCompatActivity() {
         binding.progressBar.visibility = View.VISIBLE;
         val mobile: String = binding.mobileNumber.text.toString()
         val password: String = binding.password.text.toString()
-        var toastMessage: String = "Connecting"
+
+
 
         LoginApi.retrofitService.getUserDetails(mobile, password).enqueue(object: Callback<String>{
             override fun onFailure(call: Call<String>, t: Throwable) {
@@ -48,6 +50,11 @@ class MainActivity : AppCompatActivity() {
 
                 if (response.isSuccessful) {
                     Toast.makeText(applicationContext, "Login Successful", Toast.LENGTH_SHORT).show()
+
+                    val intent = Intent(applicationContext, GroupsActivity::class.java).apply {
+                        putExtra("Message_Key", "value in key")
+                    }
+                    startActivity(intent)
                 } else {
                     Toast.makeText(applicationContext,"Login Failed - Wrong Credentials",Toast.LENGTH_SHORT).show()
                 }
