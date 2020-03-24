@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 
 import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.databinding.FragmentSettingsBinding
@@ -15,12 +16,19 @@ import com.f2h.f2h_buyer.databinding.FragmentSettingsBinding
  */
 class SettingsFragment : Fragment() {
 
+    private lateinit var binding: FragmentSettingsBinding
+    private val viewModel: SettingsViewModel by lazy {
+        ViewModelProvider(this).get(SettingsViewModel::class.java)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding: FragmentSettingsBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false)
+        binding.setLifecycleOwner(this)
+        binding.viewModel = viewModel
+
         return binding.root
     }
 

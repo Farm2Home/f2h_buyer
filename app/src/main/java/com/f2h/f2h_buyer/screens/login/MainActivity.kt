@@ -36,6 +36,14 @@ class MainActivity : AppCompatActivity() {
         val password: String = binding.password.text.toString()
 
 
+        // check login enabled or not nad move to next page
+        var loginEnabled: Boolean = true;
+        if (loginEnabled){
+            val intent = Intent(applicationContext, GroupsActivity::class.java).apply {
+                putExtra("Message_Key", "value in key")
+            }
+            startActivity(intent)
+        }
 
         LoginApi.retrofitService.getUserDetails(mobile, password).enqueue(object: Callback<String>{
             override fun onFailure(call: Call<String>, t: Throwable) {
@@ -52,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext, "Login Successful", Toast.LENGTH_SHORT).show()
 
                     val intent = Intent(applicationContext, GroupsActivity::class.java).apply {
-                        putExtra("Message_Key", "value in key")
+                        putExtra("user_id", "1")
                     }
                     startActivity(intent)
                 } else {
