@@ -19,14 +19,14 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .build()
 
-interface LoginApiService{
-    @GET("user/login")
-    fun getUserDetails(@Query("mobile") mobile: String, @Query("password") password: String):
+interface GroupApiService{
+    @GET("group")
+    fun getUserDetails(@Query("user_id") userId: Long):
             Call<String>
 }
 
-object LoginApi {
-    val retrofitService : LoginApiService by lazy {
-        retrofit.create(LoginApiService::class.java)
+object GroupApi {
+    val retrofitService : GroupApiService by lazy {
+        retrofit.create(GroupApiService::class.java)
     }
 }

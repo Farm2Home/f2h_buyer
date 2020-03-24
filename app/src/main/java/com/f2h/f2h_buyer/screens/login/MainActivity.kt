@@ -37,10 +37,10 @@ class MainActivity : AppCompatActivity() {
 
 
         // check login enabled or not nad move to next page
-        var loginEnabled: Boolean = true;
-        if (loginEnabled){
+        var loginEnabled: Boolean = false;
+        if (!loginEnabled){
             val intent = Intent(applicationContext, GroupsActivity::class.java).apply {
-                putExtra("Message_Key", "value in key")
+                putExtra("user_id", "1")
             }
             startActivity(intent)
         }

@@ -24,15 +24,17 @@
             android:layout_width="150dp"
             android:layout_height="match_parent"
             android:contentDescription="TODO"
-            android:padding="20dp"
-            app:srcCompat="@drawable/nav_header" />
+            android:paddingLeft="5dp"
+            android:paddingEnd="20dp"
+            android:paddingRight="20dp"
+            app:srcCompat="@drawable/f2h_logo" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/navHeaderCredentials"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Name Here And Complete address of person here"

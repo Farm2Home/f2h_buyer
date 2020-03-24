@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.databinding.ActivityUserPagesBinding
+import kotlinx.android.synthetic.main.nav_header.view.*
 
 class UserPagesActivity : AppCompatActivity() {
 
