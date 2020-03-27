@@ -2,6 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/groupsFragment"
+        android:title="@string/my_groups" />
+    <item
         android:id="@+id/dailyOrdersFragment"
         android:icon="@android:drawable/ic_menu_compass"
         android:title="@string/daily_orders" />

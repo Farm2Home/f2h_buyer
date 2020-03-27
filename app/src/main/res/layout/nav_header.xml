@@ -21,7 +21,7 @@
 
         <ImageView
             android:id="@+id/navHeaderImage"
-            android:layout_width="150dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:contentDescription="TODO"
             android:paddingLeft="5dp"

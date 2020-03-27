@@ -1,5 +1,7 @@
 package com.f2h.f2h_buyer.network
 
+import com.f2h.f2h_buyer.network.models.User
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Call
@@ -16,13 +18,14 @@ private val moshi = Moshi.Builder()
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(MoshiConverterFactory.create(moshi))
+    .addCallAdapterFactory(CoroutineCallAdapterFactory())
     .baseUrl(BASE_URL)
     .build()
 
 interface LoginApiService{
     @GET("user/login")
-    fun getUserDetails(@Query("mobile") mobile: String, @Query("password") password: String):
-            Call<String>
+    fun tryUserLogin(@Query("mobile") mobile: String, @Query("password") password: String):
+            Call<User>
 }
 
 object LoginApi {

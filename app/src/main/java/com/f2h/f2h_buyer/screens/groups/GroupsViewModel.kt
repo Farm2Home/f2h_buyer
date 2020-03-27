@@ -1,4 +1,4 @@
-package com.f2h.f2h_buyer.screens.contact_us
+package com.f2h.f2h_buyer.screens.groups
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class ContactUsViewModel : ViewModel() {
+class GroupsViewModel : ViewModel() {
 
 
     private val _response = MutableLiveData<User>()

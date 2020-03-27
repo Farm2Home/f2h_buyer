@@ -17,6 +17,7 @@
 
         <!-- TODO: Update blank fragment layout -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -41,6 +42,7 @@
                     android:fontFamily=""
                     android:padding="20dp"
                     android:text="@{viewModel.response.userName}" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -50,8 +52,8 @@
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
                     android:paddingHorizontal="20dp"
+                    android:paddingTop="10dp"
                     android:text="@{viewModel.response.email}" />
 
                 <TextView

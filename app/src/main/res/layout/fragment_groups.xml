@@ -7,17 +7,17 @@
     <data>
         <variable
             name="viewModel"
-            type="com.f2h.f2h_buyer.screens.settings.SettingsViewModel" />
+            type="com.f2h.f2h_buyer.screens.groups.GroupsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".screens.settings.SettingsFragment">
+        tools:context=".screens.groups.GroupsFragment">
 
         <!-- TODO: Update blank fragment layout -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView2"
+            android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"

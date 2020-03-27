@@ -16,14 +16,9 @@ class UserPagesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUserPagesBinding
     private lateinit var drawerLayout: DrawerLayout
-    private lateinit var userId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // get data from the login screen
-        userId = intent.getStringExtra("user_id")
-        println(userId)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_pages)
         drawerLayout = binding.drawerLayout
