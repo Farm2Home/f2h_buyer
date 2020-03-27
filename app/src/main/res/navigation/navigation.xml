@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.f2h.f2h_buyer.screens.settings.SettingsFragment"
-        android:label="@string/settings" />
+        android:label="@string/my_profile" />
     <fragment
         android:id="@+id/groupsFragment"
         android:name="com.f2h.f2h_buyer.screens.groups.GroupsFragment"

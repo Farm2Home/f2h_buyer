@@ -4,6 +4,7 @@ import com.squareup.moshi.Json
 
 data class Group (
     @Json(name = "group_id") val groupId: Long,
+    @Json(name = "owner_user_id") val ownerUserId: Long,
     @Json(name = "group_name") val groupName: String,
     @Json(name = "description") val description: String
 )

@@ -13,12 +13,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-        <activity
-            android:name=".screens.groups.GroupsActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait">
-        </activity>
-
         <activity android:name=".screens.UserPagesActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait">

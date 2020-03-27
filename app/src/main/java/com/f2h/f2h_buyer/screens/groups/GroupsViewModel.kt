@@ -12,9 +12,9 @@ import kotlinx.coroutines.*
 
 class GroupsViewModel(val database: SessionDatabaseDao, application: Application) : AndroidViewModel(application) {
 
-    private val _groups = MutableLiveData<Group>()
+    private val _groups = MutableLiveData<List<Group>>()
 
-    val group: LiveData<Group>
+    val group: LiveData<List<Group>>
         get() = _groups
 
 
@@ -34,7 +34,10 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
             try {
                 var userGroups = getGroupsDataDeferred.await()
                 if (userGroups != null && userGroups.size > 0) {
-                    _groups.value = userGroups[0]
+                    _groups.value = userGroups
+
+                    //TODO - Change this from here and put it when a group is selected
+                    updateSessionActiveGroupId(userGroups[0].groupId)
                 }
             } catch (t:Throwable){
                 println(t.message)
@@ -54,6 +57,12 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
                 database.clearSessions()
             }
             return@withContext session
+        }
+    }
+
+    private suspend fun updateSessionActiveGroupId(groupId: Long){
+        return withContext(Dispatchers.IO) {
+            database.updateActiveGroup(groupId)
         }
     }
 

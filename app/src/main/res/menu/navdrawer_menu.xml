@@ -16,7 +16,7 @@
     <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/settings_icon"
-        android:title="@string/settings" />
+        android:title="@string/my_profile" />
     <item
         android:id="@+id/signOutFragment"
         android:icon="@drawable/sign_out_icon"
