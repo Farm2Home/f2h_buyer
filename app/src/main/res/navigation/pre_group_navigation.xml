@@ -8,9 +8,4 @@
         android:name="com.f2h.f2h_buyer.screens.login.LoginFragment"
         android:label="LoginFragment" />
 
-    <activity
-        android:id="@+id/groupsActivity"
-        android:name="com.f2h.f2h_buyer.screens.groups.GroupsActivity"
-        android:label="GroupsActivity" />
-
 </navigation>

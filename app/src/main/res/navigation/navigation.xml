@@ -19,4 +19,8 @@
         android:id="@+id/groupsFragment"
         android:name="com.f2h.f2h_buyer.screens.groups.GroupsFragment"
         android:label="My Groups" />
+    <fragment
+        android:id="@+id/signOutFragment"
+        android:name="com.f2h.f2h_buyer.screens.sign_out.SignOutFragment"
+        android:label="SignOutFragment" />
 </navigation>

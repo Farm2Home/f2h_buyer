@@ -36,12 +36,12 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/userName"
+                    android:id="@+id/groupName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily=""
                     android:padding="20dp"
-                    android:text="@{viewModel.response.userName}" />
+                    android:text="@{viewModel.group.groupName}" />
 
                 <View
                     android:layout_width="match_parent"
@@ -49,27 +49,13 @@
                     android:background="@android:color/darker_gray" />
 
                 <TextView
-                    android:id="@+id/email"
+                    android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingVertical="40dp"
                     android:paddingHorizontal="20dp"
-                    android:paddingTop="10dp"
-                    android:text="@{viewModel.response.email}" />
+                    android:text="@{viewModel.group.description}" />
 
-                <TextView
-                    android:id="@+id/mobile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="20dp"
-                    android:text="@{viewModel.response.mobile}" />
-
-                <TextView
-                    android:id="@+id/address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="20dp"
-                    android:paddingBottom="20dp"
-                    android:text="@{viewModel.response.address}" />
 
             </LinearLayout>
 

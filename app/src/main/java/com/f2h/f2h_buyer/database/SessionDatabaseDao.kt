@@ -20,4 +20,7 @@ interface SessionDatabaseDao {
     @Query("DELETE FROM session_table")
     fun clearSessions()
 
+    @Query("UPDATE session_table SET active_group_id = :activeGroupId WHERE id is not null")
+    fun updateActiveGroup(activeGroupId: Long)
+
 }

@@ -13,6 +13,9 @@ data class SessionEntity (
     @ColumnInfo(name = "user_id")
     var userId: Long = 0L,
 
+    @ColumnInfo(name = "active_group_id")
+    var activeGroupId: Long = 0L,
+
     @ColumnInfo(name = "user_name")
     var userName: String = "",
 
@@ -27,4 +30,5 @@ data class SessionEntity (
 
     @ColumnInfo(name = "password")
     var password: String = ""
+
 )
