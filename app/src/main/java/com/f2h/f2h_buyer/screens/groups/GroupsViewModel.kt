@@ -27,6 +27,12 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
         getUserGroupsInformation()
     }
 
+    fun updateSelectedGroup(groupId: Long){
+        coroutineScope.launch {
+            updateSessionActiveGroupId(groupId)
+        }
+    }
+
     private fun getUserGroupsInformation() {
         coroutineScope.launch {
             userSession = retrieveSession()
@@ -35,9 +41,6 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
                 var userGroups = getGroupsDataDeferred.await()
                 if (userGroups != null && userGroups.size > 0) {
                     _groups.value = userGroups
-
-                    //TODO - Change this from here and put it when a group is selected
-                    updateSessionActiveGroupId(userGroups[0].groupId)
                 }
             } catch (t:Throwable){
                 println(t.message)

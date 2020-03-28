@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,9 +15,7 @@ import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.database.F2HDatabase
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.databinding.FragmentGroupsBinding
-import com.f2h.f2h_buyer.databinding.FragmentLoginBinding
-import com.f2h.f2h_buyer.screens.login.LoginViewModel
-import com.f2h.f2h_buyer.screens.login.LoginViewModelFactory
+
 
 /**
  * A simple [Fragment] subclass.
@@ -38,12 +37,15 @@ class GroupsFragment : Fragment() {
         binding.setLifecycleOwner(this)
         binding.viewModel = viewModel
 
-        val adapter = GroupsAdapter()
+        val adapter = GroupsAdapter(GroupClickListener { groupId ->
+            viewModel.updateSelectedGroup(groupId)
+            Toast.makeText(context, "Selected group_id : " + groupId, Toast.LENGTH_SHORT).show()
+        })
         binding.groupListRecyclerView.adapter = adapter
 
         viewModel.group.observe(viewLifecycleOwner, Observer {
             it?.let {
-                adapter.data = it
+                adapter.submitList(it)
             }
         })
 
