@@ -24,14 +24,14 @@ class ContactUsViewModel(val database: SessionDatabaseDao, application: Applicat
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
-        getProfileSettingsInformation()
+        getGroupContactProfileInformation()
     }
 
-    private fun getProfileSettingsInformation() {
+    private fun getGroupContactProfileInformation() {
         coroutineScope.launch {
             userSession = retrieveSession()
             try {
-                var activeGroupData = GroupApi.retrofitService.getGroupDetails(userSession.activeGroupId).await()
+                var activeGroupData = GroupApi.retrofitService.getGroupDetails(userSession.groupId).await()
                 var userData = UserApi.retrofitService.getUserDetails(activeGroupData.ownerUserId).await()
                 _response.value = userData
             } catch (t:Throwable){

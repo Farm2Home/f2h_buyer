@@ -27,9 +27,9 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
         getUserGroupsInformation()
     }
 
-    fun updateSelectedGroup(groupId: Long){
+    fun updateSelectedGroup(group: Group){
         coroutineScope.launch {
-            updateSessionActiveGroupId(groupId)
+            updateSessionActiveGroupId(group)
         }
     }
 
@@ -63,9 +63,9 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
         }
     }
 
-    private suspend fun updateSessionActiveGroupId(groupId: Long){
+    private suspend fun updateSessionActiveGroupId(group: Group){
         return withContext(Dispatchers.IO) {
-            database.updateActiveGroup(groupId)
+            database.updateActiveGroup(group.groupId, group.description, group.groupName)
         }
     }
 

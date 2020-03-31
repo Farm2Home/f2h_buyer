@@ -13,9 +13,6 @@ data class SessionEntity (
     @ColumnInfo(name = "user_id")
     var userId: Long = 0L,
 
-    @ColumnInfo(name = "active_group_id")
-    var activeGroupId: Long = 0L,
-
     @ColumnInfo(name = "user_name")
     var userName: String = "",
 
@@ -29,6 +26,15 @@ data class SessionEntity (
     var mobile: String = "",
 
     @ColumnInfo(name = "password")
-    var password: String = ""
+    var password: String = "",
+
+    @ColumnInfo(name = "group_id")
+    var groupId: Long = 0L,
+
+    @ColumnInfo(name = "group_name")
+    var groupName: String = "",
+
+    @ColumnInfo(name = "group_description")
+    var groupDescription: String = ""
 
 )

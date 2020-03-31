@@ -13,8 +13,6 @@ import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.database.F2HDatabase
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.databinding.FragmentContactUsBinding
-import com.f2h.f2h_buyer.screens.groups.GroupsViewModel
-import com.f2h.f2h_buyer.screens.groups.GroupsViewModelFactory
 
 /**
  * A simple [Fragment] subclass.
@@ -24,8 +22,8 @@ class ContactUsFragment : Fragment() {
     private lateinit var binding: FragmentContactUsBinding
     private val application: Application by lazy { requireNotNull(this.activity).application }
     private val dataSource: SessionDatabaseDao by lazy { F2HDatabase.getInstance(application).sessionDatabaseDao }
-    private val viewModelFactory: ContactUsModelFactory by lazy { ContactUsModelFactory(dataSource, application) }
-    private val viewModel: ContactUsViewModel by lazy { ViewModelProvider(this, viewModelFactory).get(
+    private val viewViewModelFactory: ContactUsViewModelFactory by lazy { ContactUsViewModelFactory(dataSource, application) }
+    private val viewModel: ContactUsViewModel by lazy { ViewModelProvider(this, viewViewModelFactory).get(
         ContactUsViewModel::class.java) }
 
     override fun onCreateView(

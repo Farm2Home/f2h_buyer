@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 
-class ContactUsModelFactory (
+class ContactUsViewModelFactory (
     private val dataSource: SessionDatabaseDao,
     private val application: Application) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
