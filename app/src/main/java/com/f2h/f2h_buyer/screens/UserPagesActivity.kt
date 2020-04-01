@@ -20,6 +20,7 @@ class UserPagesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUserPagesBinding
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var f2hDatabase: F2HDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,24 +33,27 @@ class UserPagesActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
         NavigationUI.setupWithNavController(binding.navView, navController)
 
-        val f2hDatabase = F2HDatabase.getInstance(this)
-        var userSessionData: SessionEntity
-
-        GlobalScope.launch {
-            userSessionData = f2hDatabase.sessionDatabaseDao.getAll().get(0)
-            drawerLayout.navView.getHeaderView(0).navHeaderProfileCredentials.text =
-                userSessionData.userName + "\n" + userSessionData.address + "\n" + userSessionData.mobile
-
-            drawerLayout.navView.getHeaderView(0).navHeaderGroupCredentials.text =
-                userSessionData.groupName + "\n" + userSessionData.groupDescription
-        }
+        f2hDatabase = F2HDatabase.getInstance(this)
+        updateNavHeader()
 
     }
 
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = this.findNavController(R.id.userPagesNavHostFragment)
+        updateNavHeader()
         return NavigationUI.navigateUp(navController, drawerLayout)
+    }
+
+    private fun updateNavHeader(){
+        GlobalScope.launch {
+            val userSessionData = f2hDatabase.sessionDatabaseDao.getAll().get(0)
+            drawerLayout.navView.getHeaderView(0).navHeaderProfileCredentials.text =
+                userSessionData.userName + "\n" + userSessionData.address + "\n" + userSessionData.mobile
+
+            drawerLayout.navView.getHeaderView(0).navHeaderGroupCredentials.text =
+                userSessionData.groupName + "\n" + userSessionData.groupDescription
+        }
     }
 
 }

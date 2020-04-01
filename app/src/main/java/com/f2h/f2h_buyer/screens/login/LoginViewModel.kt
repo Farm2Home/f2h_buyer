@@ -38,20 +38,20 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
     fun onClickLoginButton() {
         val mobile: String = loginMobile.value.toString()
         val password: String = loginPassword.value.toString()
-        tryToLogin(mobile, password)
+        var session = SessionEntity(mobile = mobile, password = password )
+        tryToLogin(session)
     }
 
-    private suspend fun saveSession() {
+    private suspend fun saveSession(updatedUserData: User, preSavedSession: SessionEntity) {
         return withContext(Dispatchers.IO) {
-            val session = SessionEntity()
             database.clearSessions()
-            session.address = _loginResponse.value?.address ?: ""
-            session.email = _loginResponse.value?.email ?: ""
-            session.userId = _loginResponse.value?.userId ?: 0L
-            session.mobile = _loginResponse.value?.mobile ?: ""
-            session.userName = _loginResponse.value?.userName ?: ""
-            session.password = _loginResponse.value?.password ?: ""
-            database.insert(session)
+            preSavedSession.address = updatedUserData.address
+            preSavedSession.email = updatedUserData.email
+            preSavedSession.userId = updatedUserData.userId
+            preSavedSession.mobile = updatedUserData.mobile
+            preSavedSession.userName = updatedUserData.userName
+            preSavedSession.password = updatedUserData.password
+            database.insert(preSavedSession)
         }
     }
 
@@ -73,19 +73,21 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
         coroutineScope.launch {
             val session = retrieveSession()
             if (session != null && session.id != null) {
-                tryToLogin(session.mobile, session.password)
+                tryToLogin(session)
             }
         }
     }
 
-    private fun tryToLogin (mobile: String, password: String){
+    private fun tryToLogin (session: SessionEntity){
         coroutineScope.launch {
-            var getUserDataDeferred = LoginApi.retrofitService.tryUserLogin(mobile, password)
+            var getUserDataDeferred = LoginApi.retrofitService.tryUserLogin(session.mobile, session.password)
             try {
-                var userData = getUserDataDeferred.await()
-                _loginResponse.value = userData
-                println("Successfully logged in : "+ userData.toString())
-                saveSession()
+                var updatedUserData = getUserDataDeferred.await()
+                if (updatedUserData != null){
+                    _loginResponse.value = updatedUserData
+                    saveSession(updatedUserData, session)
+                    println("Successfully logged in : "+ updatedUserData.toString())
+                }
                 _isLoginComplete.value = true
             } catch (t:Throwable){
                 println(t.message)

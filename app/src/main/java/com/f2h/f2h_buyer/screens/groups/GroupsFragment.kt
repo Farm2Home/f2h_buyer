@@ -37,12 +37,12 @@ class GroupsFragment : Fragment() {
         binding.setLifecycleOwner(this)
         binding.viewModel = viewModel
 
-        val adapter = GroupsAdapter(GroupClickListener { groupId ->
-            viewModel.updateSelectedGroup(groupId)
-            Toast.makeText(context, "Selected group_id : " + groupId, Toast.LENGTH_SHORT).show()
+        val adapter = GroupsAdapter(GroupClickListener { group ->
+            viewModel.updateSelectedGroup(group)
+            Toast.makeText(context, "Selected group : " + group.groupName, Toast.LENGTH_SHORT).show()
         })
-        binding.groupListRecyclerView.adapter = adapter
 
+        binding.groupListRecyclerView.adapter = adapter
         viewModel.group.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
