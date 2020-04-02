@@ -6,33 +6,36 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
-import com.f2h.f2h_buyer.network.GroupApi
 import com.f2h.f2h_buyer.network.ItemApi
-import com.f2h.f2h_buyer.network.models.Group
-import com.f2h.f2h_buyer.network.models.Item
 import kotlinx.coroutines.*
 
 class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Application) : AndroidViewModel(application) {
 
     private val _items = MutableLiveData<String>()
-
     val items: LiveData<String>
         get() = _items
 
 
-    private var sessionData = SessionEntity()
+    private val _sessionData = MutableLiveData<SessionEntity>()
+    val sessionData: LiveData<SessionEntity>
+        get() = _sessionData
+
+
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
-        getItemsForGroup()
+        getItemsAndAvailabilitiesForGroup()
     }
 
+    fun refreshFragmentData(){
+        getItemsAndAvailabilitiesForGroup()
+    }
 
-    private fun getItemsForGroup() {
+    private fun getItemsAndAvailabilitiesForGroup() {
         coroutineScope.launch {
-            sessionData = retrieveSession()
-            var getItemsDataDeferred = ItemApi.retrofitService.getItemsForGroup(sessionData.groupId)
+            _sessionData.value = retrieveSession()
+            var getItemsDataDeferred = ItemApi.retrofitService.getItemsForGroup(_sessionData.value!!.groupId)
             try {
                 var items = getItemsDataDeferred.await()
                 println("Item API response : " + items.toString())

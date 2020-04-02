@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.f2h.f2h_buyer.databinding.ListItemGroupsBinding
+import com.f2h.f2h_buyer.databinding.ListGroupsBinding
 import com.f2h.f2h_buyer.network.models.Group
 
 class GroupsAdapter(val clickListener: GroupClickListener): ListAdapter<Group, GroupsAdapter.ViewHolder>(GroupDiffCallback()) {
@@ -20,7 +20,7 @@ class GroupsAdapter(val clickListener: GroupClickListener): ListAdapter<Group, G
     }
 
 
-    class ViewHolder private constructor(val binding: ListItemGroupsBinding): RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder private constructor(val binding: ListGroupsBinding): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
             item: Group,
@@ -34,7 +34,7 @@ class GroupsAdapter(val clickListener: GroupClickListener): ListAdapter<Group, G
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val view = LayoutInflater.from(parent.context)
-                val binding = ListItemGroupsBinding.inflate(view, parent, false)
+                val binding = ListGroupsBinding.inflate(view, parent, false)
                 return ViewHolder(binding)
             }
         }

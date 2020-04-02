@@ -34,6 +34,8 @@ class DailyOrdersFragment : Fragment() {
         binding.setLifecycleOwner(this)
         binding.viewModel = viewModel
 
+        viewModel.refreshFragmentData()
+
         return binding.root
     }
 }

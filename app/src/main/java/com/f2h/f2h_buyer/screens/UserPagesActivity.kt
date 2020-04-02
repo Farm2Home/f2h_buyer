@@ -12,8 +12,7 @@ import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.databinding.ActivityUserPagesBinding
 import kotlinx.android.synthetic.main.activity_user_pages.view.*
 import kotlinx.android.synthetic.main.nav_header.view.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 class UserPagesActivity : AppCompatActivity() {
@@ -21,6 +20,8 @@ class UserPagesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUserPagesBinding
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var f2hDatabase: F2HDatabase
+    private var viewModelJob = Job()
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,13 +47,26 @@ class UserPagesActivity : AppCompatActivity() {
     }
 
     private fun updateNavHeader(){
-        GlobalScope.launch {
-            val userSessionData = f2hDatabase.sessionDatabaseDao.getAll().get(0)
+        coroutineScope.launch {
+            val userSessionData = retrieveSession()
             drawerLayout.navView.getHeaderView(0).navHeaderProfileCredentials.text =
                 userSessionData.userName + "\n" + userSessionData.address + "\n" + userSessionData.mobile
 
-            drawerLayout.navView.getHeaderView(0).navHeaderGroupCredentials.text =
-                userSessionData.groupName + "\n" + userSessionData.groupDescription
+            drawerLayout.navView.getHeaderView(0).navHeaderGroupName.text = userSessionData.groupName
+        }
+    }
+
+    private suspend fun retrieveSession() : SessionEntity {
+        return withContext(Dispatchers.IO) {
+            val sessions = f2hDatabase.sessionDatabaseDao.getAll()
+            var session = SessionEntity()
+            if (sessions != null && sessions.size==1) {
+                session = sessions[0]
+                println(session.toString())
+            } else {
+                f2hDatabase.sessionDatabaseDao.clearSessions()
+            }
+            return@withContext session
         }
     }
 
