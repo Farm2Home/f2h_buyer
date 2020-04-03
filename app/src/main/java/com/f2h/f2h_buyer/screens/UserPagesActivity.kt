@@ -49,10 +49,8 @@ class UserPagesActivity : AppCompatActivity() {
     private fun updateNavHeader(){
         coroutineScope.launch {
             val userSessionData = retrieveSession()
-            drawerLayout.navView.getHeaderView(0).navHeaderProfileCredentials.text =
-                userSessionData.userName + "\n" + userSessionData.address + "\n" + userSessionData.mobile
-
-            drawerLayout.navView.getHeaderView(0).navHeaderGroupName.text = userSessionData.groupName
+            drawerLayout.navView.getHeaderView(0).navHeaderGroupCredentials.text =
+                userSessionData.groupName + "\n" + userSessionData.groupDescription
         }
     }
 

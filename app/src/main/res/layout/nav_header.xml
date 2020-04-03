@@ -12,7 +12,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Light">
 
         <ImageView
-            android:id="@+id/navHeaderProfileImage"
+            android:id="@+id/navHeaderGroupImage"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:contentDescription="TODO"
@@ -24,29 +24,17 @@
             app:srcCompat="@drawable/f2h_logo" />
 
         <TextView
-            android:id="@+id/navHeaderProfileCredentials"
+            android:id="@+id/navHeaderGroupCredentials"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:text="Name Here And Complete address of person here"
-            app:layout_constraintBottom_toBottomOf="@+id/navHeaderProfileImage"
-            app:layout_constraintStart_toEndOf="@+id/navHeaderProfileImage"
-            app:layout_constraintTop_toTopOf="@+id/navHeaderProfileImage" />
+            android:text="Name and details of group here"
+            app:layout_constraintBottom_toBottomOf="@+id/navHeaderGroupImage"
+            app:layout_constraintStart_toEndOf="@+id/navHeaderGroupImage"
+            app:layout_constraintTop_toTopOf="@+id/navHeaderGroupImage" />
 
-        <TextView
-            android:id="@+id/navHeaderGroupName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
-            android:text=""
-            android:textColor="#CC5E5B5B"
-            android:textSize="17sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/navHeaderProfileImage"
-            app:layout_constraintTop_toBottomOf="@+id/navHeaderProfileImage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

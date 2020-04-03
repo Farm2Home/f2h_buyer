@@ -19,6 +19,7 @@
 
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
@@ -31,6 +32,7 @@
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -52,11 +54,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="100dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="20dp"
                     android:text="@{item.itemName}"
                     android:textSize="15sp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonIncrease"
                     app:layout_constraintStart_toEndOf="@+id/groupImage"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -64,7 +66,6 @@
                     android:id="@+id/itemDescription"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:text="@{item.description}"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="@+id/itemName"
@@ -73,8 +74,8 @@
 
                 <Button
                     android:id="@+id/buttonDecrease"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_marginBottom="10dp"
                     android:text="-"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -84,12 +85,12 @@
 
                 <Button
                     android:id="@+id/buttonIncrease"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
                     android:text="+"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/itemName"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -97,6 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{`10 ` + item.uom}"
+                    android:textSize="12sp"
                     app:layout_constraintBottom_toTopOf="@+id/buttonDecrease"
                     app:layout_constraintEnd_toEndOf="@+id/buttonIncrease"
                     app:layout_constraintStart_toStartOf="@+id/buttonIncrease"
@@ -107,9 +109,19 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="15dp"
                     android:text="@{Float.toString(item.pricePerUnit) + `/` + item.uom}"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/farmer"
+                    app:layout_constraintStart_toStartOf="@+id/farmer"
+                    app:layout_constraintTop_toBottomOf="@+id/farmer" />
+
+                <TextView
+                    android:id="@+id/farmer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{`Farmer ID - ` + Long.toString(item.farmerUserId)}"
+                    android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="@+id/itemDescription"
                     app:layout_constraintStart_toStartOf="@+id/itemDescription"
                     app:layout_constraintTop_toBottomOf="@+id/itemDescription" />

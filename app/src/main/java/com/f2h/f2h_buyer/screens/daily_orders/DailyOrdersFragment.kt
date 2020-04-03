@@ -2,20 +2,22 @@ package com.f2h.f2h_buyer.screens.daily_orders
 
 import android.app.Application
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-
 import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.database.F2HDatabase
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.databinding.FragmentDailyOrdersBinding
-import com.f2h.f2h_buyer.screens.groups.GroupClickListener
+import devs.mulham.horizontalcalendar.HorizontalCalendar
+import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener
+import java.util.*
+
 
 /**
  * A simple [Fragment] subclass.
@@ -45,6 +47,28 @@ class DailyOrdersFragment : Fragment() {
         viewModel.items.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
+            }
+        })
+
+
+
+        // Settings for the horizontal calendar
+        val startDate: Calendar = Calendar.getInstance()
+        startDate.add(Calendar.DATE, 0)
+        val endDate: Calendar = Calendar.getInstance()
+        endDate.add(Calendar.DATE, 7)
+
+        val horizontalCalendar: HorizontalCalendar = HorizontalCalendar.Builder(binding.root, R.id.calendarView)
+            .range(startDate, endDate)
+            .datesNumberOnScreen(5)
+            .configure()
+            .textSize(12F,20F,12F)
+            .end()
+            .build()
+
+        horizontalCalendar.setCalendarListener(object : HorizontalCalendarListener() {
+            override fun onDateSelected(date: Calendar?, position: Int) {
+                Toast.makeText(context, "Date selected : " + date?.time, Toast.LENGTH_SHORT).show()
             }
         })
 
