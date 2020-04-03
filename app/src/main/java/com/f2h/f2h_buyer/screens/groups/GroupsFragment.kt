@@ -10,11 +10,13 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 
 import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.database.F2HDatabase
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.databinding.FragmentGroupsBinding
+import com.f2h.f2h_buyer.network.models.Group
 
 
 /**
@@ -38,10 +40,8 @@ class GroupsFragment : Fragment() {
         binding.viewModel = viewModel
 
         val adapter = GroupsAdapter(GroupClickListener { group ->
-            viewModel.updateSelectedGroup(group)
-            Toast.makeText(context, "Selected group : " + group.groupName, Toast.LENGTH_SHORT).show()
+            onGroupSelected(group)
         })
-
         binding.groupListRecyclerView.adapter = adapter
         viewModel.group.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -50,6 +50,12 @@ class GroupsFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+    fun onGroupSelected(group: Group){
+        viewModel.updateSessionWithGroupInfo(group)
+        Toast.makeText(context, "Group selected : " + group.groupName, Toast.LENGTH_SHORT).show()
+        view?.let { Navigation.findNavController(it).navigate(R.id.action_groupsFragment_to_dailyOrdersFragment) }
     }
 
 }

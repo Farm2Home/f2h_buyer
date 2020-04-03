@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation"
-    app:startDestination="@id/dailyOrdersFragment">
+    app:startDestination="@id/groupsFragment">
 
     <fragment
         android:id="@+id/dailyOrdersFragment"
@@ -18,7 +18,11 @@
     <fragment
         android:id="@+id/groupsFragment"
         android:name="com.f2h.f2h_buyer.screens.groups.GroupsFragment"
-        android:label="My Groups" />
+        android:label="My Groups" >
+        <action
+            android:id="@+id/action_groupsFragment_to_dailyOrdersFragment"
+            app:destination="@id/dailyOrdersFragment" />
+    </fragment>
     <fragment
         android:id="@+id/signOutFragment"
         android:name="com.f2h.f2h_buyer.screens.sign_out.SignOutFragment"

@@ -27,9 +27,11 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
         getUserGroupsInformation()
     }
 
-    fun updateSelectedGroup(group: Group){
+    fun updateSessionWithGroupInfo(group: Group){
         coroutineScope.launch {
-            updateSessionActiveGroupId(group)
+            withContext(Dispatchers.IO) {
+                database.updateActiveGroup(group.groupId, group.description, group.groupName)
+            }
         }
     }
 
@@ -53,19 +55,13 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
         return withContext(Dispatchers.IO) {
             val sessions = database.getAll()
             var session = SessionEntity()
-            if (sessions != null && sessions.size==1) {
+            if (sessions.size==1) {
                 session = sessions[0]
                 println(session.toString())
             } else {
                 database.clearSessions()
             }
             return@withContext session
-        }
-    }
-
-    private suspend fun updateSessionActiveGroupId(group: Group){
-        return withContext(Dispatchers.IO) {
-            database.updateActiveGroup(group.groupId, group.description, group.groupName)
         }
     }
 

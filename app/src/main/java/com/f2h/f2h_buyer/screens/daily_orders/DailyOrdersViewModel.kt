@@ -7,12 +7,13 @@ import androidx.lifecycle.MutableLiveData
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.ItemApi
+import com.f2h.f2h_buyer.network.models.Item
 import kotlinx.coroutines.*
 
 class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Application) : AndroidViewModel(application) {
 
-    private val _items = MutableLiveData<String>()
-    val items: LiveData<String>
+    private val _items = MutableLiveData<List<Item>>()
+    val items: LiveData<List<Item>>
         get() = _items
 
 
@@ -40,7 +41,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
                 var items = getItemsDataDeferred.await()
                 println("Item API response : " + items.toString())
                 if (items != null && items.size > 0) {
-                    _items.value = items.toString()
+                    _items.value = items
                 }
             } catch (t:Throwable){
                 println(t.message)

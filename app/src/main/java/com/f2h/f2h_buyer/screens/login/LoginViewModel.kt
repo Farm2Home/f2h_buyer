@@ -73,6 +73,8 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
         coroutineScope.launch {
             val session = retrieveSession()
             if (session != null && session.id != null) {
+                loginPassword.value = session.password
+                loginMobile.value = session.mobile
                 tryToLogin(session)
             }
         }
