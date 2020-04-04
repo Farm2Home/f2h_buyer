@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -40,11 +42,13 @@ class DailyOrdersFragment : Fragment() {
         binding.viewModel = viewModel
         viewModel.refreshFragmentData()
 
+
+        // Item list recycler view
         val adapter = ItemsAdapter(ItemClickListener { item ->
             Toast.makeText(context, "Item selected : " + item.itemName, Toast.LENGTH_SHORT).show()
         })
         binding.itemListRecyclerView.adapter = adapter
-        viewModel.items.observe(viewLifecycleOwner, Observer {
+        viewModel.visibleItems.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
             }
@@ -68,7 +72,24 @@ class DailyOrdersFragment : Fragment() {
 
         horizontalCalendar.setCalendarListener(object : HorizontalCalendarListener() {
             override fun onDateSelected(date: Calendar?, position: Int) {
-                Toast.makeText(context, "Date selected : " + date?.time, Toast.LENGTH_SHORT).show()
+                viewModel.updateSelectedDate(date!!.toInstant())
+            }
+        })
+
+
+        // Dropdown menu on item selected
+        binding.spinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View,
+                position: Int,
+                id: Long
+            ) {
+                viewModel.updateSelectedTimeSlot(binding.spinner.selectedItem.toString())
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                // your code here
             }
         })
 

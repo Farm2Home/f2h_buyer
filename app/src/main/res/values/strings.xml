@@ -10,4 +10,12 @@
     <string name="my_profile">My Profile</string>
     <string name="my_groups">My Groups</string>
     <string name="sign_out">Sign Out</string>
+
+
+    <string-array name="time_slots">
+        <item>Morning</item>
+        <item>Afternoon</item>
+        <item>Evening</item>
+    </string-array>
+
 </resources>

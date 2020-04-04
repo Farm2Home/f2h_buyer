@@ -4,8 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.f2h.f2h_buyer.database.F2HDatabase
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.LoginApi
@@ -59,7 +57,7 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
         return withContext(Dispatchers.IO) {
             val sessions = database.getAll()
             var session = SessionEntity()
-            if (sessions != null && sessions.size==1) {
+            if (sessions.size==1) {
                 session = sessions[0]
                 println(session.toString())
             } else {
@@ -69,15 +67,19 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
         }
     }
 
-    private fun fetchSavedSession() {
+    private fun fetchSavedSession(): SessionEntity {
+        var session = SessionEntity()
         coroutineScope.launch {
-            val session = retrieveSession()
-            if (session != null && session.id != null) {
-                loginPassword.value = session.password
-                loginMobile.value = session.mobile
+            session = retrieveSession()
+            loginPassword.value = session.password
+            loginMobile.value = session.mobile
+            if (session.id != 0L){
                 tryToLogin(session)
+            } else{
+                _isLoginComplete.value = false
             }
         }
+        return session
     }
 
     private fun tryToLogin (session: SessionEntity){

@@ -40,10 +40,10 @@
 
                 <devs.mulham.horizontalcalendar.HorizontalCalendarView
                     android:id="@+id/calendarView"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="#FFFF"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/spinner"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:textColorSelected="@color/colorPrimary" />
@@ -82,6 +82,16 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/saveButton"
                     app:layout_constraintTop_toTopOf="@+id/saveButton" />
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:entries="@array/time_slots"
+                    android:spinnerMode="dropdown"
+                    app:layout_constraintBottom_toBottomOf="@+id/calendarView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/calendarView" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
