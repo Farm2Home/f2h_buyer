@@ -54,7 +54,6 @@ class GroupsFragment : Fragment() {
 
     fun onGroupSelected(group: Group){
         viewModel.updateSessionWithGroupInfo(group)
-        Toast.makeText(context, "Group selected : " + group.groupName, Toast.LENGTH_SHORT).show()
         view?.let { Navigation.findNavController(it).navigate(R.id.action_groupsFragment_to_dailyOrdersFragment) }
     }
 

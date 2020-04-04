@@ -21,7 +21,9 @@
         android:label="My Groups" >
         <action
             android:id="@+id/action_groupsFragment_to_dailyOrdersFragment"
-            app:destination="@id/dailyOrdersFragment" />
+            app:destination="@id/dailyOrdersFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/signOutFragment"

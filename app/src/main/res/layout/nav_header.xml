@@ -15,25 +15,27 @@
             android:id="@+id/navHeaderGroupImage"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginTop="10dp"
             android:contentDescription="TODO"
-            android:paddingLeft="5dp"
-            android:paddingEnd="20dp"
-            android:paddingRight="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.514"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/f2h_logo" />
+            app:srcCompat="@drawable/wv_logo" />
 
         <TextView
             android:id="@+id/navHeaderGroupCredentials"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:text="Name and details of group here"
-            app:layout_constraintBottom_toBottomOf="@+id/navHeaderGroupImage"
-            app:layout_constraintStart_toEndOf="@+id/navHeaderGroupImage"
-            app:layout_constraintTop_toTopOf="@+id/navHeaderGroupImage" />
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="Group Name"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/navHeaderGroupImage" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
