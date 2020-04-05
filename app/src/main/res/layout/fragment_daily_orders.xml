@@ -16,16 +16,46 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/groupName"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:padding="10dp"
-            android:text="@{viewModel.sessionData.groupName}"
-            android:textAlignment="center"
-            android:textColor="#94000000"
-            android:textSize="20sp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/groupName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@{viewModel.sessionData.groupName}"
+                android:textAlignment="center"
+                android:textColor="#94000000"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/time_slots"
+                android:spinnerMode="dropdown"
+                app:layout_constraintBottom_toBottomOf="@+id/groupName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/groupName" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:indeterminate="true"
+            android:scaleY="5"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -43,7 +73,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="#FFFF"
-                    app:layout_constraintEnd_toStartOf="@+id/spinner"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:textColorSelected="@color/colorPrimary" />
@@ -82,16 +111,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/saveButton"
                     app:layout_constraintTop_toTopOf="@+id/saveButton" />
-
-                <Spinner
-                    android:id="@+id/spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:entries="@array/time_slots"
-                    android:spinnerMode="dropdown"
-                    app:layout_constraintBottom_toBottomOf="@+id/calendarView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/calendarView" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

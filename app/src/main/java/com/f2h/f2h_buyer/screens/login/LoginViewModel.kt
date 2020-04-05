@@ -39,6 +39,7 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
     }
 
     fun onClickLoginButton() {
+        _isProgressBarActive.value = true
         val mobile: String = loginMobile.value.toString()
         val password: String = loginPassword.value.toString()
         var session = SessionEntity(mobile = mobile, password = password )
@@ -92,9 +93,7 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
         coroutineScope.launch {
             var getUserDataDeferred = LoginApi.retrofitService.tryUserLogin(session.mobile, session.password)
             try {
-                _isProgressBarActive.value = true
                 var updatedUserData = getUserDataDeferred.await()
-                _isProgressBarActive.value = false
                 if (updatedUserData != null){
                     _loginResponse.value = updatedUserData
                     saveSession(updatedUserData, session)
@@ -106,6 +105,7 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
                 _loginResponse.value = null
                 _isLoginComplete.value = true
             }
+            _isProgressBarActive.value = false
         }
     }
 

@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil.inflate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -37,7 +38,7 @@ class DailyOrdersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_daily_orders, container, false)
+        binding = inflate(inflater, R.layout.fragment_daily_orders, container, false)
         binding.setLifecycleOwner(this)
         binding.viewModel = viewModel
         viewModel.refreshFragmentData()
@@ -64,18 +65,20 @@ class DailyOrdersFragment : Fragment() {
 
         val horizontalCalendar: HorizontalCalendar = HorizontalCalendar.Builder(binding.root, R.id.calendarView)
             .range(startDate, endDate)
-            .datesNumberOnScreen(5)
             .configure()
                 .textSize(12F,12F,12F)
                 .showTopText(false)
                 .showBottomText(false)
                 .formatMiddleText("   MMM\ndd-EEE")
             .end()
+            .defaultSelectedDate(Calendar.getInstance())
             .build()
 
         horizontalCalendar.setCalendarListener(object : HorizontalCalendarListener() {
-            override fun onDateSelected(date: Calendar?, position: Int) {
-                viewModel.updateSelectedDate(date!!.toInstant())
+            override fun onDateSelected(date: Calendar, position: Int) {
+                if (date != null) {
+                    viewModel.updateSelectedDate(date.time)
+                }
             }
         })
 
@@ -93,6 +96,16 @@ class DailyOrdersFragment : Fragment() {
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
                 // your code here
+            }
+        })
+
+
+        // Progress Bar loader
+        viewModel.isProgressBarActive.observe(viewLifecycleOwner, Observer { isProgressBarActive ->
+            if(isProgressBarActive){
+                binding.progressBar.visibility = View.VISIBLE
+            } else {
+                binding.progressBar.visibility = View.GONE
             }
         })
 
