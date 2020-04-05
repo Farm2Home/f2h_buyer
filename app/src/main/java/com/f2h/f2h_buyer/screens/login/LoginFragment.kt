@@ -40,6 +40,16 @@ class LoginFragment: Fragment() {
             }
         })
 
+        viewModel.isProgressBarActive.observe(viewLifecycleOwner, Observer { isProgressBarActive ->
+            if(isProgressBarActive){
+                binding.progressBar.visibility = View.VISIBLE
+                binding.loginButton.visibility = View.GONE
+            } else {
+                binding.progressBar.visibility = View.GONE
+                binding.loginButton.visibility = View.VISIBLE
+            }
+        })
+
         return binding.root
     }
 

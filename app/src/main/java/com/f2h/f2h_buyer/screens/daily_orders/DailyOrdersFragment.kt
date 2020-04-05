@@ -56,7 +56,7 @@ class DailyOrdersFragment : Fragment() {
 
 
 
-        // Settings for the horizontal calendar
+        // Initial settings for the horizontal calendar
         val startDate: Calendar = Calendar.getInstance()
         startDate.add(Calendar.DATE, 0)
         val endDate: Calendar = Calendar.getInstance()
@@ -66,7 +66,10 @@ class DailyOrdersFragment : Fragment() {
             .range(startDate, endDate)
             .datesNumberOnScreen(5)
             .configure()
-            .textSize(12F,20F,12F)
+                .textSize(12F,12F,12F)
+                .showTopText(false)
+                .showBottomText(false)
+                .formatMiddleText("   MMM\ndd-EEE")
             .end()
             .build()
 

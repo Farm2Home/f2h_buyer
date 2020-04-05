@@ -25,11 +25,16 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
     val isLoginComplete: LiveData<Boolean>
         get() = _isLoginComplete
 
+    private val _isProgressBarActive = MutableLiveData<Boolean>()
+    val isProgressBarActive: LiveData<Boolean>
+        get() = _isProgressBarActive
+
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     init {
         _isLoginComplete.value = false
+        _isProgressBarActive.value = true
         fetchSavedSession()
     }
 
@@ -77,6 +82,7 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
                 tryToLogin(session)
             } else{
                 _isLoginComplete.value = false
+                _isProgressBarActive.value = false
             }
         }
         return session
@@ -86,7 +92,9 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
         coroutineScope.launch {
             var getUserDataDeferred = LoginApi.retrofitService.tryUserLogin(session.mobile, session.password)
             try {
+                _isProgressBarActive.value = true
                 var updatedUserData = getUserDataDeferred.await()
+                _isProgressBarActive.value = false
                 if (updatedUserData != null){
                     _loginResponse.value = updatedUserData
                     saveSession(updatedUserData, session)
@@ -99,7 +107,6 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
                 _isLoginComplete.value = true
             }
         }
-        _isLoginComplete.value = false
     }
 
     override fun onCleared() {
