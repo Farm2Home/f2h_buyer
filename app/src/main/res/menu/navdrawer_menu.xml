@@ -6,10 +6,6 @@
         android:icon="@drawable/menu_icon"
         android:title="@string/my_groups" />
     <item
-        android:id="@+id/dailyOrdersFragment"
-        android:icon="@drawable/daily_orders_icon"
-        android:title="@string/daily_orders" />
-    <item
         android:id="@+id/contactUsFragment"
         android:icon="@drawable/contact_us_icon"
         android:title="@string/contact_us" />

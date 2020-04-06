@@ -9,7 +9,7 @@
             type="com.f2h.f2h_buyer.network.models.Group" />
         <variable
             name="clickListener"
-            type="com.f2h.f2h_buyer.screens.groups.GroupClickListener" />
+            type="com.f2h.f2h_buyer.screens.group_list.GroupClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

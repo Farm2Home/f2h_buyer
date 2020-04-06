@@ -7,13 +7,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.f2h.f2h_buyer.screens.groups.GroupsViewModel" />
+            type="com.f2h.f2h_buyer.screens.group_list.GroupsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".screens.groups.GroupsFragment">
+        tools:context=".screens.group_list.GroupsFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/groupListRecyclerView"

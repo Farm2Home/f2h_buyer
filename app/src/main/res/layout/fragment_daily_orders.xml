@@ -16,66 +16,39 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:indeterminate="true"
-            android:scaleY="5"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/groupName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:elegantTextHeight="false"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:padding="10dp"
-            android:text="@{viewModel.sessionData.groupName}"
-            android:textAlignment="textStart"
-            android:textColor="#94000000"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toStartOf="@+id/spinner"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/progressBar" />
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:entries="@array/time_slots"
-            android:spinnerMode="dropdown"
-            app:layout_constraintBottom_toBottomOf="@+id/groupName"
-            app:layout_constraintEnd_toEndOf="@+id/calendarView"
-            app:layout_constraintTop_toTopOf="@+id/groupName" />
 
         <devs.mulham.horizontalcalendar.HorizontalCalendarView
             android:id="@+id/calendarView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFF"
-            app:layout_constraintTop_toBottomOf="@+id/groupName"
-            app:textColorSelected="@color/colorPrimary"
-            tools:layout_editor_absoluteX="0dp">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textColorSelected="@color/colorPrimary">
 
         </devs.mulham.horizontalcalendar.HorizontalCalendarView>
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="15dp"
+            android:entries="@array/time_slots"
+            android:spinnerMode="dropdown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calendarView" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/saveButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calendarView">
+            app:layout_constraintTop_toBottomOf="@+id/spinner">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/itemListRecyclerView"
@@ -88,6 +61,18 @@
 
             </androidx.recyclerview.widget.RecyclerView>
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="80dp"
+                android:indeterminate="true"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/itemListRecyclerView" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
@@ -95,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
-            android:text="Cancel"
+            android:text="@string/cancel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/saveButton" />
 
@@ -105,7 +90,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="30dp"
             android:layout_marginBottom="10dp"
-            android:text="Save"
+            android:text="@string/save"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
