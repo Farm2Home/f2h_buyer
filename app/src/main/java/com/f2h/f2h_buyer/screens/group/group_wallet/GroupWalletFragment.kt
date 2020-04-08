@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 
 import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.databinding.FragmentGroupWalletBinding
-import com.f2h.f2h_buyer.screens.group.group_details.GroupWalletViewModelFactory
+import com.f2h.f2h_buyer.screens.group.group_tabs.GroupWalletViewModelFactory
 
 class GroupWalletFragment : Fragment() {
 

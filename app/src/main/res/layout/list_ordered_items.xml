@@ -64,6 +64,8 @@
                     android:id="@+id/itemDescription"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:text="@{item.description}"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="@+id/itemName"

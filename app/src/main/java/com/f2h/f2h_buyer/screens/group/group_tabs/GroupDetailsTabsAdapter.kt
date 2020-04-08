@@ -1,4 +1,4 @@
-package com.f2h.f2h_buyer.screens.group.group_details
+package com.f2h.f2h_buyer.screens.group.group_tabs
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

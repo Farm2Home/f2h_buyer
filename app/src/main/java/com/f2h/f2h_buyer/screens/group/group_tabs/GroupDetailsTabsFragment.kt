@@ -1,4 +1,4 @@
-package com.f2h.f2h_buyer.screens.group.group_details
+package com.f2h.f2h_buyer.screens.group.group_tabs
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,6 +24,10 @@ class GroupDetailsTabsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        //Set app bar title to group name here
+        (context as AppCompatActivity).supportActionBar!!.title = args.groupName
+
         return inflater.inflate(R.layout.fragment_group_details_tabs, container, false)
     }
 
@@ -32,9 +36,6 @@ class GroupDetailsTabsFragment : Fragment() {
         viewPager = view.findViewById(R.id.pager)
         viewPager.adapter = groupDetailsTabsAdapter
 
-
-        //Set app bar title to group name here
-        (context as AppCompatActivity).supportActionBar!!.title = args.groupName
 
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->

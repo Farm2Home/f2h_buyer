@@ -66,6 +66,8 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="5dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:text="@{group.description}"
                     android:textSize="11sp"
                     app:layout_constraintBottom_toBottomOf="@+id/groupImage"

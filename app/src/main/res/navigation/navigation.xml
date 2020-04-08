@@ -33,7 +33,7 @@
         android:label="SignOutFragment" />
     <fragment
         android:id="@+id/groupDetailsTabsFragment"
-        android:name="com.f2h.f2h_buyer.screens.group.group_details.GroupDetailsTabsFragment"
+        android:name="com.f2h.f2h_buyer.screens.group.group_tabs.GroupDetailsTabsFragment"
         android:label="group_details_tabs_fragment"
         tools:layout="@layout/fragment_group_details_tabs" >
         <action

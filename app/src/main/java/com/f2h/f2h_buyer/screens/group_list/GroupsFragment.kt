@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -47,6 +48,9 @@ class GroupsFragment : Fragment() {
                 adapter.submitList(it)
             }
         })
+
+        //Set app bar title to group name here
+        (context as AppCompatActivity).supportActionBar!!.title = "Farm To Home"
 
         return binding.root
     }

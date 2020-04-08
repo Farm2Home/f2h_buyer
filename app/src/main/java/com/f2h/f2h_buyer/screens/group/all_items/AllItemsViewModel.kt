@@ -12,7 +12,6 @@ import com.f2h.f2h_buyer.network.models.ItemAvailability
 import kotlinx.coroutines.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -27,11 +26,6 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
         get() = _visibleItems
 
     private val _sessionData = MutableLiveData<SessionEntity>()
-    val sessionData: LiveData<SessionEntity>
-        get() = _sessionData
-
-    private var selectedDate = Calendar.getInstance().time
-    private var selectedTimeSlot = "Morning"
 
     private val _allItems = MutableLiveData<List<Item>>()
     private var viewModelJob = Job()
@@ -58,7 +52,7 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
                 var items = getItemsDataDeferred.await()
                 if (items.size > 0) {
                     _allItems.value = items
-                    filterVisibleItems(items)
+                    filterEarliestAvailableItemAsVisibleItems(items)
                 }
             } catch (t:Throwable){
                 println(t.message)
@@ -67,23 +61,54 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
         }
     }
 
-    private fun filterVisibleItems(items: List<Item>) {
+
+    private fun filterEarliestAvailableItemAsVisibleItems(items: List<Item>) {
         var filteredItems = ArrayList<Item>()
-        val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd")
         items.forEach {item ->
-            var nextItemAvailability = item.itemAvailability.get(0)
-            item.itemAvailability.forEach { itemAvailability ->
-                val itemAvailabilityDate = parser.parse(itemAvailability.availableDate)
-                val nextItemAvailabilityDate = parser.parse(item.itemAvailability.get(0).availableDate)
-                if (Calendar.getInstance().time <= itemAvailabilityDate &&
-                    itemAvailabilityDate < nextItemAvailabilityDate){
-                    nextItemAvailability = itemAvailability
-                }
+            if(!item.itemAvailability.isEmpty()) {
+                var earliestItemAvailability = fetchEarliestItemAvailability(item)
+                item.itemAvailability = arrayOf(earliestItemAvailability).toList()
             }
-            item.itemAvailability = arrayOf(nextItemAvailability).toList()
             filteredItems.add(item)
         }
         _visibleItems.value = filteredItems
+    }
+
+
+    private fun fetchEarliestItemAvailability(item: Item): ItemAvailability {
+        val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+        var earliestItemAvailability = ItemAvailability()
+
+        var itemUpcoming = removeOlderItemAvailability(item)
+        if (!itemUpcoming.itemAvailability.isEmpty()) {
+            earliestItemAvailability = itemUpcoming.itemAvailability[0]
+            itemUpcoming.itemAvailability.forEach { itemAvailability ->
+                val itemAvailabilityDate = parser.parse(itemAvailability.availableDate)
+                val earliestAvailabilityDate = parser.parse(earliestItemAvailability.availableDate)
+                if (itemAvailabilityDate <= earliestAvailabilityDate) {
+                    earliestItemAvailability = itemAvailability
+                }
+            }
+        }
+        return earliestItemAvailability
+    }
+
+
+    private fun removeOlderItemAvailability(item: Item): Item {
+        var upcomingItemAvailabilities = ArrayList<ItemAvailability>()
+        val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val formatter: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+        var todaysDate = Calendar.getInstance()
+        todaysDate.time = parser.parse(formatter.format(Date()))
+
+        item.itemAvailability.forEach{itemAvailability ->
+            val date = parser.parse(itemAvailability.availableDate)
+            if(date > todaysDate.time){
+                upcomingItemAvailabilities.add(itemAvailability)
+            }
+        }
+        item.itemAvailability = upcomingItemAvailabilities
+        return item
     }
 
 
@@ -99,17 +124,6 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
             }
             return@withContext session
         }
-    }
-
-
-    fun updateSelectedDate(date: Date){
-        selectedDate = date
-        _allItems.value?.let { filterVisibleItems(it) }
-    }
-
-    fun updateSelectedTimeSlot(timeSlot: String){
-        selectedTimeSlot = timeSlot
-        _allItems.value?.let { filterVisibleItems(it) }
     }
 
 
