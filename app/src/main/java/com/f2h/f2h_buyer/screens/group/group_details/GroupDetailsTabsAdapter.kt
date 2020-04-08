@@ -2,7 +2,8 @@ package com.f2h.f2h_buyer.screens.group.group_details
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.f2h.f2h_buyer.screens.daily_orders.DailyOrdersFragment
+import com.f2h.f2h_buyer.screens.group.all_items.AllItemsFragment
+import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersFragment
 import com.f2h.f2h_buyer.screens.group.group_wallet.GroupWalletFragment
 
 
@@ -17,7 +18,7 @@ class GroupDetailsTabsAdapter(fragment: Fragment) : FragmentStateAdapter(fragmen
             }
 
             1 -> {
-                val fragment = DailyOrdersFragment()
+                val fragment = AllItemsFragment()
                 return fragment
             }
 
@@ -27,7 +28,7 @@ class GroupDetailsTabsAdapter(fragment: Fragment) : FragmentStateAdapter(fragmen
             }
         }
 
-        val fragment = DailyOrdersFragment()
+        val fragment = AllItemsFragment()
         return fragment
     }
 }

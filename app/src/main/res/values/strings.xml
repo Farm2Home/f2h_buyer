@@ -13,7 +13,6 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
 
-
     <string-array name="time_slots">
         <item>Morning</item>
         <item>Afternoon</item>

@@ -8,7 +8,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.f2h.f2h_buyer.screens.daily_orders.DailyOrdersViewModel" />
+            type="com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
