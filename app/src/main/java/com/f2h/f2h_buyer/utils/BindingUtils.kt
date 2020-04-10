@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
 
 
 @BindingAdapter("availableDateFormatted")
-fun TextView.setAvailableDateFormatted(item: Item){
+fun TextView.setAvailableDateFormatted(item: Item?){
     item?.let {
         val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd")
         val formatter: DateFormat = SimpleDateFormat("MMM-dd-yyy")
@@ -28,9 +28,8 @@ fun TextView.setAvailableDateFormatted(item: Item){
 
 
 @BindingAdapter("priceFormatted")
-fun TextView.setPriceFormatted(item: Item){
+fun TextView.setPriceFormatted(item: Item?){
     item?.let {
-
         text = "\u20B9 " + String.format("%.0f", item.pricePerUnit) + "/" + item.uom
     }
 }

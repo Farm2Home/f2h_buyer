@@ -2,13 +2,9 @@ package com.f2h.f2h_buyer.screens.group.pre_order
 
 import android.app.Application
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil.inflate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -42,6 +38,9 @@ class PreOrderFragment : Fragment() {
         binding.setLifecycleOwner(this)
         binding.viewModel = viewModel
 
+        //Call the API to fetch item data to populate page
+        viewModel.getItemAndAvailabilities(args.itemId)
+
         // Progress Bar loader
         viewModel.isProgressBarActive.observe(viewLifecycleOwner, Observer { isProgressBarActive ->
             if(isProgressBarActive){
@@ -51,14 +50,21 @@ class PreOrderFragment : Fragment() {
             }
         })
 
+
+        // Item list recycler view
+        val adapter =
+            TableComponentAdapter(
+                TableComponentClickListener { row ->
+                    // edit row
+                })
+        binding.tableRecyclerView.adapter = adapter
+        viewModel.table.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                adapter.submitList(it)
+            }
+        })
+
+
         return binding.root
-    }
-
-
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        //Call the API to fetch item data to populate page
-        viewModel.getItemAndAvailabilities(args.itemId)
     }
 }

@@ -57,7 +57,7 @@ class UserPagesActivity : AppCompatActivity() {
         return withContext(Dispatchers.IO) {
             val sessions = f2hDatabase.sessionDatabaseDao.getAll()
             var session = SessionEntity()
-            if (sessions != null && sessions.size==1) {
+            if (sessions.size==1) {
                 session = sessions[0]
                 println(session.toString())
             } else {

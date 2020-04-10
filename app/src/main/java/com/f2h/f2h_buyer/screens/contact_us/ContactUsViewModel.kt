@@ -44,7 +44,7 @@ class ContactUsViewModel(val database: SessionDatabaseDao, application: Applicat
         return withContext(Dispatchers.IO) {
             val sessions = database.getAll()
             var session = SessionEntity()
-            if (sessions != null && sessions.size==1) {
+            if (sessions.size==1) {
                 session = sessions[0]
                 println(session.toString())
             } else {

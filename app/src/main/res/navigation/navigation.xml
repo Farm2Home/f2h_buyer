@@ -19,16 +19,15 @@
     <fragment
         android:id="@+id/groupDetailsTabsFragment"
         android:name="com.f2h.f2h_buyer.screens.group.group_tabs.GroupDetailsTabsFragment"
-        android:label="group_details_tabs_fragment"
-        tools:layout="@layout/fragment_group_details_tabs" >
+        tools:layout="@layout/fragment_group_details_tabs">
         <action
             android:id="@+id/action_groupDetailsTabsFragment_to_dailyOrdersFragment"
             app:destination="@id/dailyOrdersFragment"
             app:enterAnim="@android:anim/slide_in_left" />
         <argument
             android:name="groupName"
-            app:argType="string"
-            android:defaultValue="Group Name" />
+            android:defaultValue="Group Name"
+            app:argType="string" />
         <action
             android:id="@+id/action_groupDetailsTabsFragment_to_allItemsFragment"
             app:destination="@id/allItemsFragment"
