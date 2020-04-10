@@ -11,13 +11,16 @@ import androidx.lifecycle.ViewModelProvider
 
 import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.databinding.FragmentGroupWalletBinding
-import com.f2h.f2h_buyer.screens.group.group_tabs.GroupWalletViewModelFactory
 
 class GroupWalletFragment : Fragment() {
 
     private lateinit var binding: FragmentGroupWalletBinding
     private val application: Application by lazy { requireNotNull(this.activity).application }
-    private val viewModelFactory: GroupWalletViewModelFactory by lazy { GroupWalletViewModelFactory(application) }
+    private val viewModelFactory: GroupWalletViewModelFactory by lazy {
+        GroupWalletViewModelFactory(
+            application
+        )
+    }
     private val viewModel: GroupWalletViewModel by lazy { ViewModelProvider(this, viewModelFactory).get(
         GroupWalletViewModel::class.java) }
 

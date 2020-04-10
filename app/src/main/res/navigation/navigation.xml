@@ -7,16 +7,7 @@
 
     <fragment
         android:id="@+id/dailyOrdersFragment"
-        android:name="com.f2h.f2h_buyer.screens.group.daily_orders.AllItemsFragment"
-        android:label="@string/daily_orders" />
-    <fragment
-        android:id="@+id/contactUsFragment"
-        android:name="com.f2h.f2h_buyer.screens.contact_us.ContactUsFragment"
-        android:label="@string/contact_us" />
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.f2h.f2h_buyer.screens.settings.SettingsFragment"
-        android:label="@string/my_profile" />
+        android:name="com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersFragment" />
     <fragment
         android:id="@+id/groupsFragment"
         android:name="com.f2h.f2h_buyer.screens.group_list.GroupsFragment"
@@ -24,13 +15,8 @@
         <action
             android:id="@+id/action_groupsFragment_to_groupDetailsTabsFragment"
             app:destination="@id/groupDetailsTabsFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@android:anim/slide_in_left" />
     </fragment>
-    <fragment
-        android:id="@+id/signOutFragment"
-        android:name="com.f2h.f2h_buyer.screens.sign_out.SignOutFragment"
-        android:label="SignOutFragment" />
     <fragment
         android:id="@+id/groupDetailsTabsFragment"
         android:name="com.f2h.f2h_buyer.screens.group.group_tabs.GroupDetailsTabsFragment"
@@ -39,11 +25,36 @@
         <action
             android:id="@+id/action_groupDetailsTabsFragment_to_dailyOrdersFragment"
             app:destination="@id/dailyOrdersFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@android:anim/slide_in_left" />
         <argument
             android:name="groupName"
             app:argType="string"
             android:defaultValue="Group Name" />
+        <action
+            android:id="@+id/action_groupDetailsTabsFragment_to_allItemsFragment"
+            app:destination="@id/allItemsFragment"
+            app:enterAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_groupDetailsTabsFragment_to_groupWalletFragment"
+            app:destination="@id/groupWalletFragment"
+            app:enterAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_groupDetailsTabsFragment_to_preOrderFragment"
+            app:destination="@id/preOrderFragment"
+            app:enterAnim="@android:anim/slide_in_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/allItemsFragment"
+        android:name="com.f2h.f2h_buyer.screens.group.all_items.AllItemsFragment" />
+    <fragment
+        android:id="@+id/groupWalletFragment"
+        android:name="com.f2h.f2h_buyer.screens.group.group_wallet.GroupWalletFragment" />
+    <fragment
+        android:id="@+id/preOrderFragment"
+        android:name="com.f2h.f2h_buyer.screens.group.pre_order.PreOrderFragment">
+        <argument
+            android:name="itemId"
+            android:defaultValue="0L"
+            app:argType="long" />
     </fragment>
 </navigation>

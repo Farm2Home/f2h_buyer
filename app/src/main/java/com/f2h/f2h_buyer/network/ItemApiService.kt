@@ -8,6 +8,7 @@ import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 private const val BASE_URL = "http://f2h.herokuapp.com/"
@@ -27,6 +28,10 @@ interface ItemApiService{
     @GET("item")
     fun getItemsForGroup(@Query("group_id") groupId: Long):
             Deferred<List<Item>>
+
+    @GET("item/{item_id}")
+    fun getItem(@Path("item_id") itemId: Long):
+            Deferred<Item>
 
 }
 

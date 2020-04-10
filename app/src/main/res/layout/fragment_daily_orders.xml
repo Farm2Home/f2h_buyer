@@ -28,27 +28,26 @@
 
         </devs.mulham.horizontalcalendar.HorizontalCalendarView>
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginTop="15dp"
-            android:entries="@array/time_slots"
-            android:spinnerMode="dropdown"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+<!--        <Spinner-->
+<!--            android:id="@+id/spinner"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:entries="@array/time_slots"-->
+<!--            android:spinnerMode="dropdown"-->
+<!--            tools:layout_editor_absoluteX="411dp"-->
+<!--            tools:layout_editor_absoluteY="57dp"-->
+<!--            tools:visibility="invisible" />-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/saveButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner">
+            app:layout_constraintTop_toBottomOf="@+id/calendarView">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/itemListRecyclerView"

@@ -107,10 +107,10 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         _allItems.value?.let { filterVisibleItems(it) }
     }
 
-    fun updateSelectedTimeSlot(timeSlot: String){
-        selectedTimeSlot = timeSlot
-        _allItems.value?.let { filterVisibleItems(it) }
-    }
+//    fun updateSelectedTimeSlot(timeSlot: String){
+//        selectedTimeSlot = timeSlot
+//        _allItems.value?.let { filterVisibleItems(it) }
+//    }
 
 
     override fun onCleared() {
