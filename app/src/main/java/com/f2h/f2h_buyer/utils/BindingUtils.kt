@@ -3,6 +3,7 @@ package com.f2h.f2h_buyer.utils
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.f2h.f2h_buyer.network.models.Item
+import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersModel
 import java.lang.Exception
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -32,4 +33,10 @@ fun TextView.setPriceFormatted(item: Item?){
     item?.let {
         text = "\u20B9 " + String.format("%.0f", item.pricePerUnit) + "/" + item.uom
     }
+}
+
+
+@BindingAdapter("orderedQuantityFormatted")
+fun TextView.setOrderedQuantityFormatted(data: DailyOrdersModel){
+    text = String.format("%s  %s",data.order.orderedQuantity, data.order.uom)
 }

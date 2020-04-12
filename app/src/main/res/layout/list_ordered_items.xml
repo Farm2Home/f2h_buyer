@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="item"
-            type="com.f2h.f2h_buyer.network.models.Item" />
+            name="uiModel"
+            type="com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersModel" />
         <variable
             name="clickListener"
             type="com.f2h.f2h_buyer.screens.group.daily_orders.OrderedItemClickListener" />
@@ -15,7 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> clickListener.onClick(item)}">
+        android:onClick="@{() -> clickListener.onClick(uiModel)}">
 
 
         <androidx.cardview.widget.CardView
@@ -54,7 +54,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="20dp"
-                    android:text="@{item.itemName}"
+                    android:text="@{uiModel.item.itemName}"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toStartOf="@+id/buttonIncrease"
                     app:layout_constraintStart_toEndOf="@+id/groupImage"
@@ -66,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="@{item.description}"
+                    android:text="@{uiModel.item.description}"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="@+id/itemName"
                     app:layout_constraintStart_toStartOf="@+id/itemName"
@@ -97,8 +97,8 @@
                     android:id="@+id/quantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{`10 ` + item.uom}"
                     android:textSize="12sp"
+                    app:orderedQuantityFormatted="@{uiModel}"
                     app:layout_constraintBottom_toTopOf="@+id/buttonDecrease"
                     app:layout_constraintEnd_toEndOf="@+id/buttonIncrease"
                     app:layout_constraintStart_toStartOf="@+id/buttonIncrease"
@@ -111,7 +111,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="15dp"
                     android:text="Rs. "
-                    app:priceFormatted="@{item}"
+                    app:priceFormatted="@{uiModel.item}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/farmer"
                     app:layout_constraintStart_toStartOf="@+id/farmer"
@@ -121,7 +121,7 @@
                     android:id="@+id/farmer"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@{`Farmer - ` + item.farmerUserName}"
+                    android:text="@{`Farmer - ` + uiModel.item.farmerUserName}"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="@+id/itemDescription"
                     app:layout_constraintStart_toStartOf="@+id/itemDescription"

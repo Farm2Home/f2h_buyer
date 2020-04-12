@@ -7,7 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.ItemApi
+import com.f2h.f2h_buyer.network.OrderApi
 import com.f2h.f2h_buyer.network.models.Item
+import com.f2h.f2h_buyer.network.models.Order
 import kotlinx.coroutines.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -20,18 +22,16 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     val isProgressBarActive: LiveData<Boolean>
         get() = _isProgressBarActive
 
-    private val _visibleItems = MutableLiveData<List<Item>>()
-    val visibleItems: LiveData<List<Item>>
-        get() = _visibleItems
+    private var _visibleUiData = MutableLiveData<MutableList<DailyOrdersModel>>()
+    val visibleUiData: LiveData<MutableList<DailyOrdersModel>>
+        get() = _visibleUiData
 
-    private val _sessionData = MutableLiveData<SessionEntity>()
-    val sessionData: LiveData<SessionEntity>
-        get() = _sessionData
 
+    private val sessionData = MutableLiveData<SessionEntity>()
     private var selectedDate = Calendar.getInstance().time
     private var selectedTimeSlot = "Morning"
 
-    private val _allItems = MutableLiveData<List<Item>>()
+    private var allUiData = ArrayList<DailyOrdersModel>()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
@@ -42,21 +42,17 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     }
 
 
-    fun refreshFragmentData(){
-        _isProgressBarActive.value = true
-        getItemsAndAvailabilitiesForGroup()
-    }
-
-
     private fun getItemsAndAvailabilitiesForGroup() {
         coroutineScope.launch {
-            _sessionData.value = retrieveSession()
-            var getItemsDataDeferred = ItemApi.retrofitService.getItemsForGroup(_sessionData.value!!.groupId)
+            sessionData.value = retrieveSession()
+            var getItemsDataDeferred = ItemApi.retrofitService.getItemsForGroup(sessionData.value!!.groupId)
+            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupAndUser(sessionData.value!!.groupId, sessionData.value!!.userId)
             try {
                 var items = getItemsDataDeferred.await()
-                if (items.size > 0) {
-                    _allItems.value = items
-                    filterVisibleItems(items)
+                var orders = getOrdersDataDeferred.await()
+                allUiData = createAllUiData(items, orders)
+                if (allUiData.size > 0) {
+                    _visibleUiData.value = filterVisibleItems(allUiData)
                 }
             } catch (t:Throwable){
                 println(t.message)
@@ -65,18 +61,40 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         }
     }
 
-    private fun filterVisibleItems(items: List<Item>) {
-        var filteredItems = ArrayList<Item>()
-        items.forEach {item ->
-            item.itemAvailability.forEach { itemAvailability ->
+
+
+
+    private fun createAllUiData(items: List<Item>, orders: List<Order>): ArrayList<DailyOrdersModel> {
+        var allUiData = ArrayList<DailyOrdersModel>()
+        items.forEach { item ->
+            var data = DailyOrdersModel()
+            data.item = item
+            orders.stream().forEach { order ->
+                if (item.itemId.equals(order.itemId)){
+                    data.order = order
+                }
+            }
+            allUiData.add(data)
+        }
+        return allUiData
+    }
+
+
+
+
+    private fun filterVisibleItems(datas: List<DailyOrdersModel>): ArrayList<DailyOrdersModel> {
+        var filteredItems = ArrayList<DailyOrdersModel>()
+        datas.forEach {data ->
+            data.item.itemAvailability.forEach { itemAvailability ->
                 if (itemAvailability.availableTimeSlot.equals(selectedTimeSlot) &&
                     isDateEqual(itemAvailability.availableDate, selectedDate)){
-                    filteredItems.add(item)
+                    filteredItems.add(data)
                 }
             }
         }
-        _visibleItems.value = filteredItems
+        return filteredItems
     }
+
 
     private fun isDateEqual(itemDate: String, selectedDate: Date): Boolean {
 
@@ -104,12 +122,12 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
 
     fun updateSelectedDate(date: Date){
         selectedDate = date
-        _allItems.value?.let { filterVisibleItems(it) }
+        _visibleUiData.value = filterVisibleItems(allUiData)
     }
 
 //    fun updateSelectedTimeSlot(timeSlot: String){
 //        selectedTimeSlot = timeSlot
-//        _allItems.value?.let { filterVisibleItems(it) }
+//        _allItems.value?.let { _visibleItems.value = filterVisibleItems(it) }
 //    }
 
 

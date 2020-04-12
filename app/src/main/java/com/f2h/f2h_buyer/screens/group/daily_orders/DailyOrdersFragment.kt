@@ -14,7 +14,6 @@ import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.database.F2HDatabase
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.databinding.FragmentDailyOrdersBinding
-import com.f2h.f2h_buyer.network.models.Item
 import com.f2h.f2h_buyer.screens.group.group_tabs.GroupDetailsTabsFragmentDirections
 import devs.mulham.horizontalcalendar.HorizontalCalendar
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener
@@ -47,7 +46,7 @@ class DailyOrdersFragment : Fragment() {
             navigateToPreOrderPage(item)
         })
         binding.itemListRecyclerView.adapter = adapter
-        viewModel.visibleItems.observe(viewLifecycleOwner, Observer {
+        viewModel.visibleUiData.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
             }
@@ -110,8 +109,8 @@ class DailyOrdersFragment : Fragment() {
         return binding.root
     }
 
-    private fun navigateToPreOrderPage(item: Item) {
-        val action = GroupDetailsTabsFragmentDirections.actionGroupDetailsTabsFragmentToPreOrderFragment(item.itemId)
+    private fun navigateToPreOrderPage(uiData: DailyOrdersModel) {
+        val action = GroupDetailsTabsFragmentDirections.actionGroupDetailsTabsFragmentToPreOrderFragment(uiData.item.itemId)
         view?.let { Navigation.findNavController(it).navigate(action) }
     }
 }

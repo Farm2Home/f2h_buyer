@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.f2h.f2h_buyer.databinding.ListOrderedItemsBinding
 import com.f2h.f2h_buyer.network.models.Item
 
-class OrderedItemsAdapter(val clickListener: OrderedItemClickListener): ListAdapter<Item, OrderedItemsAdapter.ViewHolder>(ListItemDiffCallback()) {
+class OrderedItemsAdapter(val clickListener: OrderedItemClickListener): ListAdapter<DailyOrdersModel, OrderedItemsAdapter.ViewHolder>(ListItemDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position)!!, clickListener)
@@ -23,10 +23,10 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener): ListAdap
     class ViewHolder private constructor(val binding: ListOrderedItemsBinding): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            item: Item,
+            item: DailyOrdersModel,
             clickListener: OrderedItemClickListener
         ) {
-            binding.item = item
+            binding.uiModel = item
             binding.clickListener = clickListener
             binding.executePendingBindings()
         }
@@ -41,16 +41,16 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener): ListAdap
     }
 }
 
-class ListItemDiffCallback : DiffUtil.ItemCallback<Item>() {
-    override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
-        return oldItem.itemId == newItem.itemId
+class ListItemDiffCallback : DiffUtil.ItemCallback<DailyOrdersModel>() {
+    override fun areItemsTheSame(oldItem: DailyOrdersModel, newItem: DailyOrdersModel): Boolean {
+        return oldItem.item.itemId == newItem.item.itemId
     }
 
-    override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
+    override fun areContentsTheSame(oldItem: DailyOrdersModel, newItem: DailyOrdersModel): Boolean {
         return oldItem == newItem
     }
 }
 
-class OrderedItemClickListener(val clickListener: (item: Item) -> Unit) {
-    fun onClick(item: Item) = clickListener(item)
+class OrderedItemClickListener(val clickListener: (item: DailyOrdersModel) -> Unit) {
+    fun onClick(item: DailyOrdersModel) = clickListener(item)
 }
