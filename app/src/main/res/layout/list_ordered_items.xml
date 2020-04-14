@@ -40,9 +40,7 @@
                     android:layout_height="70dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
                     android:contentDescription="TODO"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/f2h_logo" />
@@ -54,7 +52,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="20dp"
-                    android:text="@{uiModel.item.itemName}"
+                    android:text="@{uiModel.itemName}"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toStartOf="@+id/buttonIncrease"
                     app:layout_constraintStart_toEndOf="@+id/groupImage"
@@ -66,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="@{uiModel.item.description}"
+                    android:text="@{uiModel.itemDescription}"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="@+id/itemName"
                     app:layout_constraintStart_toStartOf="@+id/itemName"
@@ -108,20 +106,20 @@
                     android:id="@+id/price"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="10dp"
                     android:text="Rs. "
-                    app:priceFormatted="@{uiModel.item}"
+                    android:textAlignment="center"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/farmer"
-                    app:layout_constraintStart_toStartOf="@+id/farmer"
-                    app:layout_constraintTop_toBottomOf="@+id/farmer" />
+                    app:layout_constraintEnd_toEndOf="@+id/groupImage"
+                    app:layout_constraintStart_toStartOf="@+id/groupImage"
+                    app:layout_constraintTop_toBottomOf="@+id/groupImage"
+                    app:priceFormatted="@{uiModel}" />
 
                 <TextView
                     android:id="@+id/farmer"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@{`Farmer - ` + uiModel.item.farmerUserName}"
+                    android:text="@{`Farmer - ` + uiModel.farmerName}"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="@+id/itemDescription"
                     app:layout_constraintStart_toStartOf="@+id/itemDescription"
@@ -135,6 +133,16 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/total"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Total - "
+                    app:layout_constraintEnd_toEndOf="@+id/farmer"
+                    app:layout_constraintStart_toStartOf="@+id/farmer"
+                    app:layout_constraintTop_toBottomOf="@+id/farmer"
+                    app:totalPriceFormatted="@{uiModel}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

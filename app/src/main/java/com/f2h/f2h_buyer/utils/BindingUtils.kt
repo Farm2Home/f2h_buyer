@@ -28,15 +28,9 @@ fun TextView.setAvailableDateFormatted(item: Item?){
 }
 
 
-@BindingAdapter("priceFormatted")
-fun TextView.setPriceFormatted(item: Item?){
-    item?.let {
-        text = "\u20B9 " + String.format("%.0f", item.pricePerUnit) + "/" + item.uom
+@BindingAdapter("priceFormattedFromItem")
+fun TextView.setPriceFormattedFromItem(data: Item?){
+    data?.let {
+        text = "\u20B9 " + String.format("%.0f", data.pricePerUnit) + "/" + data.uom
     }
-}
-
-
-@BindingAdapter("orderedQuantityFormatted")
-fun TextView.setOrderedQuantityFormatted(data: DailyOrdersModel){
-    text = String.format("%s  %s",data.order.orderedQuantity, data.order.uom)
 }

@@ -79,7 +79,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="15dp"
                     android:text="Rs. "
-                    app:priceFormatted="@{item}"
+                    app:priceFormattedFromItem="@{item}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/nextAvailable"
                     app:layout_constraintStart_toStartOf="@+id/nextAvailable"

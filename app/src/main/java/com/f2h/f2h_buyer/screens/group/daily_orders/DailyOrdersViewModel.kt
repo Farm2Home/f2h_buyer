@@ -31,6 +31,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     private var selectedDate = Calendar.getInstance().time
     private var selectedTimeSlot = "Morning"
 
+    val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
     private var allUiData = ArrayList<DailyOrdersModel>()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -67,41 +68,52 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     private fun createAllUiData(items: List<Item>, orders: List<Order>): ArrayList<DailyOrdersModel> {
         var allUiData = ArrayList<DailyOrdersModel>()
         items.forEach { item ->
-            var data = DailyOrdersModel()
-            data.item = item
-            orders.stream().forEach { order ->
-                if (item.itemId.equals(order.itemId)){
-                    data.order = order
+            item.itemAvailability.forEach { availability ->
+                var uiElement = DailyOrdersModel()
+                uiElement.itemId = item.itemId
+                uiElement.itemName = item.itemName
+                uiElement.itemDescription = item.description
+                uiElement.itemUom = item.uom
+                uiElement.farmerName = item.farmerUserName
+                uiElement.availableDate = df.format(df.parse(availability.availableDate) ?: "")
+                uiElement.availableTimeSlot = availability.availableTimeSlot
+                uiElement.itemAvailabilityId = availability.itemAvailabilityId
+                uiElement.price = item.pricePerUnit
+
+                orders.forEach { order ->
+                    if(item.itemId.equals(order.itemId) && isDateEqual(availability.availableDate, order.orderedDate)){
+                        uiElement.orderedQuantity = order.orderedQuantity
+                        uiElement.orderUom = order.uom
+                        uiElement.orderId = order.orderId
+                        uiElement.orderAmount = order.orderedAmount
+                        uiElement.discountAmount = order.discountAmount
+                    }
                 }
+                allUiData.add(uiElement)
             }
-            allUiData.add(data)
         }
+
+        allUiData.sortBy { it.itemName }
+        allUiData.sortByDescending { it.orderedQuantity }
         return allUiData
     }
 
 
 
 
-    private fun filterVisibleItems(datas: List<DailyOrdersModel>): ArrayList<DailyOrdersModel> {
+    private fun filterVisibleItems(elements: List<DailyOrdersModel>): ArrayList<DailyOrdersModel> {
         var filteredItems = ArrayList<DailyOrdersModel>()
-        datas.forEach {data ->
-            data.item.itemAvailability.forEach { itemAvailability ->
-                if (itemAvailability.availableTimeSlot.equals(selectedTimeSlot) &&
-                    isDateEqual(itemAvailability.availableDate, selectedDate)){
-                    filteredItems.add(data)
-                }
+        elements.forEach {element ->
+            if (isDateEqual(element.availableDate, df.format(selectedDate))){
+                    filteredItems.add(element)
             }
         }
         return filteredItems
     }
 
 
-    private fun isDateEqual(itemDate: String, selectedDate: Date): Boolean {
-
-        val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val formattedItemAvailableDate = df.parse(itemDate)
-        val formattedSelectedDate = df.parse(df.format(selectedDate))
-        return (formattedItemAvailableDate.time.equals(formattedSelectedDate.time))
+    private fun isDateEqual(itemDate: String, selectedDate: String): Boolean {
+        return df.format(df.parse(itemDate)).equals(df.format(df.parse(selectedDate)))
     }
 
 

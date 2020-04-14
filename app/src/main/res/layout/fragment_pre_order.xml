@@ -100,7 +100,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/farmer"
             app:layout_constraintTop_toBottomOf="@+id/farmer"
-            app:priceFormatted="@{viewModel.item}" />
+            app:priceFormattedFromItem="@{viewModel.item}" />
 
         <TextView
             android:id="@+id/farmer"

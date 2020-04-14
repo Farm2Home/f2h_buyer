@@ -43,7 +43,7 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener): ListAdap
 
 class ListItemDiffCallback : DiffUtil.ItemCallback<DailyOrdersModel>() {
     override fun areItemsTheSame(oldItem: DailyOrdersModel, newItem: DailyOrdersModel): Boolean {
-        return oldItem.item.itemId == newItem.item.itemId
+        return oldItem == newItem
     }
 
     override fun areContentsTheSame(oldItem: DailyOrdersModel, newItem: DailyOrdersModel): Boolean {
