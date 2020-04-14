@@ -31,7 +31,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     private var selectedDate = Calendar.getInstance().time
     private var selectedTimeSlot = "Morning"
 
-    val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+    private val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
     private var allUiData = ArrayList<DailyOrdersModel>()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)

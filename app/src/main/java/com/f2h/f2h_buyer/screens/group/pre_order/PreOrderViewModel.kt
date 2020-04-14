@@ -7,8 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.ItemApi
+import com.f2h.f2h_buyer.network.OrderApi
 import com.f2h.f2h_buyer.network.models.Item
 import com.f2h.f2h_buyer.network.models.ItemAvailability
+import com.f2h.f2h_buyer.network.models.Order
 import kotlinx.coroutines.*
 import java.lang.Exception
 import java.text.DateFormat
@@ -28,10 +30,8 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     val table: LiveData<List<TableComponent>>
         get() = _table
 
-    private val _sessionData = MutableLiveData<SessionEntity>()
-    val sessionData: LiveData<SessionEntity>
-        get() = _sessionData
-
+    private val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+    private var sessionData = SessionEntity()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
@@ -43,13 +43,17 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
 
     fun getItemAndAvailabilities(itemId: Long) {
         coroutineScope.launch {
-            _sessionData.value = retrieveSession()
+            sessionData = retrieveSession()
             var getItemDataDeferred = ItemApi.retrofitService.getItem(itemId)
+            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupAndUser(sessionData.groupId, sessionData.userId)
             try {
                 var item = getItemDataDeferred.await()
+                var orders = ArrayList(getOrdersDataDeferred.await())
+                orders.retainAll { x -> x.itemId == item.itemId }
+
                 if (item.itemId != 0L) {
                     _item.value = item
-                    _table.value = createTableRows(item)
+                    _table.value = createTableRows(item, orders)
                 }
             } catch (t:Throwable){
                 println(t.message)
@@ -58,17 +62,27 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         }
     }
 
-    private fun createTableRows(item: Item): ArrayList<TableComponent> {
+    private fun createTableRows(item: Item, orders: ArrayList<Order>): ArrayList<TableComponent> {
         var list = ArrayList<TableComponent>()
-        list.add(TableComponent(id = 0L, date = "Available Dates", quantity = "Order"))
         item.itemAvailability.forEach { availability ->
+            var order = orders.filter { x -> isDateEqual(x.orderedDate, availability.availableDate) }
+            if (order.isEmpty()){
+                order = listOf(Order())
+            }
             var row = TableComponent()
             row.id = availability.itemAvailabilityId
-            row.quantity = availability.committedQuantity.toString()
             row.date = formatDate(availability.availableDate)
+            row.quantity = order[0].orderedQuantity
+            row.uom = order[0].uom
             list.add(row)
         }
+        list.sortBy { it.date }
         return list
+    }
+
+
+    private fun isDateEqual(itemDate: String, selectedDate: String): Boolean {
+        return df.format(df.parse(itemDate)).equals(df.format(df.parse(selectedDate)))
     }
 
 
