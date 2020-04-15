@@ -76,6 +76,7 @@
                     android:layout_height="40dp"
                     android:layout_marginBottom="10dp"
                     android:text="-"
+                    app:buttonVisibilityFormatted="@{uiModel}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/buttonIncrease"
                     app:layout_constraintHorizontal_bias="0.507"
@@ -88,6 +89,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="20dp"
                     android:text="+"
+                    app:buttonVisibilityFormatted="@{uiModel}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -106,10 +108,8 @@
                     android:id="@+id/price"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:text="Rs. "
                     android:textAlignment="center"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/groupImage"
                     app:layout_constraintStart_toStartOf="@+id/groupImage"
                     app:layout_constraintTop_toBottomOf="@+id/groupImage"
@@ -138,11 +138,36 @@
                     android:id="@+id/total"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Total - "
+                    android:layout_marginTop="10dp"
+                    android:text="Payable - "
+                    app:layout_constraintEnd_toEndOf="@+id/farmer"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/farmer"
+                    app:layout_constraintTop_toBottomOf="@+id/discount"
+                    app:totalPriceFormatted="@{uiModel}" />
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:textAlignment="center"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/price"
+                    app:layout_constraintStart_toStartOf="@+id/price"
+                    app:layout_constraintTop_toBottomOf="@+id/price"
+                    app:statusFormatted="@{uiModel}" />
+
+                <TextView
+                    android:id="@+id/discount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:discountFormatted="@{uiModel}"
+                    android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="@+id/farmer"
                     app:layout_constraintStart_toStartOf="@+id/farmer"
-                    app:layout_constraintTop_toBottomOf="@+id/farmer"
-                    app:totalPriceFormatted="@{uiModel}" />
+                    app:layout_constraintTop_toBottomOf="@+id/farmer" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

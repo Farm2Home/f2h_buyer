@@ -14,5 +14,9 @@ data class DailyOrdersModel (
     var orderedQuantity: Float = (0).toFloat(),
     var orderUom: String = "",
     var orderAmount: Float = (0).toFloat(),
+    var orderStatus: String= "",
+    var paymentStatus: String = "",
+    var deliveryStatus: String = "",
+    var isFreezed: Boolean = false,
     var discountAmount: Float = (0).toFloat()
 )

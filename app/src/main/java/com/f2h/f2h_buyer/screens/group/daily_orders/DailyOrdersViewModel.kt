@@ -26,7 +26,6 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     val visibleUiData: LiveData<MutableList<DailyOrdersModel>>
         get() = _visibleUiData
 
-
     private val sessionData = MutableLiveData<SessionEntity>()
     private var selectedDate = Calendar.getInstance().time
     private var selectedTimeSlot = "Morning"
@@ -79,6 +78,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
                 uiElement.availableTimeSlot = availability.availableTimeSlot
                 uiElement.itemAvailabilityId = availability.itemAvailabilityId
                 uiElement.price = item.pricePerUnit
+                uiElement.isFreezed = availability.isFreezed
 
                 orders.forEach { order ->
                     if(item.itemId.equals(order.itemId) && isDateEqual(availability.availableDate, order.orderedDate)){
@@ -87,6 +87,9 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
                         uiElement.orderId = order.orderId
                         uiElement.orderAmount = order.orderedAmount
                         uiElement.discountAmount = order.discountAmount
+                        uiElement.orderStatus = order.orderStatus
+                        uiElement.paymentStatus = order.paymentStatus
+                        uiElement.deliveryStatus = order.deliveryStatus
                     }
                 }
                 allUiData.add(uiElement)
