@@ -65,15 +65,15 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     private fun createTableRows(item: Item, orders: ArrayList<Order>): ArrayList<TableComponent> {
         var list = ArrayList<TableComponent>()
         item.itemAvailability.forEach { availability ->
-            var order = orders.filter { x -> isDateEqual(x.orderedDate, availability.availableDate) }
+            var order = orders.filter { x -> isDateEqual(x.orderedDate ?: "", availability.availableDate) }
             if (order.isEmpty()){
                 order = listOf(Order())
             }
             var row = TableComponent()
             row.id = availability.itemAvailabilityId
             row.date = formatDate(availability.availableDate)
-            row.quantity = order[0].orderedQuantity
-            row.uom = order[0].uom
+            row.quantity = order[0].orderedQuantity ?: (0).toFloat()
+            row.uom = order[0].uom ?: ""
             list.add(row)
         }
         list.sortBy { it.date }

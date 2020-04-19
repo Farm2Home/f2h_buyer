@@ -32,7 +32,7 @@ class ContactUsViewModel(val database: SessionDatabaseDao, application: Applicat
             userSession = retrieveSession()
             try {
                 var activeGroupData = GroupApi.retrofitService.getGroupDetails(userSession.groupId).await()
-                var userData = UserApi.retrofitService.getUserDetails(activeGroupData.ownerUserId).await()
+                var userData = activeGroupData.ownerUserId?.let { UserApi.retrofitService.getUserDetails(it).await() }
                 _response.value = userData
             } catch (t:Throwable){
                 println(t.message)

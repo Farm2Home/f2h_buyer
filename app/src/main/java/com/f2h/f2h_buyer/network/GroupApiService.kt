@@ -1,6 +1,8 @@
 package com.f2h.f2h_buyer.network
 
 import com.f2h.f2h_buyer.network.models.Group
+import com.f2h.f2h_buyer.network.models.GroupAdapter
+import com.f2h.f2h_buyer.network.models.GroupJson
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -14,6 +16,7 @@ import retrofit2.http.Query
 private const val BASE_URL = "http://f2h.herokuapp.com/"
 
 private val moshi = Moshi.Builder()
+    .add(GroupAdapter())
     .add(KotlinJsonAdapterFactory())
     .build()
 

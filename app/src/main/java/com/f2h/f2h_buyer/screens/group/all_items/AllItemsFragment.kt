@@ -68,7 +68,7 @@ class AllItemsFragment : Fragment() {
     }
 
     private fun navigateToPreOrderPage(item: Item) {
-        val action = GroupDetailsTabsFragmentDirections.actionGroupDetailsTabsFragmentToPreOrderFragment(item.itemId)
+        val action = GroupDetailsTabsFragmentDirections.actionGroupDetailsTabsFragmentToPreOrderFragment(item.itemId ?: -1L)
         view?.let { Navigation.findNavController(it).navigate(action) }
     }
 }

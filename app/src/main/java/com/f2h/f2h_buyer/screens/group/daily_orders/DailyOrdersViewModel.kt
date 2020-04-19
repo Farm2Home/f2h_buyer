@@ -11,6 +11,7 @@ import com.f2h.f2h_buyer.network.OrderApi
 import com.f2h.f2h_buyer.network.models.Item
 import com.f2h.f2h_buyer.network.models.Order
 import kotlinx.coroutines.*
+import java.lang.Exception
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -69,27 +70,33 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         items.forEach { item ->
             item.itemAvailability.forEach { availability ->
                 var uiElement = DailyOrdersModel()
+
+                try {
+                    uiElement.availableDate = df.format(df.parse(availability.availableDate) ?: "")
+                } catch (e: Exception){
+                    return@forEach
+                }
+
                 uiElement.itemId = item.itemId
                 uiElement.itemName = item.itemName
                 uiElement.itemDescription = item.description
                 uiElement.itemUom = item.uom
                 uiElement.farmerName = item.farmerUserName
-                uiElement.availableDate = df.format(df.parse(availability.availableDate) ?: "")
                 uiElement.availableTimeSlot = availability.availableTimeSlot
                 uiElement.itemAvailabilityId = availability.itemAvailabilityId
                 uiElement.price = item.pricePerUnit
                 uiElement.isFreezed = availability.isFreezed
 
                 orders.forEach { order ->
-                    if(item.itemId.equals(order.itemId) && isDateEqual(availability.availableDate, order.orderedDate)){
-                        uiElement.orderedQuantity = order.orderedQuantity
-                        uiElement.orderUom = order.uom
-                        uiElement.orderId = order.orderId
-                        uiElement.orderAmount = order.orderedAmount
-                        uiElement.discountAmount = order.discountAmount
-                        uiElement.orderStatus = order.orderStatus
-                        uiElement.paymentStatus = order.paymentStatus
-                        uiElement.deliveryStatus = order.deliveryStatus
+                    if(item.itemId.equals(order.itemId) && isDateEqual(availability.availableDate, order.orderedDate ?: "")){
+                        uiElement.orderedQuantity = order.orderedQuantity ?: (0).toFloat()
+                        uiElement.orderUom = order.uom ?: ""
+                        uiElement.orderId = order.orderId ?: -1L
+                        uiElement.orderAmount = order.orderedAmount ?: (0).toFloat()
+                        uiElement.discountAmount = order.discountAmount ?: (0).toFloat()
+                        uiElement.orderStatus = order.orderStatus ?: ""
+                        uiElement.paymentStatus = order.paymentStatus ?: ""
+                        uiElement.deliveryStatus = order.deliveryStatus ?: ""
                     }
                 }
                 allUiData.add(uiElement)
