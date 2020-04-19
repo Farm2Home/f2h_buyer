@@ -109,7 +109,7 @@ class DailyOrdersFragment : Fragment() {
         return binding.root
     }
 
-    private fun navigateToPreOrderPage(uiData: DailyOrdersModel) {
+    private fun navigateToPreOrderPage(uiData: DailyOrdersUiModel) {
         val action = GroupDetailsTabsFragmentDirections.actionGroupDetailsTabsFragmentToPreOrderFragment(uiData.itemId)
         view?.let { Navigation.findNavController(it).navigate(action) }
     }

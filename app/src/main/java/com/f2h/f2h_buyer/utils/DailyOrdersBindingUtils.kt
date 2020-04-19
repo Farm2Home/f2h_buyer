@@ -8,16 +8,11 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.f2h.f2h_buyer.network.models.Item
-import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersModel
-import kotlinx.android.synthetic.main.list_ordered_items.view.*
-import java.lang.Exception
-import java.text.DateFormat
-import java.text.SimpleDateFormat
+import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
 
 
 @BindingAdapter("priceFormatted")
-fun TextView.setPriceFormatted(data: DailyOrdersModel?){
+fun TextView.setPriceFormatted(data: DailyOrdersUiModel?){
     data?.let {
         text = "₹ " + String.format("%.0f", data.price) + "/" + data.itemUom
     }
@@ -25,13 +20,13 @@ fun TextView.setPriceFormatted(data: DailyOrdersModel?){
 
 
 @BindingAdapter("orderedQuantityFormatted")
-fun TextView.setOrderedQuantityFormatted(data: DailyOrdersModel){
+fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
     text = String.format("%s  %s",data.orderedQuantity, data.orderUom)
 }
 
 
 @BindingAdapter("discountFormatted")
-fun TextView.setDiscountFormatted(data: DailyOrdersModel){
+fun TextView.setDiscountFormatted(data: DailyOrdersUiModel){
     if (data.discountAmount > 0) {
         text = String.format("Discount = ₹%.0f", data.discountAmount)
     } else {
@@ -42,7 +37,7 @@ fun TextView.setDiscountFormatted(data: DailyOrdersModel){
 
 
 @BindingAdapter("totalPriceFormatted")
-fun TextView.setTotalPriceFormatted(data: DailyOrdersModel){
+fun TextView.setTotalPriceFormatted(data: DailyOrdersUiModel){
     if(data.orderAmount > 0) {
 
         val markupPrice = String.format("₹%.0f", data.orderAmount + data.discountAmount)
@@ -63,10 +58,12 @@ fun TextView.setTotalPriceFormatted(data: DailyOrdersModel){
 }
 
 @BindingAdapter("totalAmountFormatted")
-fun TextView.setTotalAmountFormatted(list: List<DailyOrdersModel>?){
+fun TextView.setTotalAmountFormatted(list: List<DailyOrdersUiModel>?){
     if (list != null) {
         var totalAmount = (0).toFloat()
         list.forEach { element ->
+            if (!element.orderStatus.equals("REJECTED") &&
+                !element.paymentStatus.equals("PAID"))
             totalAmount += (element.orderAmount)
         }
         text = String.format("Total = ₹ %.0f", totalAmount)
@@ -75,7 +72,7 @@ fun TextView.setTotalAmountFormatted(list: List<DailyOrdersModel>?){
 
 
 @BindingAdapter("statusFormatted")
-fun TextView.setStatusFormatted(data: DailyOrdersModel){
+fun TextView.setStatusFormatted(data: DailyOrdersUiModel){
 
     var firstStatus: String = data.orderStatus
 
@@ -89,8 +86,10 @@ fun TextView.setStatusFormatted(data: DailyOrdersModel){
 
 
 @BindingAdapter("buttonVisibilityFormatted")
-fun Button.setButtonVisibilityFormatted(data: DailyOrdersModel){
-    if (data.isFreezed.equals(false)){
+fun Button.setButtonVisibilityFormatted(data: DailyOrdersUiModel){
+    if (data.isFreezed.equals(false) &&
+        data.orderStatus.equals("ORDERED") ||
+        data.orderStatus.isBlank()){
         visibility = View.VISIBLE
     } else{
         visibility = View.INVISIBLE

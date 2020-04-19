@@ -6,7 +6,7 @@
     <data>
         <variable
             name="uiModel"
-            type="com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersModel" />
+            type="com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel" />
         <variable
             name="clickListener"
             type="com.f2h.f2h_buyer.screens.group.daily_orders.OrderedItemClickListener" />

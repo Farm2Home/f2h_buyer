@@ -9,7 +9,7 @@ data class OrderJson (
     @Json(name = "group_id") val groupId: Long? = -1L,
     @Json(name = "seller_user_id") val sellerUserId: Long? = -1L,
     @Json(name = "buyer_user_id") val buyerUserId: Long? = -1L,
-    @Json(name = "item_id") val itemId: Long? = -1L,
+    @Json(name = "item_availability_id") val itemAvailabilityId: Long? = -1L,
     @Json(name = "order_description") val orderDescription: String? = "",
     @Json(name = "delivery_location") val deliveryLocation: String? = "",
     @Json(name = "uom") val uom: String? = "",
@@ -34,7 +34,7 @@ data class Order (
     var groupId: Long? = -1L,
     var sellerUserId: Long? = -1L,
     var buyerUserId: Long? = -1L,
-    var itemId: Long? = -1L,
+    var itemAvailabilityId: Long? = -1L,
     var orderDescription: String? = "",
     var deliveryLocation: String? = "",
     var uom: String? = "",
@@ -61,7 +61,7 @@ class OrderAdapter {
         order.groupId = orderJson.groupId ?: -1L
         order.sellerUserId = orderJson.sellerUserId ?: -1L
         order.buyerUserId = orderJson.buyerUserId ?: -1L
-        order.itemId = orderJson.itemId ?: -1L
+        order.itemAvailabilityId = orderJson.itemAvailabilityId ?: -1L
         order.orderDescription = orderJson.orderDescription ?: ""
         order.deliveryLocation = orderJson.deliveryLocation ?: ""
         order.uom = orderJson.uom ?: ""

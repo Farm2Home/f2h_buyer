@@ -9,7 +9,6 @@ import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.ItemApi
 import com.f2h.f2h_buyer.network.OrderApi
 import com.f2h.f2h_buyer.network.models.Item
-import com.f2h.f2h_buyer.network.models.ItemAvailability
 import com.f2h.f2h_buyer.network.models.Order
 import kotlinx.coroutines.*
 import java.lang.Exception
@@ -49,7 +48,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
             try {
                 var item = getItemDataDeferred.await()
                 var orders = ArrayList(getOrdersDataDeferred.await())
-                orders.retainAll { x -> x.itemId == item.itemId }
+                orders.retainAll { x -> x.itemAvailabilityId == item.itemId }
 
                 if (item.itemId != 0L) {
                     _item.value = item
