@@ -34,14 +34,3 @@ fun TextView.setPriceFormattedFromItem(data: Item?){
         text = "\u20B9 " + String.format("%.0f", data.pricePerUnit) + "/" + data.uom
     }
 }
-
-@BindingAdapter("quantityFormattedTable")
-fun TextView.setPriceFormattedFromItem(data: TableComponent?){
-    data?.let {
-        if (data.quantity > 0) {
-            text = String.format("%s %s", data.quantity, data.uom)
-        } else {
-            text = "0"
-        }
-    }
-}

@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
-import com.f2h.f2h_buyer.network.ItemApi
 import com.f2h.f2h_buyer.network.ItemAvailabilityApi
 import com.f2h.f2h_buyer.network.OrderApi
 import com.f2h.f2h_buyer.network.models.Item
@@ -94,6 +93,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
             itemAvailabilitys.forEach { availability ->
                 if (availability.itemAvailabilityId.equals(order.itemAvailabilityId)) {
                     uiElement.isFreezed = availability.isFreezed
+                    uiElement.availableQuantity = availability.availableQuantity
                 }
             }
 

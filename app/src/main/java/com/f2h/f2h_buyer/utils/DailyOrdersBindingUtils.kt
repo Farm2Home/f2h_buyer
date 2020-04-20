@@ -2,7 +2,9 @@ package com.f2h.f2h_buyer.utils
 
 import android.graphics.Color
 import android.text.SpannableString
+import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.text.style.StrikethroughSpan
 import android.view.View
 import android.widget.Button
@@ -21,14 +23,20 @@ fun TextView.setPriceFormatted(data: DailyOrdersUiModel?){
 
 @BindingAdapter("orderedQuantityFormatted")
 fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
-    text = String.format("%s  %s",data.orderedQuantity, data.orderUom)
+    var orderedString = String.format("%s  %s",data.orderedQuantity, data.orderUom)
+
+    if(data.orderStatus.equals("ORDERED")){
+        orderedString = String.format("%s\n(%s)", orderedString, data.availableQuantity)
+    }
+
+    text = orderedString
 }
 
 
 @BindingAdapter("discountFormatted")
 fun TextView.setDiscountFormatted(data: DailyOrdersUiModel){
     if (data.discountAmount > 0) {
-        text = String.format("Discount = ₹%.0f", data.discountAmount)
+        text = String.format("Discount  ₹%.0f", data.discountAmount)
     } else {
         text = ""
     }
@@ -38,22 +46,22 @@ fun TextView.setDiscountFormatted(data: DailyOrdersUiModel){
 
 @BindingAdapter("totalPriceFormatted")
 fun TextView.setTotalPriceFormatted(data: DailyOrdersUiModel){
-    if(data.orderAmount > 0) {
 
+    if(data.orderAmount <= 0) {
+        text = ""
+        return
+    }
+
+    if (data.discountAmount > 0) {
         val markupPrice = String.format("₹%.0f", data.orderAmount + data.discountAmount)
-        val content = String.format("Payable = %s ₹%.0f", markupPrice, data.orderAmount)
-        val spannableString = SpannableString(content)
+        val payableString = String.format("Payable  %s ₹%.0f %s", markupPrice, data.orderAmount, data.paymentStatus)
+        val spannableString = SpannableString(payableString)
         spannableString.setSpan(StrikethroughSpan(),10,10+markupPrice.length,0)
         spannableString.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),10,10+markupPrice.length,0)
 
-        if (data.discountAmount > 0) {
-            text = spannableString
-        } else {
-            text = String.format("Payable = ₹%.0f", data.orderAmount)
-        }
-
-    } else{
-        text = ""
+        text = spannableString
+    } else {
+        text = String.format("Payable  ₹%.0f  %s", data.orderAmount, data.paymentStatus)
     }
 }
 
@@ -66,7 +74,7 @@ fun TextView.setTotalAmountFormatted(list: List<DailyOrdersUiModel>?){
                 !element.paymentStatus.equals("PAID"))
             totalAmount += (element.orderAmount)
         }
-        text = String.format("Total = ₹ %.0f", totalAmount)
+        text = String.format("Total  ₹%.0f", totalAmount)
     }
 }
 
@@ -81,15 +89,16 @@ fun TextView.setStatusFormatted(data: DailyOrdersUiModel){
         firstStatus = data.deliveryStatus
     }
 
-    text = String.format("%s\n%s", firstStatus, data.paymentStatus)
+    text = String.format("%s", firstStatus)
 }
 
 
 @BindingAdapter("buttonVisibilityFormatted")
 fun Button.setButtonVisibilityFormatted(data: DailyOrdersUiModel){
     if (data.isFreezed.equals(false) &&
-        data.orderStatus.equals("ORDERED") ||
-        data.orderStatus.isBlank()){
+        data.availableQuantity > 0 &&
+        (data.orderStatus.equals("ORDERED") ||
+        data.orderStatus.isBlank())){
         visibility = View.VISIBLE
     } else{
         visibility = View.INVISIBLE
