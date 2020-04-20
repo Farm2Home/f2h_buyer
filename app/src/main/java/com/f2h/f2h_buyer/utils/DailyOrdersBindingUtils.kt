@@ -82,14 +82,24 @@ fun TextView.setTotalAmountFormatted(list: List<DailyOrdersUiModel>?){
 @BindingAdapter("statusFormatted")
 fun TextView.setStatusFormatted(data: DailyOrdersUiModel){
 
-    var firstStatus: String = data.orderStatus
+    var displayedStatus: String = data.orderStatus
 
     if (data.deliveryStatus.equals("DELIVERY_STARTED") ||
         data.deliveryStatus.equals("DELIVERED")){
-        firstStatus = data.deliveryStatus
+        displayedStatus = data.deliveryStatus
     }
 
-    text = String.format("%s", firstStatus)
+    val colouredText = SpannableString(displayedStatus)
+    var color = Color.DKGRAY
+    when (displayedStatus) {
+        "ORDERED" -> color = Color.parseColor("#FF9800")
+        "CONFIRMED" -> color = Color.parseColor("#FF9800")
+        "REJECTED" -> color = Color.parseColor("#F44336")
+        "DELIVERED" -> color = Color.parseColor("#4CAF50")
+    }
+    colouredText.setSpan(ForegroundColorSpan(color),0, displayedStatus.length,0)
+
+    text = colouredText
 }
 
 
