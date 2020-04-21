@@ -21,6 +21,7 @@ data class OrderJson (
     @Json(name = "payment_status") val paymentStatus: String? = "",
     @Json(name = "delivery_status") val deliveryStatus: String? = "",
     @Json(name = "delivery_comment") val deliveryComment: String? = "",
+    @Json(name = "order_comment") val orderComment: String? = "",
     @Json(name = "delivered_date") val deliveredDate: String? = "",
     @Json(name = "delivery_time_slot")  val deliveryTimeSlot: String? = "",
     @Json(name = "ordered_date") val orderedDate: String? = "",
@@ -46,6 +47,7 @@ data class Order (
     var paymentStatus: String? = "",
     var deliveryStatus: String? = "",
     var deliveryComment: String? = "",
+    var orderComment: String? = "",
     var deliveredDate: String? = "",
     var deliveryTimeSlot: String? = "",
     var orderedDate: String? = "",
@@ -76,6 +78,7 @@ class OrderAdapter {
         order.deliveredDate = orderJson.deliveredDate ?: ""
         order.deliveryTimeSlot = orderJson.deliveryTimeSlot ?: ""
         order.orderedDate = orderJson.orderedDate ?: ""
+        order.orderComment = orderJson.orderComment ?: ""
         order.createdBy = orderJson.createdBy ?: ""
         order.updatedBy = orderJson.updatedBy ?: ""
         return order

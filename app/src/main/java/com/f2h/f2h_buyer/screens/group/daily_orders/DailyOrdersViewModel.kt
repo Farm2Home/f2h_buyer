@@ -114,6 +114,8 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
             uiElement.orderStatus = order.orderStatus ?: ""
             uiElement.paymentStatus = order.paymentStatus ?: ""
             uiElement.deliveryStatus = order.deliveryStatus ?: ""
+            uiElement.orderComment = order.orderComment ?: ""
+            uiElement.deliveryComment = order.deliveryComment ?: ""
 
             allUiData.add(uiElement)
         }

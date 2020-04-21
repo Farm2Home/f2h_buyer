@@ -38,6 +38,19 @@ fun TextView.setDiscountFormatted(data: DailyOrdersUiModel){
 }
 
 
+@BindingAdapter("commentFormatted")
+fun TextView.setCommentFormatted(data: DailyOrdersUiModel){
+
+    if(data.orderStatus.equals("REJECTED")){
+        text = data.orderComment
+    }
+
+    if(data.deliveryStatus.equals("DELIVERED")){
+        text = data.deliveryComment
+    }
+}
+
+
 
 @BindingAdapter("totalPriceFormatted")
 fun TextView.setTotalPriceFormatted(data: DailyOrdersUiModel){

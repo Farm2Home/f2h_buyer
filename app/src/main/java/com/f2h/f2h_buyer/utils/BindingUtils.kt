@@ -9,25 +9,6 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 
-@BindingAdapter("availableDateFormatted")
-fun TextView.setAvailableDateFormatted(item: Item?){
-    item?.let {
-        val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val formatter: DateFormat = SimpleDateFormat("MMM-dd-yyy")
-        var formattedDate: String = ""
-
-        try {
-            var date = item.itemAvailability.get(0).availableDate
-            formattedDate = formatter.format(parser.parse(date))
-        }catch (e: Exception){
-            println(e)
-        }
-
-        text = "Earliest Available - " + formattedDate
-    }
-}
-
-
 @BindingAdapter("priceFormattedFromItem")
 fun TextView.setPriceFormattedFromItem(data: Item?){
     data?.let {
