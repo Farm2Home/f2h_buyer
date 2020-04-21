@@ -47,17 +47,18 @@ fun TextView.setTotalPriceFormatted(data: DailyOrdersUiModel){
         return
     }
 
+    var markupPrice = ""
     if (data.discountAmount > 0) {
-        val markupPrice = String.format("₹%.0f", data.orderAmount + data.discountAmount)
-        val payableString = String.format("Payable  %s ₹%.0f %s", markupPrice, data.orderAmount, data.paymentStatus)
-        val spannableString = SpannableString(payableString)
-        spannableString.setSpan(StrikethroughSpan(),9,10+markupPrice.length,0)
-        spannableString.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),9,10+markupPrice.length,0)
-
-        text = spannableString
-    } else {
-        text = String.format("Payable  ₹%.0f  %s", data.orderAmount, data.paymentStatus)
+        markupPrice = String.format("₹%.0f", data.orderAmount + data.discountAmount)
     }
+
+    val payableString = String.format("Payable  %s ₹%.0f \n%s", markupPrice, data.orderAmount, data.paymentStatus)
+    val payableStringFormatted = SpannableString(payableString)
+    payableStringFormatted.setSpan(StrikethroughSpan(),9,10+markupPrice.length,0)
+    payableStringFormatted.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),9,10+markupPrice.length,0)
+    payableStringFormatted.setSpan(RelativeSizeSpan(0.6F), payableString.length-data.paymentStatus.length, payableString.length,0)
+
+    text = payableStringFormatted
 }
 
 @BindingAdapter("totalAmountFormatted")
