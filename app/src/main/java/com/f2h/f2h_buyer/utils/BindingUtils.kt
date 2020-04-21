@@ -23,7 +23,7 @@ fun TextView.setAvailableDateFormatted(item: Item?){
             println(e)
         }
 
-        text = "Next Available - " + formattedDate
+        text = "Earliest Available - " + formattedDate
     }
 }
 

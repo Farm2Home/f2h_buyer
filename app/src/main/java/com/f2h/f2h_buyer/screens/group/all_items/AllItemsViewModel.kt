@@ -103,7 +103,7 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
 
         item.itemAvailability.forEach{itemAvailability ->
             val date = parser.parse(itemAvailability.availableDate)
-            if(date > todaysDate.time){
+            if(date >= todaysDate.time){
                 upcomingItemAvailabilities.add(itemAvailability)
             }
         }
