@@ -24,11 +24,6 @@ fun TextView.setPriceFormatted(data: DailyOrdersUiModel?){
 @BindingAdapter("orderedQuantityFormatted")
 fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
     var orderedString = String.format("%s  %s",data.orderedQuantity, data.orderUom)
-
-    if(data.orderStatus.equals("ORDERED")){
-        orderedString = String.format("%s\n(%s)", orderedString, data.availableQuantity)
-    }
-
     text = orderedString
 }
 
@@ -56,8 +51,8 @@ fun TextView.setTotalPriceFormatted(data: DailyOrdersUiModel){
         val markupPrice = String.format("₹%.0f", data.orderAmount + data.discountAmount)
         val payableString = String.format("Payable  %s ₹%.0f %s", markupPrice, data.orderAmount, data.paymentStatus)
         val spannableString = SpannableString(payableString)
-        spannableString.setSpan(StrikethroughSpan(),10,10+markupPrice.length,0)
-        spannableString.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),10,10+markupPrice.length,0)
+        spannableString.setSpan(StrikethroughSpan(),9,10+markupPrice.length,0)
+        spannableString.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),9,10+markupPrice.length,0)
 
         text = spannableString
     } else {
@@ -70,11 +65,9 @@ fun TextView.setTotalAmountFormatted(list: List<DailyOrdersUiModel>?){
     if (list != null) {
         var totalAmount = (0).toFloat()
         list.forEach { element ->
-            if (!element.orderStatus.equals("REJECTED") &&
-                !element.paymentStatus.equals("PAID"))
             totalAmount += (element.orderAmount)
         }
-        text = String.format("Total  ₹%.0f", totalAmount)
+        text = String.format("₹%.0f", totalAmount)
     }
 }
 
