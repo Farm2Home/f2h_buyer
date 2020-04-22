@@ -56,7 +56,7 @@ class DailyOrdersFragment : Fragment() {
 
         // Initial settings for the horizontal calendar
         val startDate: Calendar = Calendar.getInstance()
-        startDate.add(Calendar.DATE, 0)
+        startDate.add(Calendar.DATE, -4)
         val endDate: Calendar = Calendar.getInstance()
         endDate.add(Calendar.DATE, 7)
 
