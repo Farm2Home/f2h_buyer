@@ -10,6 +10,7 @@ data class DailyOrdersUiModel (
     var itemUom: String = "",
     var orderId: Long = 0,
     var orderedQuantity: Float = 0F,
+    var confirmedQuantity: Float = 0F,
     var availableQuantity: Float = 0F,
     var orderUom: String = "",
     var orderAmount: Float = 0F,

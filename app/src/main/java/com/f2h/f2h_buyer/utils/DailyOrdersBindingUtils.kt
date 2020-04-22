@@ -24,6 +24,9 @@ fun TextView.setPriceFormatted(data: DailyOrdersUiModel?){
 @BindingAdapter("orderedQuantityFormatted")
 fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
     var orderedString = String.format("%s  %s",data.orderedQuantity, data.orderUom)
+    if (data.orderStatus.equals("CONFIRMED")){
+        orderedString = String.format("%s  %s",data.confirmedQuantity, data.orderUom)
+    }
     text = orderedString
 }
 
@@ -41,13 +44,15 @@ fun TextView.setDiscountFormatted(data: DailyOrdersUiModel){
 @BindingAdapter("commentFormatted")
 fun TextView.setCommentFormatted(data: DailyOrdersUiModel){
 
-    if(data.orderStatus.equals("REJECTED")){
+    if(data.orderStatus.equals("REJECTED") ||
+       data.deliveryStatus.equals("CONFIRMED")){
         text = data.orderComment
     }
 
     if(data.deliveryStatus.equals("DELIVERED")){
         text = data.deliveryComment
     }
+
 }
 
 
@@ -73,6 +78,8 @@ fun TextView.setTotalPriceFormatted(data: DailyOrdersUiModel){
 
     text = payableStringFormatted
 }
+
+
 
 @BindingAdapter("totalAmountFormatted")
 fun TextView.setTotalAmountFormatted(list: List<DailyOrdersUiModel>?){
@@ -108,6 +115,7 @@ fun TextView.setStatusFormatted(data: DailyOrdersUiModel){
 
     text = colouredText
 }
+
 
 
 @BindingAdapter("buttonVisibilityFormatted")
