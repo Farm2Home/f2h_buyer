@@ -1,6 +1,5 @@
 package com.f2h.f2h_buyer.network
 
-import com.f2h.f2h_buyer.network.models.Item
 import com.f2h.f2h_buyer.network.models.ItemAvailability
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
@@ -9,7 +8,6 @@ import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 private const val BASE_URL = "http://f2h.herokuapp.com/"
