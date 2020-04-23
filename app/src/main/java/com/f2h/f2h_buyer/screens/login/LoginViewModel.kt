@@ -49,12 +49,12 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
     private suspend fun saveSession(updatedUserData: User, preSavedSession: SessionEntity) {
         return withContext(Dispatchers.IO) {
             database.clearSessions()
-            preSavedSession.address = updatedUserData.address
-            preSavedSession.email = updatedUserData.email
-            preSavedSession.userId = updatedUserData.userId
-            preSavedSession.mobile = updatedUserData.mobile
-            preSavedSession.userName = updatedUserData.userName
-            preSavedSession.password = updatedUserData.password
+            preSavedSession.address = updatedUserData.address ?: ""
+            preSavedSession.email = updatedUserData.email ?: ""
+            preSavedSession.userId = updatedUserData.userId ?: -1L
+            preSavedSession.mobile = updatedUserData.mobile ?: ""
+            preSavedSession.userName = updatedUserData.userName ?: ""
+            preSavedSession.password = updatedUserData.password ?: ""
             database.insert(preSavedSession)
         }
     }

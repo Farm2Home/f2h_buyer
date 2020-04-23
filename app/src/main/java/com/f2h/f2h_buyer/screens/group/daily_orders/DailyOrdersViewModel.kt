@@ -78,11 +78,11 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
-        val jsonAdapter: JsonAdapter<Item> = moshi.adapter<Item>(Item::class.java)
+        val jsonAdapter: JsonAdapter<Item> = moshi.adapter(Item::class.java)
 
         orders.forEach { order ->
             var uiElement = DailyOrdersUiModel()
-            var item: Item = Item()
+            var item = Item()
             try {
                 item = jsonAdapter.fromJson(order.orderDescription) ?: Item()
             } catch (e: Exception){
@@ -91,19 +91,22 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
 
             // Check item availability for the order. freezed etc
             itemAvailabilitys.forEach { availability ->
-                if (availability.itemAvailabilityId.equals(order.itemAvailabilityId)) {
-                    uiElement.isFreezed = availability.isFreezed
-                    uiElement.availableQuantity = availability.availableQuantity
+                if (availability.itemAvailabilityId != null) {
+                    if (availability.itemAvailabilityId.equals(order.itemAvailabilityId)) {
+                        uiElement.isFreezed = availability.isFreezed ?: false
+                        uiElement.availableQuantity = availability.availableQuantity ?: 0F
+                    }
                 }
             }
 
             if (item != null) {
-                uiElement.itemId = item.itemId
-                uiElement.itemName = item.itemName
-                uiElement.itemDescription = item.description
-                uiElement.itemUom = item.uom
-                uiElement.farmerName = item.farmerUserName
-                uiElement.price = item.pricePerUnit
+                uiElement.itemId = item.itemId ?: -1
+                uiElement.itemName = item.itemName ?: ""
+                uiElement.itemDescription = item.description ?: ""
+                uiElement.itemUom = item.uom ?: ""
+                uiElement.farmerName = item.farmerUserName ?: ""
+                uiElement.price = item.pricePerUnit ?: 0F
+                uiElement.orderQtyJump = item.orderQtyJump ?: 0F
             }
             uiElement.orderedDate = df.format(df.parse(order.orderedDate))
             uiElement.orderedQuantity = order.orderedQuantity ?: 0F

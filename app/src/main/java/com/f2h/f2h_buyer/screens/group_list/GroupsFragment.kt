@@ -58,7 +58,7 @@ class GroupsFragment : Fragment() {
 
     fun onGroupSelected(group: Group){
         viewModel.updateSessionWithGroupInfo(group)
-        val action = GroupsFragmentDirections.actionGroupsFragmentToGroupDetailsTabsFragment(group.groupName)
+        val action = GroupsFragmentDirections.actionGroupsFragmentToGroupDetailsTabsFragment(group.groupName ?: "")
         view?.let { Navigation.findNavController(it).navigate(action) }
     }
 

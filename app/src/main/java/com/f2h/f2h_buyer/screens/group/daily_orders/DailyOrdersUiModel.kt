@@ -12,6 +12,7 @@ data class DailyOrdersUiModel (
     var orderedQuantity: Float = 0F,
     var confirmedQuantity: Float = 0F,
     var availableQuantity: Float = 0F,
+    var orderQtyJump: Float = 0F,
     var orderUom: String = "",
     var orderAmount: Float = 0F,
     var orderStatus: String = "",
