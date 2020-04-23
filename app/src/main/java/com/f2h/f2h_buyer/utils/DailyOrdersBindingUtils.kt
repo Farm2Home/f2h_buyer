@@ -43,16 +43,12 @@ fun TextView.setDiscountFormatted(data: DailyOrdersUiModel){
 
 @BindingAdapter("commentFormatted")
 fun TextView.setCommentFormatted(data: DailyOrdersUiModel){
-
-    if(data.orderStatus.equals("REJECTED") ||
-       data.deliveryStatus.equals("CONFIRMED")){
-        text = data.orderComment
-    }
-
+    var comment = data.orderComment
     if(data.deliveryStatus.equals("DELIVERED")){
-        text = data.deliveryComment
+        comment = data.deliveryComment
     }
 
+    text = comment
 }
 
 
