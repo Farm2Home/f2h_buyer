@@ -94,7 +94,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
                 if (availability.itemAvailabilityId != null) {
                     if (availability.itemAvailabilityId.equals(order.itemAvailabilityId)) {
                         uiElement.isFreezed = availability.isFreezed ?: false
-                        uiElement.availableQuantity = availability.availableQuantity ?: 0F
+                        uiElement.availableQuantity = availability.availableQuantity ?: 0.0
                     }
                 }
             }
@@ -105,16 +105,16 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
                 uiElement.itemDescription = item.description ?: ""
                 uiElement.itemUom = item.uom ?: ""
                 uiElement.farmerName = item.farmerUserName ?: ""
-                uiElement.price = item.pricePerUnit ?: 0F
-                uiElement.orderQtyJump = item.orderQtyJump ?: 0F
+                uiElement.price = item.pricePerUnit ?: 0.0
+                uiElement.orderQtyJump = item.orderQtyJump ?: 0.0
             }
             uiElement.orderedDate = df.format(df.parse(order.orderedDate))
-            uiElement.orderedQuantity = order.orderedQuantity ?: 0F
-            uiElement.confirmedQuantity = order.confirmedQuantity ?: 0F
+            uiElement.orderedQuantity = order.orderedQuantity ?: 0.0
+            uiElement.confirmedQuantity = order.confirmedQuantity ?: 0.0
             uiElement.orderUom = order.uom ?: ""
             uiElement.orderId = order.orderId ?: -1L
-            uiElement.orderAmount = order.orderedAmount ?: 0F
-            uiElement.discountAmount = order.discountAmount ?: 0F
+            uiElement.orderAmount = order.orderedAmount ?: 0.0
+            uiElement.discountAmount = order.discountAmount ?: 0.0
             uiElement.orderStatus = order.orderStatus ?: ""
             uiElement.paymentStatus = order.paymentStatus ?: ""
             uiElement.deliveryStatus = order.deliveryStatus ?: ""
@@ -135,7 +135,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         var filteredItems = ArrayList<DailyOrdersUiModel>()
         elements.forEach {element ->
             if (isDateEqual(element.orderedDate, df.format(selectedDate))){
-                    filteredItems.add(element)
+                    filteredItems.add(element.copy())
             }
         }
         return filteredItems
@@ -168,16 +168,41 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     }
 
 
-
+    // increase order qty till max available qty
     fun increaseOrderQuantity(updateElement: DailyOrdersUiModel){
-        _visibleUiData.value?.forEach { visibleUiElement ->
-            if (visibleUiElement.orderId.equals(updateElement.orderId)){
-                visibleUiElement.orderedQuantity = visibleUiElement.orderedQuantity + visibleUiElement.orderQtyJump
+        _visibleUiData.value?.forEach { uiElement ->
+            if (uiElement.orderId.equals(updateElement.orderId)){
+                uiElement.orderedQuantity = uiElement.orderedQuantity.plus(uiElement.orderQtyJump)
+
+                if (uiElement.orderedQuantity > uiElement.availableQuantity) uiElement.orderedQuantity = uiElement.availableQuantity
+                uiElement.orderAmount = calculateOrderAmount(uiElement)
             }
         }
-        _visibleUiData.value = filterVisibleItems(allUiData)
+        _visibleUiData.value = _visibleUiData.value
     }
 
+
+    // decrease order qty till min 0
+    fun decreaseOrderQuantity(updateElement: DailyOrdersUiModel){
+        _visibleUiData.value?.forEach { uiElement ->
+            if (uiElement.orderId.equals(updateElement.orderId)){
+                uiElement.orderedQuantity = uiElement.orderedQuantity.minus(uiElement.orderQtyJump)
+
+                if (uiElement.orderedQuantity < 0) uiElement.orderedQuantity = 0.0
+                uiElement.orderAmount = calculateOrderAmount(uiElement)
+            }
+        }
+        _visibleUiData.value = _visibleUiData.value
+    }
+
+
+    private fun calculateOrderAmount(uiElement: DailyOrdersUiModel): Double {
+        return uiElement.orderedQuantity.times(uiElement.price)
+    }
+
+
+    fun onClickSaveButton() {
+    }
 
     override fun onCleared() {
         super.onCleared()

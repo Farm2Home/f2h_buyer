@@ -9,10 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.f2h.f2h_buyer.databinding.ListOrderedItemsBinding
 
 class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
-                          val increaseButtonClickListener: IncreaseButtonClickListener): ListAdapter<DailyOrdersUiModel, OrderedItemsAdapter.ViewHolder>(ListItemDiffCallback()) {
+                          val increaseButtonClickListener: IncreaseButtonClickListener,
+                          val decreaseButtonClickListener: DecreaseButtonClickListener): ListAdapter<DailyOrdersUiModel, OrderedItemsAdapter.ViewHolder>(ListItemDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position)!!, clickListener, increaseButtonClickListener)
+        holder.bind(getItem(position)!!, clickListener, increaseButtonClickListener, decreaseButtonClickListener)
     }
 
 
@@ -26,11 +27,13 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
         fun bind(
             item: DailyOrdersUiModel,
             clickListener: OrderedItemClickListener,
-            increaseButtonClickListener: IncreaseButtonClickListener
+            increaseButtonClickListener: IncreaseButtonClickListener,
+            decreaseButtonClickListener: DecreaseButtonClickListener
         ) {
             binding.uiModel = item
             binding.clickListener = clickListener
             binding.increaseButtonClickListener = increaseButtonClickListener
+            binding.decreaseButtonClickListener = decreaseButtonClickListener
             binding.executePendingBindings()
         }
 
@@ -61,5 +64,9 @@ class OrderedItemClickListener(val clickListener: (uiModel: DailyOrdersUiModel) 
 }
 
 class IncreaseButtonClickListener(val clickListener: (uiModel: DailyOrdersUiModel) -> Unit) {
+    fun onClick(uiModel: DailyOrdersUiModel) = clickListener(uiModel)
+}
+
+class DecreaseButtonClickListener(val clickListener: (uiModel: DailyOrdersUiModel) -> Unit) {
     fun onClick(uiModel: DailyOrdersUiModel) = clickListener(uiModel)
 }

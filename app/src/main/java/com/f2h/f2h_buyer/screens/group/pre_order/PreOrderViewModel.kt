@@ -71,7 +71,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
             var row = TableComponent()
             row.id = availability.itemAvailabilityId ?: 0L
             row.date = formatDate(availability.availableDate ?: "")
-            row.quantity = order[0].orderedQuantity ?: (0).toFloat()
+            row.quantity = order[0].orderedQuantity ?: (0).toDouble()
             row.uom = order[0].uom ?: ""
             list.add(row)
         }

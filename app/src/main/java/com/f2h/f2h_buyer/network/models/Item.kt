@@ -10,8 +10,8 @@ data class Item (
     @Json(name = "item_name") var itemName: String? = "",
     @Json(name = "description") var description: String? = "",
     @Json(name = "uom") var uom: String? = "",
-    @Json(name = "price_per_unit") var pricePerUnit: Float? = 0F,
-    @Json(name = "confirm_qty_jump") var confirmQtyJump: Float? = 0F,
-    @Json(name = "order_qty_jump") var orderQtyJump: Float? = 0F,
+    @Json(name = "price_per_unit") var pricePerUnit: Double? = 0.0,
+    @Json(name = "confirm_qty_jump") var confirmQtyJump: Double? = 0.0,
+    @Json(name = "order_qty_jump") var orderQtyJump: Double? = 0.0,
     @Json(name = "item_availability") var itemAvailability: List<ItemAvailability> = listOf()
 )

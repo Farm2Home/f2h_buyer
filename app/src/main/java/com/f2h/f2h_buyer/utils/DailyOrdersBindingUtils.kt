@@ -24,14 +24,24 @@ fun TextView.setPriceFormatted(data: DailyOrdersUiModel?){
 @BindingAdapter("orderedQuantityFormatted")
 fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
     var freezeString = ""
+
     if (isOrderFreezed(data)){
-        freezeString = "\nFREEZED"
+        freezeString = "\nFreezed"
     }
 
-    var orderedString = String.format("%s  %s%s",data.orderedQuantity, data.orderUom, freezeString)
-    if (data.orderStatus.equals("CONFIRMED")){
-        orderedString = String.format("%s  %s%s",data.confirmedQuantity, data.orderUom, freezeString)
+    if (data.orderedQuantity >= data.availableQuantity) {
+        freezeString = "\nOut of stock"
     }
+
+    if (data.orderedQuantity <= 0) {
+        freezeString = "\nDelete order"
+    }
+
+    var orderedString = String.format("%.2f  %s%s",data.orderedQuantity, data.orderUom, freezeString)
+    if (data.orderStatus.equals("CONFIRMED")){
+        orderedString = String.format("%.2f  %s%s",data.confirmedQuantity, data.orderUom, freezeString)
+    }
+
     text = orderedString
 }
 
@@ -85,7 +95,7 @@ fun TextView.setTotalPriceFormatted(data: DailyOrdersUiModel){
 @BindingAdapter("totalAmountFormatted")
 fun TextView.setTotalAmountFormatted(list: List<DailyOrdersUiModel>?){
     if (list != null) {
-        var totalAmount = (0).toFloat()
+        var totalAmount = (0).toDouble()
         list.forEach { element ->
             totalAmount += (element.orderAmount)
         }
