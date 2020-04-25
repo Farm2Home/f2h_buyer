@@ -167,10 +167,16 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         _visibleUiData.value = filterVisibleItems(allUiData)
     }
 
-//    fun updateSelectedTimeSlot(timeSlot: String){
-//        selectedTimeSlot = timeSlot
-//        _allItems.value?.let { _visibleItems.value = filterVisibleItems(it) }
-//    }
+
+
+    fun increaseOrderQuantity(updateElement: DailyOrdersUiModel){
+        _visibleUiData.value?.forEach { visibleUiElement ->
+            if (visibleUiElement.orderId.equals(updateElement.orderId)){
+                visibleUiElement.orderedQuantity = visibleUiElement.orderedQuantity + visibleUiElement.orderQtyJump
+            }
+        }
+        _visibleUiData.value = filterVisibleItems(allUiData)
+    }
 
 
     override fun onCleared() {

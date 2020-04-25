@@ -23,9 +23,14 @@ fun TextView.setPriceFormatted(data: DailyOrdersUiModel?){
 
 @BindingAdapter("orderedQuantityFormatted")
 fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
-    var orderedString = String.format("%s  %s",data.orderedQuantity, data.orderUom)
+    var freezeString = ""
+    if (isOrderFreezed(data)){
+        freezeString = "\nFREEZED"
+    }
+
+    var orderedString = String.format("%s  %s%s",data.orderedQuantity, data.orderUom, freezeString)
     if (data.orderStatus.equals("CONFIRMED")){
-        orderedString = String.format("%s  %s",data.confirmedQuantity, data.orderUom)
+        orderedString = String.format("%s  %s%s",data.confirmedQuantity, data.orderUom, freezeString)
     }
     text = orderedString
 }
@@ -116,12 +121,19 @@ fun TextView.setStatusFormatted(data: DailyOrdersUiModel){
 
 @BindingAdapter("buttonVisibilityFormatted")
 fun Button.setButtonVisibilityFormatted(data: DailyOrdersUiModel){
-    if (data.isFreezed.equals(false) &&
-        data.availableQuantity > 0 &&
-        (data.orderStatus.equals("ORDERED") ||
-        data.orderStatus.isBlank())){
-        visibility = View.VISIBLE
-    } else{
+    if (isOrderFreezed(data)){
         visibility = View.INVISIBLE
+    } else{
+        visibility = View.VISIBLE
     }
+}
+
+
+private fun isOrderFreezed(data: DailyOrdersUiModel) : Boolean {
+    if (data.isFreezed.equals(false) &&
+       (data.orderStatus.equals("ORDERED") ||
+        data.orderStatus.isBlank())){
+        return false
+    }
+    return true
 }

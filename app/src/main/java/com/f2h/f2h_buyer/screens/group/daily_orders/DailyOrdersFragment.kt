@@ -37,13 +37,21 @@ class DailyOrdersFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = inflate(inflater, R.layout.fragment_daily_orders, container, false)
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        return binding.root
+    }
 
-        // Item list recycler view
-        val adapter = OrderedItemsAdapter(OrderedItemClickListener { item ->
-            navigateToPreOrderPage(item)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Daily Orders List recycler view
+        val adapter = OrderedItemsAdapter(OrderedItemClickListener { uiDataElement ->
+            navigateToPreOrderPage(uiDataElement)
+        }, IncreaseButtonClickListener { uiDataElement ->
+            viewModel.increaseOrderQuantity(uiDataElement)
         })
         binding.itemListRecyclerView.adapter = adapter
         viewModel.visibleUiData.observe(viewLifecycleOwner, Observer {
@@ -62,10 +70,10 @@ class DailyOrdersFragment : Fragment() {
         val horizontalCalendar: HorizontalCalendar = HorizontalCalendar.Builder(binding.root, R.id.calendarView)
             .range(startDate, endDate)
             .configure()
-                .textSize(12F,12F,12F)
-                .showTopText(false)
-                .showBottomText(false)
-                .formatMiddleText("   MMM\ndd-EEE")
+            .textSize(12F,12F,12F)
+            .showTopText(false)
+            .showBottomText(false)
+            .formatMiddleText("   MMM\ndd-EEE")
             .end()
             .defaultSelectedDate(Calendar.getInstance())
             .build()
@@ -79,23 +87,6 @@ class DailyOrdersFragment : Fragment() {
         })
 
 
-//        // Dropdown menu on item selected
-//        binding.spinner.setOnItemSelectedListener(object : OnItemSelectedListener {
-//            override fun onItemSelected(
-//                parentView: AdapterView<*>?,
-//                selectedItemView: View?,
-//                position: Int,
-//                id: Long
-//            ) {
-//                viewModel.updateSelectedTimeSlot(binding.spinner.selectedItem.toString())
-//            }
-//
-//            override fun onNothingSelected(parentView: AdapterView<*>?) {
-//                // your code here
-//            }
-//        })
-
-
         // Progress Bar loader
         viewModel.isProgressBarActive.observe(viewLifecycleOwner, Observer { isProgressBarActive ->
             if(isProgressBarActive){
@@ -104,12 +95,13 @@ class DailyOrdersFragment : Fragment() {
                 binding.progressBar.visibility = View.GONE
             }
         })
-
-        return binding.root
     }
+
+
 
     private fun navigateToPreOrderPage(uiData: DailyOrdersUiModel) {
         val action = GroupDetailsTabsFragmentDirections.actionGroupDetailsTabsFragmentToPreOrderFragment(uiData.itemId)
         view?.let { Navigation.findNavController(it).navigate(action) }
     }
+
 }

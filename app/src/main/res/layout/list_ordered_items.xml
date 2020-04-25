@@ -10,6 +10,9 @@
         <variable
             name="clickListener"
             type="com.f2h.f2h_buyer.screens.group.daily_orders.OrderedItemClickListener" />
+        <variable
+            name="increaseButtonClickListener"
+            type="com.f2h.f2h_buyer.screens.group.daily_orders.IncreaseButtonClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -91,6 +94,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="20dp"
                     android:text="+"
+                    android:onClick="@{() -> increaseButtonClickListener.onClick(uiModel)}"
                     app:buttonVisibilityFormatted="@{uiModel}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
