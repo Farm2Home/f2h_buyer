@@ -9,6 +9,7 @@ data class DailyOrdersUiModel (
     var price: Double = 0.0,
     var itemUom: String = "",
     var orderId: Long = 0,
+    var quantityChange: Double = 0.0,
     var orderedQuantity: Double = 0.0,
     var confirmedQuantity: Double = 0.0,
     var availableQuantity: Double = 0.0,

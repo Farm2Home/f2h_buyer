@@ -28,7 +28,7 @@ fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
         freezeString = "\nFreezed"
     }
 
-    if (data.orderedQuantity >= data.availableQuantity) {
+    if (data.quantityChange >= data.availableQuantity) {
         freezeString = "\nOut of stock"
     }
 

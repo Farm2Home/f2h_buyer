@@ -12,6 +12,7 @@ import com.f2h.f2h_buyer.network.OrderApi
 import com.f2h.f2h_buyer.network.models.Item
 import com.f2h.f2h_buyer.network.models.ItemAvailability
 import com.f2h.f2h_buyer.network.models.Order
+import com.f2h.f2h_buyer.network.models.OrderUpdate
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -35,6 +36,10 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     private var _selectedDate = MutableLiveData<Date>()
     val selectedDate: LiveData<Date>
         get() = _selectedDate
+
+    private var _toastMessage = MutableLiveData<String>()
+    val toastMessage: LiveData<String>
+        get() = _toastMessage
 
     private val sessionData = MutableLiveData<SessionEntity>()
 
@@ -177,8 +182,14 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         _visibleUiData.value?.forEach { uiElement ->
             if (uiElement.orderId.equals(updateElement.orderId)){
                 uiElement.orderedQuantity = uiElement.orderedQuantity.plus(uiElement.orderQtyJump)
+                uiElement.quantityChange = uiElement.quantityChange.plus(uiElement.orderQtyJump)
 
-                if (uiElement.orderedQuantity > uiElement.availableQuantity) uiElement.orderedQuantity = uiElement.availableQuantity
+                // logic to prevent increasing quantity beyond maximum
+                if (uiElement.quantityChange > uiElement.availableQuantity) {
+                    uiElement.orderedQuantity = uiElement.orderedQuantity.minus(uiElement.orderQtyJump)
+                    uiElement.quantityChange = uiElement.quantityChange.minus(uiElement.orderQtyJump)
+                }
+
                 uiElement.orderAmount = calculateOrderAmount(uiElement)
             }
         }
@@ -191,7 +202,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         _visibleUiData.value?.forEach { uiElement ->
             if (uiElement.orderId.equals(updateElement.orderId)){
                 uiElement.orderedQuantity = uiElement.orderedQuantity.minus(uiElement.orderQtyJump)
-
+                uiElement.quantityChange = uiElement.quantityChange.minus(uiElement.orderQtyJump)
                 if (uiElement.orderedQuantity < 0) uiElement.orderedQuantity = 0.0
                 uiElement.orderAmount = calculateOrderAmount(uiElement)
             }
@@ -206,6 +217,34 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
 
 
     fun onClickSaveButton() {
+        _isProgressBarActive.value = true
+        var orderUpdates = arrayListOf<OrderUpdate>()
+        _visibleUiData.value?.forEach { uiElement ->
+            var orderUpdate = OrderUpdate(
+                orderId = uiElement.orderId,
+                discountAmount = uiElement.discountAmount,
+                orderedAmount = uiElement.orderAmount,
+                orderedQuantity = uiElement.orderedQuantity
+            )
+            orderUpdates.add(orderUpdate)
+        }
+
+        coroutineScope.launch {
+            var updateOrdersDataDeferred = OrderApi.retrofitService.updateOrders(orderUpdates)
+            try{
+                var orders = updateOrdersDataDeferred.await()
+                getItemsAndAvailabilitiesForGroup()
+            } catch (t:Throwable){
+                println(t.message)
+                _toastMessage.value = "Out of stock"
+            }
+            _isProgressBarActive.value = false
+        }
+    }
+
+
+    fun onClickCancelButton() {
+        _visibleUiData.value = filterVisibleItems(allUiData)
     }
 
     override fun onCleared() {

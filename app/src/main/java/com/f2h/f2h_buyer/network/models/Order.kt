@@ -27,3 +27,11 @@ data class Order (
     @Json(name = "created_by") val createdBy: String? = "",
     @Json(name = "updated_by") val updatedBy: String? = ""
 )
+
+
+data class OrderUpdate (
+    @Json(name = "order_id") var orderId: Long?,
+    @Json(name = "ordered_quantity") var orderedQuantity: Double?,
+    @Json(name = "ordered_amount") var orderedAmount: Double?,
+    @Json(name = "discount_amount") var discountAmount: Double?
+)
