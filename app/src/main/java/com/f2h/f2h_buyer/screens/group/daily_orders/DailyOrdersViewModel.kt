@@ -32,8 +32,11 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     val visibleUiData: LiveData<MutableList<DailyOrdersUiModel>>
         get() = _visibleUiData
 
+    private var _selectedDate = MutableLiveData<Date>()
+    val selectedDate: LiveData<Date>
+        get() = _selectedDate
+
     private val sessionData = MutableLiveData<SessionEntity>()
-    private var selectedDate = Calendar.getInstance().time
 
 
     private val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
@@ -43,6 +46,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
 
 
     init {
+        _selectedDate.value = Calendar.getInstance().time
         _isProgressBarActive.value = true
         getItemsAndAvailabilitiesForGroup()
     }
@@ -134,7 +138,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     private fun filterVisibleItems(elements: List<DailyOrdersUiModel>): ArrayList<DailyOrdersUiModel> {
         var filteredItems = ArrayList<DailyOrdersUiModel>()
         elements.forEach {element ->
-            if (isDateEqual(element.orderedDate, df.format(selectedDate))){
+            if (isDateEqual(element.orderedDate, df.format(_selectedDate.value))){
                     filteredItems.add(element.copy())
             }
         }
@@ -163,7 +167,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
 
 
     fun updateSelectedDate(date: Date){
-        selectedDate = date
+        _selectedDate.value = date
         _visibleUiData.value = filterVisibleItems(allUiData)
     }
 

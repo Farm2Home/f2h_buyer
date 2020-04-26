@@ -2,7 +2,6 @@ package com.f2h.f2h_buyer.utils
 
 import android.graphics.Color
 import android.text.SpannableString
-import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StrikethroughSpan
@@ -37,12 +36,19 @@ fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
         freezeString = "\nDelete order"
     }
 
-    var orderedString = String.format("%.2f  %s%s",data.orderedQuantity, data.orderUom, freezeString)
+    var orderedString = String.format("%s  %s%s", getFormattedQtyNumber(data.orderedQuantity), data.orderUom, freezeString)
     if (data.orderStatus.equals("CONFIRMED")){
-        orderedString = String.format("%.2f  %s%s",data.confirmedQuantity, data.orderUom, freezeString)
+        orderedString = String.format("%s  %s%s",getFormattedQtyNumber(data.confirmedQuantity), data.orderUom, freezeString)
     }
 
     text = orderedString
+}
+
+private fun getFormattedQtyNumber(number: Double): String {
+    return if (number.compareTo(number.toLong()) == 0)
+        String.format("%d", number.toLong())
+    else
+        String.format("%.2f", number)
 }
 
 

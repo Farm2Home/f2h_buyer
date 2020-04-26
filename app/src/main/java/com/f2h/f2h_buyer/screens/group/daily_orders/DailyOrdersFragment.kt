@@ -70,25 +70,29 @@ class DailyOrdersFragment : Fragment() {
         startDate.add(Calendar.DATE, -4)
         val endDate: Calendar = Calendar.getInstance()
         endDate.add(Calendar.DATE, 7)
+        var selection = Calendar.getInstance()
+        selection.time = viewModel.selectedDate.value
 
-        val horizontalCalendar: HorizontalCalendar = HorizontalCalendar.Builder(binding.root, R.id.calendarView)
-            .range(startDate, endDate)
-            .configure()
-            .textSize(12F,12F,12F)
-            .showTopText(false)
-            .showBottomText(false)
-            .formatMiddleText("   MMM\ndd-EEE")
-            .end()
-            .defaultSelectedDate(Calendar.getInstance())
-            .build()
+        val horizontalCalendar: HorizontalCalendar =
+            HorizontalCalendar.Builder(binding.root, R.id.calendarView)
+                .range(startDate, endDate)
+                .configure()
+                .textSize(12F, 12F, 12F)
+                .showTopText(false)
+                .showBottomText(false)
+                .formatMiddleText("   MMM\ndd-EEE")
+                .end()
+                .defaultSelectedDate(selection)
+                .build().also {
 
-        horizontalCalendar.setCalendarListener(object : HorizontalCalendarListener() {
-            override fun onDateSelected(date: Calendar, position: Int) {
-                if (date != null) {
-                    viewModel.updateSelectedDate(date.time)
+                    it.setCalendarListener(object : HorizontalCalendarListener() {
+                        override fun onDateSelected(date: Calendar, position: Int) {
+                            if (date != null) {
+                                viewModel.updateSelectedDate(date.time)
+                            }
+                        }
+                    })
                 }
-            }
-        })
 
 
         // Progress Bar loader
