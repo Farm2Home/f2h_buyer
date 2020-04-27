@@ -188,6 +188,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
                 if (uiElement.quantityChange > uiElement.availableQuantity) {
                     uiElement.orderedQuantity = uiElement.orderedQuantity.minus(uiElement.orderQtyJump)
                     uiElement.quantityChange = uiElement.quantityChange.minus(uiElement.orderQtyJump)
+                    _toastMessage.value = "No more stock"
                 }
 
                 uiElement.orderAmount = calculateOrderAmount(uiElement)
@@ -222,6 +223,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         _visibleUiData.value?.forEach { uiElement ->
             var orderUpdate = OrderUpdate(
                 orderId = uiElement.orderId,
+                orderStatus = uiElement.orderStatus,
                 discountAmount = uiElement.discountAmount,
                 orderedAmount = uiElement.orderAmount,
                 orderedQuantity = uiElement.orderedQuantity
@@ -232,7 +234,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         coroutineScope.launch {
             var updateOrdersDataDeferred = OrderApi.retrofitService.updateOrders(orderUpdates)
             try{
-                var orders = updateOrdersDataDeferred.await()
+                updateOrdersDataDeferred.await()
                 getItemsAndAvailabilitiesForGroup()
             } catch (t:Throwable){
                 println(t.message)

@@ -31,6 +31,7 @@ data class Order (
 
 data class OrderUpdate (
     @Json(name = "order_id") var orderId: Long?,
+    @Json(name = "order_status") var orderStatus: String?,
     @Json(name = "ordered_quantity") var orderedQuantity: Double?,
     @Json(name = "ordered_amount") var orderedAmount: Double?,
     @Json(name = "discount_amount") var discountAmount: Double?

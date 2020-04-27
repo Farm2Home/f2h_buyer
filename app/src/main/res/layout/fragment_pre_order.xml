@@ -50,7 +50,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tableRecyclerView"
+            android:id="@+id/preOrderItemRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="20dp"
@@ -144,7 +144,7 @@
             android:layout_marginTop="20dp"
             android:text="Set Pre-Order Quantity"
             android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@+id/tableRecyclerView"
+            app:layout_constraintStart_toStartOf="@+id/preOrderItemRecyclerView"
             app:layout_constraintTop_toBottomOf="@+id/description" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

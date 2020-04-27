@@ -25,15 +25,7 @@ fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
     var freezeString = ""
 
     if (isOrderFreezed(data)){
-        freezeString = "\nFreezed"
-    }
-
-    if (data.quantityChange >= data.availableQuantity) {
-        freezeString = "\nOut of stock"
-    }
-
-    if (data.orderedQuantity <= 0) {
-        freezeString = "\nDelete order"
+        freezeString = "\nFreeze"
     }
 
     var orderedString = String.format("%s  %s%s", getFormattedQtyNumber(data.orderedQuantity), data.orderUom, freezeString)

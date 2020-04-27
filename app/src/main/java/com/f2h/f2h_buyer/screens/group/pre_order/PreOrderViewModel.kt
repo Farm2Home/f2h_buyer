@@ -25,8 +25,8 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     val item: LiveData<Item>
         get() = _item
 
-    private val _table = MutableLiveData<List<TableComponent>>()
-    val table: LiveData<List<TableComponent>>
+    private val _table = MutableLiveData<List<PreOrderModel>>()
+    val table: LiveData<List<PreOrderModel>>
         get() = _table
 
     private val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
@@ -61,21 +61,21 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         }
     }
 
-    private fun createTableRows(item: Item, orders: ArrayList<Order>): ArrayList<TableComponent> {
-        var list = ArrayList<TableComponent>()
+    private fun createTableRows(item: Item, orders: ArrayList<Order>): ArrayList<PreOrderModel> {
+        var list = ArrayList<PreOrderModel>()
         item.itemAvailability.forEach { availability ->
             var order = orders.filter { x -> isDateEqual(x.orderedDate ?: "", availability.availableDate ?: "") }
             if (order.isEmpty()){
                 order = listOf(Order())
             }
-            var row = TableComponent()
-            row.id = availability.itemAvailabilityId ?: 0L
-            row.date = formatDate(availability.availableDate ?: "")
-            row.quantity = order[0].orderedQuantity ?: (0).toDouble()
-            row.uom = order[0].uom ?: ""
+            var row = PreOrderModel()
+            row.itemAvailabilityId = availability.itemAvailabilityId ?: 0L
+            row.availableDate = formatDate(availability.availableDate ?: "")
+            row.orderedQuantity = order[0].orderedQuantity ?: (0).toDouble()
+            row.orderUom = order[0].uom ?: ""
             list.add(row)
         }
-        list.sortBy { it.date }
+        list.sortBy { it.availableDate }
         return list
     }
 

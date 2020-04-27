@@ -53,11 +53,11 @@ class PreOrderFragment : Fragment() {
 
         // Item list recycler view
         val adapter =
-            TableComponentAdapter(
-                TableComponentClickListener { row ->
+            PreOrderItemsAdapter(
+                PreOrderItemClickListener { row ->
                     // edit row
                 })
-        binding.tableRecyclerView.adapter = adapter
+        binding.preOrderItemRecyclerView.adapter = adapter
         viewModel.table.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)

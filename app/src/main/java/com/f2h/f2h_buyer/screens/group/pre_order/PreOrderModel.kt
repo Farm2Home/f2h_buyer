@@ -11,8 +11,8 @@ data class PreOrderModel (
     var price: Float = 0F,
     var itemUom: String = "",
     var orderId: Long = 0,
-    var orderedQuantity: Float = 0F,
+    var orderedQuantity: Double = 0.0,
     var orderUom: String = "",
-    var orderAmount: Float = 0F,
-    var discountAmount: Float = 0F
+    var orderAmount: Double = 0.0,
+    var discountAmount: Double = 0.0
 )

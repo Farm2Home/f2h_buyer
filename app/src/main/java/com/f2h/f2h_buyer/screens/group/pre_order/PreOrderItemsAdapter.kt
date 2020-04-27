@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.f2h.f2h_buyer.databinding.TableComponentBinding
+import com.f2h.f2h_buyer.databinding.ListPreorderItemBinding
 
-class TableComponentAdapter(val clickListener: TableComponentClickListener): ListAdapter<TableComponent, TableComponentAdapter.ViewHolder>(
+class PreOrderItemsAdapter(val clickListener: PreOrderItemClickListener): ListAdapter<PreOrderModel, PreOrderItemsAdapter.ViewHolder>(
     TableComponentDiffCallback()
 ) {
 
@@ -23,13 +23,13 @@ class TableComponentAdapter(val clickListener: TableComponentClickListener): Lis
     }
 
 
-    class ViewHolder private constructor(val binding: TableComponentBinding): RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder private constructor(val binding: ListPreorderItemBinding): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            tableRow: TableComponent?,
-            clickListener: TableComponentClickListener
+            uiModel: PreOrderModel?,
+            clickListener: PreOrderItemClickListener
         ) {
-            binding.tableRow = tableRow
+            binding.uiModel = uiModel
             binding.clickListener = clickListener
             binding.executePendingBindings()
         }
@@ -37,7 +37,7 @@ class TableComponentAdapter(val clickListener: TableComponentClickListener): Lis
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val view = LayoutInflater.from(parent.context)
-                val binding = TableComponentBinding.inflate(view, parent, false)
+                val binding = ListPreorderItemBinding.inflate(view, parent, false)
                 return ViewHolder(
                     binding
                 )
@@ -46,16 +46,16 @@ class TableComponentAdapter(val clickListener: TableComponentClickListener): Lis
     }
 }
 
-class TableComponentDiffCallback : DiffUtil.ItemCallback<TableComponent>() {
-    override fun areItemsTheSame(oldItem: TableComponent, newItem: TableComponent): Boolean {
-        return oldItem.id == newItem.id
+class TableComponentDiffCallback : DiffUtil.ItemCallback<PreOrderModel>() {
+    override fun areItemsTheSame(oldItem: PreOrderModel, newItem: PreOrderModel): Boolean {
+        return oldItem.itemAvailabilityId == newItem.itemAvailabilityId
     }
 
-    override fun areContentsTheSame(oldItem: TableComponent, newItem: TableComponent): Boolean {
+    override fun areContentsTheSame(oldItem: PreOrderModel, newItem: PreOrderModel): Boolean {
         return oldItem == newItem
     }
 }
 
-class TableComponentClickListener(val clickListener: (row: TableComponent) -> Unit) {
-    fun onClick(row: TableComponent) = clickListener(row)
+class PreOrderItemClickListener(val clickListener: (row: PreOrderModel) -> Unit) {
+    fun onClick(row: PreOrderModel) = clickListener(row)
 }
