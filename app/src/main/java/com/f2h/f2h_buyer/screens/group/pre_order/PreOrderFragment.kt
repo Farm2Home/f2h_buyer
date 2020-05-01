@@ -39,7 +39,7 @@ class PreOrderFragment : Fragment() {
         binding.viewModel = viewModel
 
         //Call the API to fetch item data to populate page
-        viewModel.getItemAndAvailabilities(args.itemId)
+        viewModel.fetchAllData(args.itemId)
 
         // Progress Bar loader
         viewModel.isProgressBarActive.observe(viewLifecycleOwner, Observer { isProgressBarActive ->
@@ -58,7 +58,7 @@ class PreOrderFragment : Fragment() {
                     // edit row
                 })
         binding.preOrderItemRecyclerView.adapter = adapter
-        viewModel.table.observe(viewLifecycleOwner, Observer {
+        viewModel.preOrderItems.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
             }

@@ -7,13 +7,16 @@ import androidx.lifecycle.MutableLiveData
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.ItemApi
+import com.f2h.f2h_buyer.network.ItemAvailabilityApi
 import com.f2h.f2h_buyer.network.OrderApi
 import com.f2h.f2h_buyer.network.models.Item
+import com.f2h.f2h_buyer.network.models.ItemAvailability
 import com.f2h.f2h_buyer.network.models.Order
 import kotlinx.coroutines.*
-import java.lang.Exception
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class PreOrderViewModel(val database: SessionDatabaseDao, application: Application) : AndroidViewModel(application) {
 
@@ -21,13 +24,18 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     val isProgressBarActive: LiveData<Boolean>
         get() = _isProgressBarActive
 
-    private val _item = MutableLiveData<Item>()
-    val item: LiveData<Item>
-        get() = _item
+    private val _preOrderItems = MutableLiveData<ArrayList<PreOrderItemsModel>>()
+    val preOrderItems: LiveData<ArrayList<PreOrderItemsModel>>
+        get() = _preOrderItems
 
-    private val _table = MutableLiveData<List<PreOrderModel>>()
-    val table: LiveData<List<PreOrderModel>>
-        get() = _table
+    private val _preOrderUiModel = MutableLiveData<PreOrderUiModel>()
+    val preOrderUiModel: LiveData<PreOrderUiModel>
+        get() = _preOrderUiModel
+
+    private val df_iso: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'00:00:00'Z'")
+    private val preOrderDaysMax = 10
+    private var startDate = ""
+    private var endDate = ""
 
     private val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
     private var sessionData = SessionEntity()
@@ -37,23 +45,31 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
 
     init {
         _isProgressBarActive.value = true
+        setPreOrderDateRange()
     }
 
 
-    fun getItemAndAvailabilities(itemId: Long) {
+    fun fetchAllData(itemId: Long) {
         coroutineScope.launch {
             sessionData = retrieveSession()
-            var getItemDataDeferred = ItemApi.retrofitService.getItem(itemId)
-            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupAndUser(sessionData.groupId, sessionData.userId)
             try {
-                var item = getItemDataDeferred.await()
-                var orders = ArrayList(getOrdersDataDeferred.await())
-                orders.retainAll { x -> x.itemAvailabilityId == item.itemId }
 
-                if (item.itemId != 0L) {
-                    _item.value = item
-                    _table.value = createTableRows(item, orders)
-                }
+                // Fetch Item Data
+                val getItemDataDeferred = ItemApi.retrofitService.getItem(itemId)
+                val item = getItemDataDeferred.await()
+
+                //Fetch existing Orders Data
+                val getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupUserAndItem(sessionData.groupId,
+                    sessionData.userId, item.itemId!!, startDate, endDate)
+                val orders = ArrayList(getOrdersDataDeferred.await())
+
+                //Fetch all availabilities for the item
+                val getItemAvailabilitiesDeferred = ItemAvailabilityApi.retrofitService.getItemAvailabilitiesByItemId(item.itemId!!)
+                val itemAvailabilities = ArrayList(getItemAvailabilitiesDeferred.await())
+
+                //Create the UI Model to populate UI
+                _preOrderItems.value = createPreOrderUiElements(item, orders, itemAvailabilities)
+
             } catch (t:Throwable){
                 println(t.message)
             }
@@ -61,41 +77,48 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         }
     }
 
-    private fun createTableRows(item: Item, orders: ArrayList<Order>): ArrayList<PreOrderModel> {
-        var list = ArrayList<PreOrderModel>()
-        item.itemAvailability.forEach { availability ->
-            var order = orders.filter { x -> isDateEqual(x.orderedDate ?: "", availability.availableDate ?: "") }
-            if (order.isEmpty()){
-                order = listOf(Order())
+
+    private fun createPreOrderUiElements(item: Item, orders: ArrayList<Order>, itemAvailabilities: ArrayList<ItemAvailability>): ArrayList<PreOrderItemsModel> {
+        var list = arrayListOf<PreOrderItemsModel>()
+
+        var uiModel = PreOrderUiModel()
+        uiModel.itemName = item.itemName ?: ""
+        uiModel.itemDescription = item.description ?: ""
+        uiModel.itemImageLink = item.imageLink ?: ""
+        uiModel.itemPrice = item.pricePerUnit ?: 0.0
+        uiModel.itemUom = item.uom ?: ""
+        uiModel.farmerName = item.farmerUserName ?: ""
+        _preOrderUiModel.value = uiModel
+
+        itemAvailabilities.filter { compareDates(it.availableDate, startDate) >= 0 &&
+                compareDates(it.availableDate, endDate) <= 0 }
+            .forEach { availability ->
+                var preOrderItem = PreOrderItemsModel()
+                preOrderItem.itemAvailabilityId = availability.itemAvailabilityId ?: -1L
+                preOrderItem.availableDate = availability.availableDate ?: ""
+                preOrderItem.availableTimeSlot = availability.availableTimeSlot ?: ""
+
+                var order = orders.filter { it.itemAvailabilityId!!.equals(availability.itemAvailabilityId) }
+                if (order.isNotEmpty()) {
+                    preOrderItem.orderedQuantity = order.first().orderedQuantity ?: 0.0
+                    preOrderItem.orderUom = order.first().uom ?: ""
+                    preOrderItem.orderId = order.first().orderId ?: -1L
+                }
+                list.add(preOrderItem)
             }
-            var row = PreOrderModel()
-            row.itemAvailabilityId = availability.itemAvailabilityId ?: 0L
-            row.availableDate = formatDate(availability.availableDate ?: "")
-            row.orderedQuantity = order[0].orderedQuantity ?: (0).toDouble()
-            row.orderUom = order[0].uom ?: ""
-            list.add(row)
-        }
+
         list.sortBy { it.availableDate }
         return list
     }
 
 
-    private fun isDateEqual(itemDate: String, selectedDate: String): Boolean {
-        return df.format(df.parse(itemDate)).equals(df.format(df.parse(selectedDate)))
-    }
+    private fun compareDates(date1: String?, date2: String?): Long {
+        if (date1 == null) return -1
+        if (date2 == null) return 1
 
-
-    private fun formatDate(availableDate: String): String {
-        val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val formatter: DateFormat = SimpleDateFormat("MMM-dd-yyy")
-        var formattedDate: String = ""
-        try {
-            var date = availableDate
-            formattedDate = formatter.format(parser.parse(date))
-        } catch (e: Exception) {
-            println(e)
-        }
-        return formattedDate
+        val d1 = df.parse(date1).time
+        val d2 = df.parse(date2).time
+        return d1-d2
     }
 
 
@@ -118,4 +141,25 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         super.onCleared()
         viewModelJob.cancel()
     }
+
+
+    private fun setPreOrderDateRange() {
+        startDate = getStartDate()
+        endDate = getEndDate()
+    }
+
+    private fun getStartDate(): String {
+        val date: Calendar = Calendar.getInstance()
+        val startDate: String = df_iso.format(date.time)
+        return startDate
+    }
+
+
+    private fun getEndDate(): String {
+        val date: Calendar = Calendar.getInstance()
+        date.add(Calendar.DATE, preOrderDaysMax)
+        val endDate: String = df_iso.format(date.time)
+        return endDate
+    }
+
 }

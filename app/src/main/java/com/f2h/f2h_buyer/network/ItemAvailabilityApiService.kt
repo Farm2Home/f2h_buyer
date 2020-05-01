@@ -27,6 +27,10 @@ interface ItemAvailabilityApiService{
     @GET("item_availability")
     fun getItemAvailabilities(@Query("item_availability_ids") availabilityIds: List<Long>):
             Deferred<List<ItemAvailability>>
+
+    @GET("item_availability")
+    fun getItemAvailabilitiesByItemId(@Query("item_ids") itemIds: Long):
+            Deferred<List<ItemAvailability>>
 }
 
 

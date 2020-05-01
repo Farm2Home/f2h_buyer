@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.f2h.f2h_buyer.databinding.ListPreorderItemBinding
 
-class PreOrderItemsAdapter(val clickListener: PreOrderItemClickListener): ListAdapter<PreOrderModel, PreOrderItemsAdapter.ViewHolder>(
+class PreOrderItemsAdapter(val clickListener: PreOrderItemClickListener): ListAdapter<PreOrderItemsModel, PreOrderItemsAdapter.ViewHolder>(
     TableComponentDiffCallback()
 ) {
 
@@ -26,10 +26,10 @@ class PreOrderItemsAdapter(val clickListener: PreOrderItemClickListener): ListAd
     class ViewHolder private constructor(val binding: ListPreorderItemBinding): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            uiModel: PreOrderModel?,
+            uiItemsModel: PreOrderItemsModel?,
             clickListener: PreOrderItemClickListener
         ) {
-            binding.uiModel = uiModel
+            binding.uiModel = uiItemsModel
             binding.clickListener = clickListener
             binding.executePendingBindings()
         }
@@ -46,16 +46,16 @@ class PreOrderItemsAdapter(val clickListener: PreOrderItemClickListener): ListAd
     }
 }
 
-class TableComponentDiffCallback : DiffUtil.ItemCallback<PreOrderModel>() {
-    override fun areItemsTheSame(oldItem: PreOrderModel, newItem: PreOrderModel): Boolean {
+class TableComponentDiffCallback : DiffUtil.ItemCallback<PreOrderItemsModel>() {
+    override fun areItemsTheSame(oldItem: PreOrderItemsModel, newItem: PreOrderItemsModel): Boolean {
         return oldItem.itemAvailabilityId == newItem.itemAvailabilityId
     }
 
-    override fun areContentsTheSame(oldItem: PreOrderModel, newItem: PreOrderModel): Boolean {
+    override fun areContentsTheSame(oldItem: PreOrderItemsModel, newItem: PreOrderItemsModel): Boolean {
         return oldItem == newItem
     }
 }
 
-class PreOrderItemClickListener(val clickListener: (row: PreOrderModel) -> Unit) {
-    fun onClick(row: PreOrderModel) = clickListener(row)
+class PreOrderItemClickListener(val clickListener: (row: PreOrderItemsModel) -> Unit) {
+    fun onClick(row: PreOrderItemsModel) = clickListener(row)
 }

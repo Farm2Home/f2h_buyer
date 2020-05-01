@@ -7,6 +7,7 @@ data class Item (
     @Json(name = "group_id") var groupId: Long? = -1,
     @Json(name = "farmer_user_id") var farmerUserId: Long? = -1,
     @Json(name = "farmer_user_name") var farmerUserName: String? = "",
+    @Json(name = "image_link") var imageLink: String? = "",
     @Json(name = "item_name") var itemName: String? = "",
     @Json(name = "description") var description: String? = "",
     @Json(name = "uom") var uom: String? = "",

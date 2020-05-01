@@ -6,7 +6,7 @@
     <data>
         <variable
             name="uiModel"
-            type="com.f2h.f2h_buyer.screens.group.pre_order.PreOrderModel" />
+            type="com.f2h.f2h_buyer.screens.group.pre_order.PreOrderItemsModel" />
         <variable
             name="clickListener"
             type="com.f2h.f2h_buyer.screens.group.pre_order.PreOrderItemClickListener" />
@@ -48,11 +48,10 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
-                    android:autoText="false"
                     android:paddingEnd="20dp"
-                    android:text="22\nAug\nWed"
                     android:textAlignment="center"
                     android:textSize="16sp"
+                    app:dateFormattedPreOrderItems="@{uiModel}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -86,6 +85,7 @@
                     android:layout_marginTop="5dp"
                     android:textAlignment="center"
                     android:textSize="12sp"
+                    android:text="@{Double.toString(uiModel.orderedQuantity)}"
                     app:layout_constraintEnd_toEndOf="@+id/buttonIncrease"
                     app:layout_constraintStart_toStartOf="@+id/buttonIncrease"
                     app:layout_constraintTop_toBottomOf="@+id/buttonIncrease" />

@@ -82,7 +82,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="20dp"
-            android:text="@{viewModel.item.itemName}"
+            android:text="@{viewModel.preOrderUiModel.itemName}"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -100,14 +100,14 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/farmer"
             app:layout_constraintTop_toBottomOf="@+id/farmer"
-            app:priceFormattedFromItem="@{viewModel.item}" />
+            app:priceFormattedPreOrder="@{viewModel.preOrderUiModel}" />
 
         <TextView
             android:id="@+id/farmer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="@{`Farmer - ` + viewModel.item.farmerUserName}"
+            android:text="@{`Farmer - ` + viewModel.preOrderUiModel.farmerName}"
             app:layout_constraintEnd_toEndOf="@+id/itemName"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/itemName"
@@ -120,7 +120,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
-            android:text="@{viewModel.item.description}"
+            android:text="@{viewModel.preOrderUiModel.itemDescription}"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

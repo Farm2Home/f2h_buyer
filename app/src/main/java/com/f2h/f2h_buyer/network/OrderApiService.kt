@@ -31,6 +31,12 @@ interface OrderApiService {
     fun getOrdersForGroupAndUser(@Query("group_id") groupId: Long, @Query("buyer_user_id") buyerUserId: Long):
             Deferred<List<Order>>
 
+    @GET("order")
+    fun getOrdersForGroupUserAndItem(@Query("group_id") groupId: Long, @Query("buyer_user_id") buyerUserId: Long,
+                                     @Query("item_id") itemId: Long, @Query("start_date") startDate: String,
+                                     @Query("end_date") endDate: String):
+            Deferred<List<Order>>
+
     @PUT("orders/update_all")
     fun updateOrders(@Body orderUpdates: List<OrderUpdate>): Deferred<List<Order>>
 
