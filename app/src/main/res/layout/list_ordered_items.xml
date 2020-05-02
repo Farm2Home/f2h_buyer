@@ -41,15 +41,15 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/groupImage"
+                    android:id="@+id/itemImage"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:contentDescription="TODO"
+                    app:customImageFormatted="@{uiModel.itemId}"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/f2h_logo" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/itemName"
@@ -61,7 +61,7 @@
                     android:text="@{uiModel.itemName}"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toStartOf="@+id/buttonIncrease"
-                    app:layout_constraintStart_toEndOf="@+id/groupImage"
+                    app:layout_constraintStart_toEndOf="@+id/itemImage"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -121,9 +121,9 @@
                     android:layout_height="wrap_content"
                     android:text="Rs. "
                     android:textAlignment="center"
-                    app:layout_constraintEnd_toEndOf="@+id/groupImage"
-                    app:layout_constraintStart_toStartOf="@+id/groupImage"
-                    app:layout_constraintTop_toBottomOf="@+id/groupImage"
+                    app:layout_constraintEnd_toEndOf="@+id/itemImage"
+                    app:layout_constraintStart_toStartOf="@+id/itemImage"
+                    app:layout_constraintTop_toBottomOf="@+id/itemImage"
                     app:priceFormatted="@{uiModel}" />
 
                 <TextView

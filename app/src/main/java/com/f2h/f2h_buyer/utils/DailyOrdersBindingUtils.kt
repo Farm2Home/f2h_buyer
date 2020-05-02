@@ -7,6 +7,7 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.StrikethroughSpan
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel

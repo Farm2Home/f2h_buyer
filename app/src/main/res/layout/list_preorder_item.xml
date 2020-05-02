@@ -46,9 +46,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:paddingEnd="20dp"
+                    android:text="Date"
                     android:textAlignment="center"
                     android:textSize="16sp"
                     app:dateFormattedPreOrderItems="@{uiModel}"
@@ -60,35 +61,63 @@
                     android:id="@+id/buttonDecrease"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="30dp"
                     android:text="-"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/buttonIncrease"
-                    app:layout_constraintStart_toStartOf="@+id/buttonIncrease"
-                    app:layout_constraintTop_toBottomOf="@+id/orderedQuantity" />
+                    app:buttonVisibilityFormatted="@{uiModel}"
+                    app:layout_constraintBottom_toBottomOf="@+id/buttonIncrease"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonIncrease"
+                    app:layout_constraintTop_toTopOf="@+id/buttonIncrease" />
 
                 <Button
                     android:id="@+id/buttonIncrease"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="10dp"
                     android:text="+"
+                    app:buttonVisibilityFormatted="@{uiModel}"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/orderedQuantity" />
 
                 <TextView
                     android:id="@+id/orderedQuantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:textAlignment="center"
                     android:textSize="12sp"
-                    android:text="@{Double.toString(uiModel.orderedQuantity)}"
+                    app:orderedQuantityFormattedPreOrder="@{uiModel}"
                     app:layout_constraintEnd_toEndOf="@+id/buttonIncrease"
-                    app:layout_constraintStart_toStartOf="@+id/buttonIncrease"
-                    app:layout_constraintTop_toBottomOf="@+id/buttonIncrease" />
+                    app:layout_constraintStart_toStartOf="@+id/buttonDecrease"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/availableQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="30dp"
+                    android:textAlignment="center"
+                    android:textSize="12sp"
+                    app:availableQuantityFormattedPreOrder="@{uiModel}"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonDecrease"
+                    app:layout_constraintStart_toEndOf="@+id/date"
+                    app:layout_constraintTop_toBottomOf="@+id/status" />
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonDecrease"
+                    app:layout_constraintStart_toEndOf="@+id/date"
+                    app:layout_constraintTop_toTopOf="@+id/orderedQuantity"
+                    app:statusFormatted="@{uiModel}" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

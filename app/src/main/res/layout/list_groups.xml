@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/groupImage"
+                    android:id="@+id/itemImage"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="20dp"
@@ -55,8 +55,8 @@
                     android:text="@{group.groupName}"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/groupImage"
-                    app:layout_constraintTop_toTopOf="@+id/groupImage" />
+                    app:layout_constraintStart_toEndOf="@+id/itemImage"
+                    app:layout_constraintTop_toTopOf="@+id/itemImage" />
 
                 <TextView
                     android:id="@+id/orderedQuantity"
@@ -70,9 +70,9 @@
                     android:singleLine="true"
                     android:text="@{group.description}"
                     android:textSize="11sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/groupImage"
+                    app:layout_constraintBottom_toBottomOf="@+id/itemImage"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/groupImage"
+                    app:layout_constraintStart_toEndOf="@+id/itemImage"
                     app:layout_constraintTop_toBottomOf="@+id/date" />
 
                 <View

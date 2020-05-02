@@ -82,6 +82,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         var list = arrayListOf<PreOrderItemsModel>()
 
         var uiModel = PreOrderUiModel()
+        uiModel.itemId = item.itemId ?: -1
         uiModel.itemName = item.itemName ?: ""
         uiModel.itemDescription = item.description ?: ""
         uiModel.itemImageLink = item.imageLink ?: ""
@@ -97,10 +98,16 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
                 preOrderItem.itemAvailabilityId = availability.itemAvailabilityId ?: -1L
                 preOrderItem.availableDate = availability.availableDate ?: ""
                 preOrderItem.availableTimeSlot = availability.availableTimeSlot ?: ""
+                preOrderItem.availableQuantity = availability.availableQuantity ?: 0.0
+                preOrderItem.isFreezed = availability.isFreezed ?: false
+                preOrderItem.itemUom = item.uom ?: ""
 
                 var order = orders.filter { it.itemAvailabilityId!!.equals(availability.itemAvailabilityId) }
                 if (order.isNotEmpty()) {
                     preOrderItem.orderedQuantity = order.first().orderedQuantity ?: 0.0
+                    preOrderItem.confirmedQuantity = order.first().confirmedQuantity ?: 0.0
+                    preOrderItem.orderStatus = order.first().orderStatus ?: ""
+                    preOrderItem.deliveryStatus = order.first().deliveryStatus ?: ""
                     preOrderItem.orderUom = order.first().uom ?: ""
                     preOrderItem.orderId = order.first().orderId ?: -1L
                 }
