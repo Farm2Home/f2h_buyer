@@ -46,6 +46,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     init {
         _isProgressBarActive.value = true
         setPreOrderDateRange()
+        createPreOrderUiElements(Item(), arrayListOf(), arrayListOf())
     }
 
 

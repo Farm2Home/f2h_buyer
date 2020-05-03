@@ -6,10 +6,12 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.BindingAdapter
 import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
 import com.f2h.f2h_buyer.screens.group.pre_order.PreOrderItemsModel
 import com.f2h.f2h_buyer.screens.group.pre_order.PreOrderUiModel
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -17,14 +19,22 @@ import java.text.SimpleDateFormat
 @BindingAdapter("namePriceFormattedPreOrder")
 fun TextView.setNamePriceFormattedFromPreOrderUiModel(data: PreOrderUiModel?){
     data?.let {
-        text = String.format("%s %s %s", data.itemName, data.itemPrice, data.itemUom)
+        text = String.format("%s (₹%.0f/%s)", data.itemName, data.itemPrice, data.itemUom)
+    }
+}
+
+@BindingAdapter("toolbarTitleFormatted")
+fun CollapsingToolbarLayout.setToolbarTitleFormattedFromPreOrderUiModel(data: PreOrderUiModel?){
+    data?.let {
+        title = String.format("%s (₹%.0f/%s)", data.itemName, data.itemPrice, data.itemUom)
+        setExpandedTitleColor(Color.WHITE)
     }
 }
 
 @BindingAdapter("dateFormattedPreOrderItems")
 fun TextView.setDateFormattedPreOrderItems(data: PreOrderItemsModel?){
     val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-    val df_out: DateFormat = SimpleDateFormat("dd - MMM\nEEEE")
+    val df_out: DateFormat = SimpleDateFormat("dd - MMM\nEEE")
     data?.let {
         var date: String = df_out.format(df.parse(data.availableDate))
         text = String.format("%s", date)
@@ -35,9 +45,9 @@ fun TextView.setDateFormattedPreOrderItems(data: PreOrderItemsModel?){
 @BindingAdapter("orderedQuantityFormattedPreOrder")
 fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
     data?.let {
-        var orderedString = String.format("%s  %s", getFormattedQtyNumber(data.orderedQuantity), data.orderUom)
+        var orderedString = String.format("%s\n%s", getFormattedQtyNumber(data.orderedQuantity), data.orderUom)
         if (data.orderStatus.equals("CONFIRMED")){
-            orderedString = String.format("%s  %s",getFormattedQtyNumber(data.confirmedQuantity), data.orderUom)
+            orderedString = String.format("%s\n%s",getFormattedQtyNumber(data.confirmedQuantity), data.orderUom)
         }
         text = orderedString
     }
@@ -46,7 +56,7 @@ fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
 @BindingAdapter("availableQuantityFormattedPreOrder")
 fun TextView.setAvailableQuantityFormattedPreOrder(data: PreOrderItemsModel?){
     data?.let {
-        var orderedString = String.format("Available Quantity\n%s  %s", getFormattedQtyNumber(data.availableQuantity), data.itemUom)
+        var orderedString = String.format("%s  %s", getFormattedQtyNumber(data.availableQuantity), data.itemUom)
         text = orderedString
     }
 }
