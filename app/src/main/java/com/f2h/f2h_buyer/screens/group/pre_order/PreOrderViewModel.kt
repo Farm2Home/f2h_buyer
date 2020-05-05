@@ -36,6 +36,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     private val preOrderDaysMax = 10
     private var startDate = ""
     private var endDate = ""
+    private var selectedItem = 0L
 
     private val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
     private var sessionData = SessionEntity()
@@ -44,13 +45,14 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
 
 
     init {
-        _isProgressBarActive.value = true
         setPreOrderDateRange()
         createPreOrderUiElements(Item(), arrayListOf(), arrayListOf())
     }
 
 
     fun fetchAllData(itemId: Long) {
+        selectedItem = itemId
+        _isProgressBarActive.value = true
         coroutineScope.launch {
             sessionData = retrieveSession()
             try {
@@ -168,6 +170,15 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         date.add(Calendar.DATE, preOrderDaysMax)
         val endDate: String = df_iso.format(date.time)
         return endDate
+    }
+
+    fun onClickCancelButton() {
+        fetchAllData(selectedItem)
+    }
+
+
+    fun onClickSaveButton() {
+
     }
 
 }

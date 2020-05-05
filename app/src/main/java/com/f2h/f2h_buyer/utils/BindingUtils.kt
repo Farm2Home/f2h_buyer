@@ -19,6 +19,7 @@ fun TextView.setPriceFormattedFromItem(data: Item?){
 fun ImageView.setCustomImageFormatted(itemId: Long){
     var wvItems = arrayListOf<Long>(138,139,153,154,1065,1067,1069)
     var wvTonedMilk = arrayListOf<Long>(147,1166,1168,1170)
+    var egg = arrayListOf<Long>(176)
 
     if (wvItems.contains(itemId)) {
         setImageResource(R.drawable.wv_milk)
@@ -27,6 +28,11 @@ fun ImageView.setCustomImageFormatted(itemId: Long){
 
     if (wvTonedMilk.contains(itemId)) {
         setImageResource(R.drawable.toned_milk)
+        return
+    }
+
+    if (egg.contains(itemId)) {
+        setImageResource(R.drawable.egg)
         return
     }
 

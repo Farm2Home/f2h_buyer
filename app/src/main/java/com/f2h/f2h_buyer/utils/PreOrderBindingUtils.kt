@@ -34,7 +34,7 @@ fun CollapsingToolbarLayout.setToolbarTitleFormattedFromPreOrderUiModel(data: Pr
 @BindingAdapter("dateFormattedPreOrderItems")
 fun TextView.setDateFormattedPreOrderItems(data: PreOrderItemsModel?){
     val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-    val df_out: DateFormat = SimpleDateFormat("dd - MMM\nEEE")
+    val df_out: DateFormat = SimpleDateFormat("dd-MMM\nEEEE")
     data?.let {
         var date: String = df_out.format(df.parse(data.availableDate))
         text = String.format("%s", date)
@@ -45,9 +45,9 @@ fun TextView.setDateFormattedPreOrderItems(data: PreOrderItemsModel?){
 @BindingAdapter("orderedQuantityFormattedPreOrder")
 fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
     data?.let {
-        var orderedString = String.format("%s\n%s", getFormattedQtyNumber(data.orderedQuantity), data.orderUom)
+        var orderedString = String.format("%s %s", getFormattedQtyNumber(data.orderedQuantity), data.orderUom)
         if (data.orderStatus.equals("CONFIRMED")){
-            orderedString = String.format("%s\n%s",getFormattedQtyNumber(data.confirmedQuantity), data.orderUom)
+            orderedString = String.format("%s %s",getFormattedQtyNumber(data.confirmedQuantity), data.orderUom)
         }
         text = orderedString
     }
@@ -70,6 +70,11 @@ fun TextView.setStatusFormatted(data: PreOrderItemsModel){
     if (data.deliveryStatus.equals("DELIVERY_STARTED") ||
         data.deliveryStatus.equals("DELIVERED")){
         displayedStatus = data.deliveryStatus
+    }
+
+    if (displayedStatus.isBlank()){
+        text = ""
+        return
     }
 
     val colouredText = SpannableString(displayedStatus)
