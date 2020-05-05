@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil.inflate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,10 +15,10 @@ import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.database.F2HDatabase
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.databinding.FragmentDailyOrdersBinding
-import com.f2h.f2h_buyer.network.models.Item
 import com.f2h.f2h_buyer.screens.group.group_tabs.GroupDetailsTabsFragmentDirections
 import devs.mulham.horizontalcalendar.HorizontalCalendar
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener
+import kotlinx.android.synthetic.main.fragment_all_items.view.*
 import java.util.*
 
 
@@ -38,67 +39,64 @@ class DailyOrdersFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = inflate(inflater, R.layout.fragment_daily_orders, container, false)
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        return binding.root
+    }
 
-        // Item list recycler view
-        val adapter = OrderedItemsAdapter(OrderedItemClickListener { item ->
-            navigateToPreOrderPage(item)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Daily Orders List recycler view
+        val adapter = OrderedItemsAdapter(OrderedItemClickListener { uiDataElement ->
+            navigateToPreOrderPage(uiDataElement)
+        }, IncreaseButtonClickListener { uiDataElement ->
+            viewModel.increaseOrderQuantity(uiDataElement)
+        }, DecreaseButtonClickListener { uiDataElement ->
+            viewModel.decreaseOrderQuantity(uiDataElement)
         })
         binding.itemListRecyclerView.adapter = adapter
-        viewModel.visibleItems.observe(viewLifecycleOwner, Observer {
+        viewModel.visibleUiData.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
+                adapter.notifyDataSetChanged()
             }
         })
-
 
 
         // Initial settings for the horizontal calendar
         val startDate: Calendar = Calendar.getInstance()
-        startDate.add(Calendar.DATE, 0)
+        startDate.add(Calendar.DATE, -4)
         val endDate: Calendar = Calendar.getInstance()
         endDate.add(Calendar.DATE, 7)
+        var selection = Calendar.getInstance()
+        selection.time = viewModel.selectedDate.value
 
-        val horizontalCalendar: HorizontalCalendar = HorizontalCalendar.Builder(binding.root, R.id.calendarView)
-            .range(startDate, endDate)
-            .configure()
-                .textSize(12F,12F,12F)
+        val horizontalCalendar: HorizontalCalendar =
+            HorizontalCalendar.Builder(binding.root, R.id.calendarView)
+                .range(startDate, endDate)
+                .configure()
+                .textSize(12F, 12F, 12F)
                 .showTopText(false)
                 .showBottomText(false)
                 .formatMiddleText("   MMM\ndd-EEE")
-            .end()
-            .defaultSelectedDate(Calendar.getInstance())
-            .build()
+                .end()
+                .defaultSelectedDate(selection)
+                .build().also {
 
-        horizontalCalendar.setCalendarListener(object : HorizontalCalendarListener() {
-            override fun onDateSelected(date: Calendar, position: Int) {
-                if (date != null) {
-                    viewModel.updateSelectedDate(date.time)
+                    it.setCalendarListener(object : HorizontalCalendarListener() {
+                        override fun onDateSelected(date: Calendar, position: Int) {
+                            if (date != null) {
+                                viewModel.updateSelectedDate(date.time)
+                            }
+                        }
+                    })
                 }
-            }
-        })
 
 
-//        // Dropdown menu on item selected
-//        binding.spinner.setOnItemSelectedListener(object : OnItemSelectedListener {
-//            override fun onItemSelected(
-//                parentView: AdapterView<*>?,
-//                selectedItemView: View?,
-//                position: Int,
-//                id: Long
-//            ) {
-//                viewModel.updateSelectedTimeSlot(binding.spinner.selectedItem.toString())
-//            }
-//
-//            override fun onNothingSelected(parentView: AdapterView<*>?) {
-//                // your code here
-//            }
-//        })
-
-
-        // Progress Bar loader
+        //Progress Bar loader
         viewModel.isProgressBarActive.observe(viewLifecycleOwner, Observer { isProgressBarActive ->
             if(isProgressBarActive){
                 binding.progressBar.visibility = View.VISIBLE
@@ -107,11 +105,19 @@ class DailyOrdersFragment : Fragment() {
             }
         })
 
-        return binding.root
+
+        //Toast Message
+        viewModel.toastMessage.observe(viewLifecycleOwner, Observer { message ->
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+        })
+
     }
 
-    private fun navigateToPreOrderPage(item: Item) {
-        val action = GroupDetailsTabsFragmentDirections.actionGroupDetailsTabsFragmentToPreOrderFragment(item.itemId)
+
+
+    private fun navigateToPreOrderPage(uiData: DailyOrdersUiModel) {
+        val action = GroupDetailsTabsFragmentDirections.actionGroupDetailsTabsFragmentToPreOrderFragment(uiData.itemId)
         view?.let { Navigation.findNavController(it).navigate(action) }
     }
+
 }

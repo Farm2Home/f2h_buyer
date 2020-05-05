@@ -31,6 +31,7 @@ class GroupDetailsTabsFragment : Fragment() {
         groupDetailsTabsAdapter = GroupDetailsTabsAdapter(this)
         viewPager = view.findViewById(R.id.pager)
         viewPager.adapter = groupDetailsTabsAdapter
+        viewPager.setUserInputEnabled(false)
 
 
         //Set app bar title to group name here

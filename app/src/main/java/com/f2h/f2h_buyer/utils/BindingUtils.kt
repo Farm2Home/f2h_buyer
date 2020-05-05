@@ -1,35 +1,40 @@
 package com.f2h.f2h_buyer.utils
 
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.network.models.Item
-import java.lang.Exception
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 
 
-@BindingAdapter("availableDateFormatted")
-fun TextView.setAvailableDateFormatted(item: Item?){
-    item?.let {
-        val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val formatter: DateFormat = SimpleDateFormat("MMM-dd-yyy")
-        var formattedDate: String = ""
-
-        try {
-            var date = item.itemAvailability.get(0).availableDate
-            formattedDate = formatter.format(parser.parse(date))
-        }catch (e: Exception){
-            println(e)
-        }
-
-        text = "Next Available - " + formattedDate
+@BindingAdapter("priceFormattedFromItem")
+fun TextView.setPriceFormattedFromItem(data: Item?){
+    data?.let {
+        text = "\u20B9 " + String.format("%.0f", data.pricePerUnit) + "/" + data.uom
     }
 }
 
 
-@BindingAdapter("priceFormatted")
-fun TextView.setPriceFormatted(item: Item?){
-    item?.let {
-        text = "\u20B9 " + String.format("%.0f", item.pricePerUnit) + "/" + item.uom
+@BindingAdapter("customImageFormatted")
+fun ImageView.setCustomImageFormatted(itemId: Long){
+    var wvItems = arrayListOf<Long>(138,139,153,154,1065,1067,1069)
+    var wvTonedMilk = arrayListOf<Long>(147,1166,1168,1170)
+    var egg = arrayListOf<Long>(176)
+
+    if (wvItems.contains(itemId)) {
+        setImageResource(R.drawable.wv_milk)
+        return
     }
+
+    if (wvTonedMilk.contains(itemId)) {
+        setImageResource(R.drawable.toned_milk)
+        return
+    }
+
+    if (egg.contains(itemId)) {
+        setImageResource(R.drawable.egg)
+        return
+    }
+
+    setImageResource(R.drawable.f2h_logo)
 }

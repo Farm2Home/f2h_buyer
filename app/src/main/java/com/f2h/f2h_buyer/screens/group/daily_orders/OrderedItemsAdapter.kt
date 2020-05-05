@@ -2,16 +2,18 @@ package com.f2h.f2h_buyer.screens.group.daily_orders
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.f2h.f2h_buyer.databinding.ListOrderedItemsBinding
-import com.f2h.f2h_buyer.network.models.Item
 
-class OrderedItemsAdapter(val clickListener: OrderedItemClickListener): ListAdapter<Item, OrderedItemsAdapter.ViewHolder>(ListItemDiffCallback()) {
+class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
+                          val increaseButtonClickListener: IncreaseButtonClickListener,
+                          val decreaseButtonClickListener: DecreaseButtonClickListener): ListAdapter<DailyOrdersUiModel, OrderedItemsAdapter.ViewHolder>(ListItemDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position)!!, clickListener)
+        holder.bind(getItem(position)!!, clickListener, increaseButtonClickListener, decreaseButtonClickListener)
     }
 
 
@@ -23,11 +25,15 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener): ListAdap
     class ViewHolder private constructor(val binding: ListOrderedItemsBinding): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            item: Item,
-            clickListener: OrderedItemClickListener
+            item: DailyOrdersUiModel,
+            clickListener: OrderedItemClickListener,
+            increaseButtonClickListener: IncreaseButtonClickListener,
+            decreaseButtonClickListener: DecreaseButtonClickListener
         ) {
-            binding.item = item
+            binding.uiModel = item
             binding.clickListener = clickListener
+            binding.increaseButtonClickListener = increaseButtonClickListener
+            binding.decreaseButtonClickListener = decreaseButtonClickListener
             binding.executePendingBindings()
         }
 
@@ -41,16 +47,26 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener): ListAdap
     }
 }
 
-class ListItemDiffCallback : DiffUtil.ItemCallback<Item>() {
-    override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
-        return oldItem.itemId == newItem.itemId
+
+class ListItemDiffCallback : DiffUtil.ItemCallback<DailyOrdersUiModel>() {
+    override fun areItemsTheSame(oldItem: DailyOrdersUiModel, newItem: DailyOrdersUiModel): Boolean {
+        return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
+    override fun areContentsTheSame(oldItem: DailyOrdersUiModel, newItem: DailyOrdersUiModel): Boolean {
         return oldItem == newItem
     }
 }
 
-class OrderedItemClickListener(val clickListener: (item: Item) -> Unit) {
-    fun onClick(item: Item) = clickListener(item)
+
+class OrderedItemClickListener(val clickListener: (uiModel: DailyOrdersUiModel) -> Unit) {
+    fun onClick(uiModel: DailyOrdersUiModel) = clickListener(uiModel)
+}
+
+class IncreaseButtonClickListener(val clickListener: (uiModel: DailyOrdersUiModel) -> Unit) {
+    fun onClick(uiModel: DailyOrdersUiModel) = clickListener(uiModel)
+}
+
+class DecreaseButtonClickListener(val clickListener: (uiModel: DailyOrdersUiModel) -> Unit) {
+    fun onClick(uiModel: DailyOrdersUiModel) = clickListener(uiModel)
 }

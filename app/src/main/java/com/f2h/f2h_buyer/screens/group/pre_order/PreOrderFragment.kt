@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil.inflate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -39,7 +40,7 @@ class PreOrderFragment : Fragment() {
         binding.viewModel = viewModel
 
         //Call the API to fetch item data to populate page
-        viewModel.getItemAndAvailabilities(args.itemId)
+        viewModel.fetchAllData(args.itemId)
 
         // Progress Bar loader
         viewModel.isProgressBarActive.observe(viewLifecycleOwner, Observer { isProgressBarActive ->
@@ -53,17 +54,26 @@ class PreOrderFragment : Fragment() {
 
         // Item list recycler view
         val adapter =
-            TableComponentAdapter(
-                TableComponentClickListener { row ->
-                    // edit row
+            PreOrderItemsAdapter(
+                PreOrderItemClickListener { preOrderUiElement ->
+                }, IncreaseButtonClickListener { preOrderUiElement ->
+                    viewModel.increaseOrderQuantity(preOrderUiElement)
+                }, DecreaseButtonClickListener { preOrderUiElement ->
+                    viewModel.decreaseOrderQuantity(preOrderUiElement)
                 })
-        binding.tableRecyclerView.adapter = adapter
-        viewModel.table.observe(viewLifecycleOwner, Observer {
+        binding.preOrderItemRecyclerView.adapter = adapter
+        viewModel.preOrderItems.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
+                adapter.notifyDataSetChanged()
             }
         })
 
+
+        //Toast Message
+        viewModel.toastMessage.observe(viewLifecycleOwner, Observer { message ->
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+        })
 
         return binding.root
     }

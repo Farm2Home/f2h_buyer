@@ -27,7 +27,7 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
 
     private val _sessionData = MutableLiveData<SessionEntity>()
 
-    private val _allItems = MutableLiveData<List<Item>>()
+    private var allItems = ArrayList<Item>()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
@@ -49,10 +49,10 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
             _sessionData.value = retrieveSession()
             var getItemsDataDeferred = ItemApi.retrofitService.getItemsForGroup(_sessionData.value!!.groupId)
             try {
-                var items = getItemsDataDeferred.await()
-                if (items.size > 0) {
-                    _allItems.value = items
-                    filterEarliestAvailableItemAsVisibleItems(items)
+                allItems = ArrayList(getItemsDataDeferred.await())
+                if (allItems.size > 0) {
+                    allItems.sortBy { it.itemName }
+                    filterEarliestAvailableItemAsVisibleItems(allItems)
                 }
             } catch (t:Throwable){
                 println(t.message)
@@ -103,7 +103,7 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
 
         item.itemAvailability.forEach{itemAvailability ->
             val date = parser.parse(itemAvailability.availableDate)
-            if(date > todaysDate.time){
+            if(date >= todaysDate.time){
                 upcomingItemAvailabilities.add(itemAvailability)
             }
         }
