@@ -7,12 +7,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.f2h.f2h_buyer.databinding.ListPreorderItemBinding
 
-class PreOrderItemsAdapter(val clickListener: PreOrderItemClickListener): ListAdapter<PreOrderItemsModel, PreOrderItemsAdapter.ViewHolder>(
+class PreOrderItemsAdapter(val clickListener: PreOrderItemClickListener,
+                           val increaseButtonClickListener: IncreaseButtonClickListener,
+                           val decreaseButtonClickListener: DecreaseButtonClickListener
+): ListAdapter<PreOrderItemsModel, PreOrderItemsAdapter.ViewHolder>(
     TableComponentDiffCallback()
 ) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position)!!, clickListener)
+        holder.bind(getItem(position)!!, clickListener, increaseButtonClickListener, decreaseButtonClickListener)
     }
 
 
@@ -27,10 +30,14 @@ class PreOrderItemsAdapter(val clickListener: PreOrderItemClickListener): ListAd
 
         fun bind(
             uiItemsModel: PreOrderItemsModel?,
-            clickListener: PreOrderItemClickListener
+            clickListener: PreOrderItemClickListener,
+            increaseButtonClickListener: IncreaseButtonClickListener,
+            decreaseButtonClickListener: DecreaseButtonClickListener
         ) {
             binding.uiModel = uiItemsModel
             binding.clickListener = clickListener
+            binding.increaseButtonClickListener = increaseButtonClickListener
+            binding.decreaseButtonClickListener = decreaseButtonClickListener
             binding.executePendingBindings()
         }
 
@@ -56,6 +63,14 @@ class TableComponentDiffCallback : DiffUtil.ItemCallback<PreOrderItemsModel>() {
     }
 }
 
-class PreOrderItemClickListener(val clickListener: (row: PreOrderItemsModel) -> Unit) {
-    fun onClick(row: PreOrderItemsModel) = clickListener(row)
+class PreOrderItemClickListener(val clickListener: (preOrder: PreOrderItemsModel) -> Unit) {
+    fun onClick(preOrder: PreOrderItemsModel) = clickListener(preOrder)
+}
+
+class IncreaseButtonClickListener(val clickListener: (preOrder: PreOrderItemsModel) -> Unit) {
+    fun onClick(preOrder: PreOrderItemsModel) = clickListener(preOrder)
+}
+
+class DecreaseButtonClickListener(val clickListener: (preOrder: PreOrderItemsModel) -> Unit) {
+    fun onClick(preOrder: PreOrderItemsModel) = clickListener(preOrder)
 }

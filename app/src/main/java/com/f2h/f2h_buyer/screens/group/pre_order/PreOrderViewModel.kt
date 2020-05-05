@@ -9,9 +9,8 @@ import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.ItemApi
 import com.f2h.f2h_buyer.network.ItemAvailabilityApi
 import com.f2h.f2h_buyer.network.OrderApi
-import com.f2h.f2h_buyer.network.models.Item
-import com.f2h.f2h_buyer.network.models.ItemAvailability
-import com.f2h.f2h_buyer.network.models.Order
+import com.f2h.f2h_buyer.network.models.*
+import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
 import kotlinx.coroutines.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -32,11 +31,15 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     val preOrderUiModel: LiveData<PreOrderUiModel>
         get() = _preOrderUiModel
 
+    private var _toastMessage = MutableLiveData<String>()
+    val toastMessage: LiveData<String>
+        get() = _toastMessage
+
     private val df_iso: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'00:00:00'Z'")
     private val preOrderDaysMax = 10
     private var startDate = ""
     private var endDate = ""
-    private var selectedItem = 0L
+    private var selectedItemId = 0L
 
     private val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
     private var sessionData = SessionEntity()
@@ -51,7 +54,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
 
 
     fun fetchAllData(itemId: Long) {
-        selectedItem = itemId
+        selectedItemId = itemId
         _isProgressBarActive.value = true
         coroutineScope.launch {
             sessionData = retrieveSession()
@@ -104,6 +107,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
                 preOrderItem.availableQuantity = availability.availableQuantity ?: 0.0
                 preOrderItem.isFreezed = availability.isFreezed ?: false
                 preOrderItem.itemUom = item.uom ?: ""
+                preOrderItem.orderQuantityJump = item.orderQtyJump ?: 0.0
 
                 var order = orders.filter { it.itemAvailabilityId!!.equals(availability.itemAvailabilityId) }
                 if (order.isNotEmpty()) {
@@ -172,13 +176,120 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         return endDate
     }
 
+
+
+    // increase order qty till max available qty
+    fun increaseOrderQuantity(selectedPreOrder: PreOrderItemsModel){
+        _preOrderItems.value?.forEach { preOrderUiElement ->
+            if (preOrderUiElement.itemAvailabilityId.equals(selectedPreOrder.itemAvailabilityId)){
+                preOrderUiElement.orderedQuantity = preOrderUiElement.orderedQuantity.plus(preOrderUiElement.orderQuantityJump)
+                preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.plus(preOrderUiElement.orderQuantityJump)
+
+                // logic to prevent increasing quantity beyond maximum
+                if (preOrderUiElement.quantityChange > preOrderUiElement.availableQuantity) {
+                    preOrderUiElement.orderedQuantity = preOrderUiElement.orderedQuantity.minus(preOrderUiElement.orderQuantityJump)
+                    preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.minus(preOrderUiElement.orderQuantityJump)
+                    _toastMessage.value = "No more stock"
+                }
+            }
+        }
+        _preOrderItems.value = _preOrderItems.value
+    }
+
+
+    // decrease order qty till min 0
+    fun decreaseOrderQuantity(selectedPreOrder: PreOrderItemsModel){
+        _preOrderItems.value?.forEach { preOrderUiElement ->
+            if (preOrderUiElement.itemAvailabilityId.equals(selectedPreOrder.itemAvailabilityId)){
+                preOrderUiElement.orderedQuantity = preOrderUiElement.orderedQuantity.minus(preOrderUiElement.orderQuantityJump)
+                preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.minus(preOrderUiElement.orderQuantityJump)
+
+                if (preOrderUiElement.orderedQuantity < 0) {
+                    preOrderUiElement.orderedQuantity = 0.0
+                    preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.plus(preOrderUiElement.orderQuantityJump)
+                }
+            }
+        }
+        _preOrderItems.value = _preOrderItems.value
+    }
+
+
+
     fun onClickCancelButton() {
-        fetchAllData(selectedItem)
+        fetchAllData(selectedItemId)
     }
 
 
     fun onClickSaveButton() {
+        _isProgressBarActive.value = true
+        var newOrders: ArrayList<OrderCreateRequest> = arrayListOf()
+        var updatedOrders: ArrayList<OrderUpdateRequest> = arrayListOf()
+        _preOrderItems.value?.forEach { preOrder ->
 
+            if(preOrder.quantityChange.equals(0.0)){
+                return@forEach
+            }
+
+            if (preOrder.orderId <= 0){
+                newOrders.add(createNewOrder(preOrder))
+            }
+
+            if (preOrder.orderId > 0) {
+                updatedOrders.add(createUpdateOrder(preOrder))
+            }
+        }
+
+        coroutineScope.launch {
+            var updateOrdersDataDeferred = OrderApi.retrofitService.updateOrders(updatedOrders)
+            var createOrdersDataDeferred = OrderApi.retrofitService.createOrders(newOrders)
+            try{
+                updateOrdersDataDeferred.await()
+                createOrdersDataDeferred.await()
+            } catch (t:Throwable){
+                println(t.message)
+                _toastMessage.value = "Out of stock"
+            }
+
+            // Refresh the screen
+            fetchAllData(selectedItemId)
+            _isProgressBarActive.value = false
+        }
+    }
+
+
+    private fun createNewOrder(preOrder: PreOrderItemsModel): OrderCreateRequest {
+        var newOrder = OrderCreateRequest(
+            buyerUserId = sessionData.userId,
+            itemAvailabilityId = preOrder.itemAvailabilityId,
+            orderDescription = "Successfully created new order",
+            deliveryLocation = sessionData.address,
+            uom = preOrder.orderUom,
+            orderedQuantity = preOrder.orderedQuantity,
+            orderedAmount = calculateOrderAmount(preOrder.orderedQuantity),
+            discountAmount = 0.0,
+            orderStatus = "ORDERED",
+            paymentStatus = "PENDING",
+            createdBy = "BUYER-" + sessionData.userName,
+            updatedBy = "BUYER-" + sessionData.userName
+        )
+        return newOrder
+    }
+
+
+    private fun createUpdateOrder(preOrder: PreOrderItemsModel): OrderUpdateRequest {
+        var updatedOrders = OrderUpdateRequest(
+            orderId = preOrder.orderId,
+            orderStatus = preOrder.orderStatus,
+            discountAmount = null,
+            orderedAmount = calculateOrderAmount(preOrder.orderedQuantity),
+            orderedQuantity = preOrder.orderedQuantity
+        )
+
+        return updatedOrders
+    }
+
+    private fun calculateOrderAmount(orderedQuantity: Double): Double {
+        return orderedQuantity.times(preOrderUiModel.value?.itemPrice ?: 0.0)
     }
 
 }

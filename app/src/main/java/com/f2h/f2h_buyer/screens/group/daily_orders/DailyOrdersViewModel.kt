@@ -12,7 +12,7 @@ import com.f2h.f2h_buyer.network.OrderApi
 import com.f2h.f2h_buyer.network.models.Item
 import com.f2h.f2h_buyer.network.models.ItemAvailability
 import com.f2h.f2h_buyer.network.models.Order
-import com.f2h.f2h_buyer.network.models.OrderUpdate
+import com.f2h.f2h_buyer.network.models.OrderUpdateRequest
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -219,9 +219,9 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
 
     fun onClickSaveButton() {
         _isProgressBarActive.value = true
-        var orderUpdates = arrayListOf<OrderUpdate>()
+        var orderUpdates = arrayListOf<OrderUpdateRequest>()
         _visibleUiData.value?.forEach { uiElement ->
-            var orderUpdate = OrderUpdate(
+            var orderUpdate = OrderUpdateRequest(
                 orderId = uiElement.orderId,
                 orderStatus = uiElement.orderStatus,
                 discountAmount = uiElement.discountAmount,

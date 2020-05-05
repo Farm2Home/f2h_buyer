@@ -29,10 +29,26 @@ data class Order (
 )
 
 
-data class OrderUpdate (
+data class OrderUpdateRequest (
     @Json(name = "order_id") var orderId: Long?,
     @Json(name = "order_status") var orderStatus: String?,
     @Json(name = "ordered_quantity") var orderedQuantity: Double?,
     @Json(name = "ordered_amount") var orderedAmount: Double?,
     @Json(name = "discount_amount") var discountAmount: Double?
+)
+
+
+data class OrderCreateRequest (
+    @Json(name = "buyer_user_id") var buyerUserId: Long?,
+    @Json(name = "item_availability_id") var itemAvailabilityId: Long?,
+    @Json(name = "order_description") var orderDescription: String?,
+    @Json(name = "delivery_location") var deliveryLocation: String?,
+    @Json(name = "uom") var uom: String?,
+    @Json(name = "ordered_quantity") var orderedQuantity: Double?,
+    @Json(name = "ordered_amount") var orderedAmount: Double?,
+    @Json(name = "discount_amount") var discountAmount: Double?,
+    @Json(name = "order_status") var orderStatus: String?,
+    @Json(name = "payment_status") var paymentStatus: String?,
+    @Json(name = "created_by") var createdBy: String?,
+    @Json(name = "updated_by") var updatedBy: String?
 )

@@ -56,7 +56,7 @@ fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
 @BindingAdapter("availableQuantityFormattedPreOrder")
 fun TextView.setAvailableQuantityFormattedPreOrder(data: PreOrderItemsModel?){
     data?.let {
-        var orderedString = String.format("%s  %s", getFormattedQtyNumber(data.availableQuantity), data.itemUom)
+        var orderedString = String.format("%s  %s", getFormattedQtyNumber(data.availableQuantity - data.quantityChange), data.itemUom)
         text = orderedString
     }
 }
@@ -94,9 +94,9 @@ fun TextView.setStatusFormatted(data: PreOrderItemsModel){
 @BindingAdapter("buttonVisibilityFormatted")
 fun Button.setButtonVisibilityFormatted(data: PreOrderItemsModel){
     if (isOrderFreezed(data)){
-        visibility = View.INVISIBLE
+        isEnabled = false
     } else{
-        visibility = View.VISIBLE
+        isEnabled = true
     }
 }
 

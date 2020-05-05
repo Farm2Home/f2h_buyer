@@ -131,9 +131,9 @@ fun TextView.setStatusFormatted(data: DailyOrdersUiModel){
 @BindingAdapter("buttonVisibilityFormatted")
 fun Button.setButtonVisibilityFormatted(data: DailyOrdersUiModel){
     if (isOrderFreezed(data)){
-        visibility = View.INVISIBLE
+        isEnabled = false
     } else{
-        visibility = View.VISIBLE
+        isEnabled = true
     }
 }
 

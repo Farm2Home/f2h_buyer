@@ -10,6 +10,12 @@
         <variable
             name="clickListener"
             type="com.f2h.f2h_buyer.screens.group.pre_order.PreOrderItemClickListener" />
+        <variable
+            name="increaseButtonClickListener"
+            type="com.f2h.f2h_buyer.screens.group.pre_order.IncreaseButtonClickListener" />
+        <variable
+            name="decreaseButtonClickListener"
+            type="com.f2h.f2h_buyer.screens.group.pre_order.DecreaseButtonClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,7 +66,9 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginEnd="60dp"
+                    android:onClick="@{() -> decreaseButtonClickListener.onClick(uiModel)}"
                     android:text="-"
+                    android:textStyle="bold"
                     app:buttonVisibilityFormatted="@{uiModel}"
                     app:layout_constraintBottom_toBottomOf="@+id/status"
                     app:layout_constraintEnd_toStartOf="@+id/buttonIncrease"
@@ -71,7 +79,9 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginEnd="20dp"
+                    android:onClick="@{() -> increaseButtonClickListener.onClick(uiModel)}"
                     android:text="+"
+                    android:textStyle="bold"
                     app:buttonVisibilityFormatted="@{uiModel}"
                     app:layout_constraintBottom_toBottomOf="@+id/buttonDecrease"
                     app:layout_constraintEnd_toEndOf="parent"
