@@ -252,7 +252,6 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
 
             // Refresh the screen
             fetchAllData(selectedItemId)
-            _isProgressBarActive.value = false
         }
     }
 

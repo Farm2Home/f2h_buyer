@@ -57,7 +57,8 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     }
 
 
-    private fun getItemsAndAvailabilitiesForGroup() {
+    public fun getItemsAndAvailabilitiesForGroup() {
+        _isProgressBarActive.value = true
         coroutineScope.launch {
             sessionData.value = retrieveSession()
             var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupAndUser(sessionData.value!!.groupId, sessionData.value!!.userId)

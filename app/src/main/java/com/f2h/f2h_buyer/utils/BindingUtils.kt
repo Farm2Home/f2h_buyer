@@ -1,5 +1,6 @@
 package com.f2h.f2h_buyer.utils
 
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -37,4 +38,9 @@ fun ImageView.setCustomImageFormatted(itemId: Long){
     }
 
     setImageResource(R.drawable.f2h_logo)
+}
+
+@BindingAdapter("buttonStatus")
+fun Button.setButtonStatus(status: Boolean){
+    isEnabled = status
 }

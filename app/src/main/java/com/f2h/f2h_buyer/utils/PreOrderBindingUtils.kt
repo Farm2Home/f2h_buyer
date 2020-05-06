@@ -45,9 +45,13 @@ fun TextView.setDateFormattedPreOrderItems(data: PreOrderItemsModel?){
 @BindingAdapter("orderedQuantityFormattedPreOrder")
 fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
     data?.let {
-        var orderedString = String.format("%s %s", getFormattedQtyNumber(data.orderedQuantity), data.orderUom)
+        var freezeString = ""
+        if (isOrderFreezed(data) && "ORDERED".equals(data.orderStatus)){
+            freezeString = "\nFreeze"
+        }
+        var orderedString = String.format("%s %s%s", getFormattedQtyNumber(data.orderedQuantity), data.orderUom, freezeString)
         if (data.orderStatus.equals("CONFIRMED")){
-            orderedString = String.format("%s %s",getFormattedQtyNumber(data.confirmedQuantity), data.orderUom)
+            orderedString = String.format("%s %s%s",getFormattedQtyNumber(data.confirmedQuantity), data.orderUom, freezeString)
         }
         text = orderedString
     }
@@ -56,7 +60,14 @@ fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
 @BindingAdapter("availableQuantityFormattedPreOrder")
 fun TextView.setAvailableQuantityFormattedPreOrder(data: PreOrderItemsModel?){
     data?.let {
-        var orderedString = String.format("%s  %s", getFormattedQtyNumber(data.availableQuantity - data.quantityChange), data.itemUom)
+        var availabileQuantityText = getFormattedQtyNumber(data.availableQuantity - data.quantityChange)
+        var itemUom = data.itemUom
+        if(data.availableQuantity - data.quantityChange > 1000){
+            availabileQuantityText = "Unlimited"
+            itemUom = ""
+        }
+
+        var orderedString = String.format("%s  %s", availabileQuantityText, itemUom)
         text = orderedString
     }
 }

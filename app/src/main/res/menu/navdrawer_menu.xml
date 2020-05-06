@@ -14,6 +14,10 @@
         android:icon="@drawable/settings_icon"
         android:title="@string/my_profile" />
     <item
+        android:id="@+id/reportFragment"
+        android:icon="@drawable/report_icon"
+        android:title="@string/report" />
+    <item
         android:id="@+id/signOutFragment"
         android:icon="@drawable/sign_out_icon"
         android:title="@string/sign_out" />
