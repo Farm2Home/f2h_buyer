@@ -157,7 +157,7 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
         elements.forEach { element ->
             if ((selectedItem == "ALL" || element.itemName.equals(selectedItem)) &&
                 (selectedOrderStatus == "ALL" || element.orderStatus.equals(selectedOrderStatus)) &&
-                (selectedPaymentStatus == "ALL" || element.itemName.equals(selectedPaymentStatus))) {
+                (selectedPaymentStatus == "ALL" || element.paymentStatus.equals(selectedPaymentStatus))) {
                 filteredItems.add(element)
             }
         }
