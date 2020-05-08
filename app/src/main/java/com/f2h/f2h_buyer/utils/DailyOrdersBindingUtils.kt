@@ -29,9 +29,9 @@ fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
         freezeString = "\nFreeze"
     }
 
-    var orderedString = String.format("%s  %s%s", getFormattedQtyNumber(data.orderedQuantity), data.orderUom, freezeString)
+    var orderedString = String.format("%s  %s", getFormattedQtyNumber(data.orderedQuantity), freezeString)
     if (data.orderStatus.equals("CONFIRMED")){
-        orderedString = String.format("%s  %s%s",getFormattedQtyNumber(data.confirmedQuantity), data.orderUom, freezeString)
+        orderedString = String.format("%s  %s",getFormattedQtyNumber(data.confirmedQuantity), freezeString)
     }
 
     text = orderedString
@@ -139,10 +139,10 @@ fun Button.setButtonVisibilityFormatted(data: DailyOrdersUiModel){
 
 
 private fun isOrderFreezed(data: DailyOrdersUiModel) : Boolean {
-    if (data.isFreezed.equals(false) &&
-       (data.orderStatus.equals("ORDERED") ||
-        data.orderStatus.isBlank())){
-        return false
+    if (data.isFreezed.equals(true) &&
+        (data.orderStatus.equals("ORDERED") ||
+                data.orderStatus.isBlank())){
+        return true
     }
-    return true
+    return false
 }

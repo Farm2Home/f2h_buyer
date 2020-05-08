@@ -65,7 +65,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/itemDescription"
+                    android:id="@+id/date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -90,7 +90,7 @@
                     app:layout_constraintEnd_toEndOf="@+id/buttonIncrease"
                     app:layout_constraintHorizontal_bias="0.507"
                     app:layout_constraintStart_toStartOf="@+id/buttonIncrease"
-                    app:layout_constraintTop_toBottomOf="@+id/quantity" />
+                    app:layout_constraintTop_toBottomOf="@+id/confirmedQuantity" />
 
                 <Button
                     android:id="@+id/buttonIncrease"
@@ -106,7 +106,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/quantity"
+                    android:id="@+id/confirmedQuantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -129,14 +129,14 @@
                     app:priceFormatted="@{uiModel}" />
 
                 <TextView
-                    android:id="@+id/farmer"
+                    android:id="@+id/orderedQuantity"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@{`Farmer - ` + uiModel.farmerName}"
                     android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/itemDescription"
-                    app:layout_constraintStart_toStartOf="@+id/itemDescription"
-                    app:layout_constraintTop_toBottomOf="@+id/itemDescription" />
+                    app:layout_constraintEnd_toEndOf="@+id/date"
+                    app:layout_constraintStart_toStartOf="@+id/date"
+                    app:layout_constraintTop_toBottomOf="@+id/date" />
 
 
                 <View
@@ -152,9 +152,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Payable - "
-                    app:layout_constraintEnd_toEndOf="@+id/farmer"
+                    app:layout_constraintEnd_toEndOf="@+id/orderedQuantity"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/farmer"
+                    app:layout_constraintStart_toStartOf="@+id/orderedQuantity"
                     app:layout_constraintTop_toBottomOf="@+id/discount"
                     app:totalPriceFormatted="@{uiModel}" />
 
@@ -178,12 +178,12 @@
                     android:layout_marginTop="5dp"
                     android:textSize="12sp"
                     app:discountFormatted="@{uiModel}"
-                    app:layout_constraintEnd_toEndOf="@+id/comment"
-                    app:layout_constraintStart_toStartOf="@+id/comment"
-                    app:layout_constraintTop_toBottomOf="@+id/comment" />
+                    app:layout_constraintEnd_toEndOf="@+id/deliveryAddress"
+                    app:layout_constraintStart_toStartOf="@+id/deliveryAddress"
+                    app:layout_constraintTop_toBottomOf="@+id/deliveryAddress" />
 
                 <TextView
-                    android:id="@+id/comment"
+                    android:id="@+id/deliveryAddress"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -191,10 +191,10 @@
                     android:singleLine="false"
                     android:textSize="10sp"
                     app:commentFormatted="@{uiModel}"
-                    app:layout_constraintEnd_toEndOf="@+id/farmer"
+                    app:layout_constraintEnd_toEndOf="@+id/orderedQuantity"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/farmer"
-                    app:layout_constraintTop_toBottomOf="@+id/farmer" />
+                    app:layout_constraintStart_toStartOf="@+id/orderedQuantity"
+                    app:layout_constraintTop_toBottomOf="@+id/orderedQuantity" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

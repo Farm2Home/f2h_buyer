@@ -14,7 +14,6 @@ data class DailyOrdersUiModel (
     var confirmedQuantity: Double = 0.0,
     var availableQuantity: Double = 0.0,
     var orderQtyJump: Double = 0.0,
-    var orderUom: String = "",
     var orderAmount: Double = 0.0,
     var orderStatus: String = "",
     var orderComment: String = "",

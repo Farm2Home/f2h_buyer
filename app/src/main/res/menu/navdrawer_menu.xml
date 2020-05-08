@@ -6,17 +6,9 @@
         android:icon="@drawable/menu_icon"
         android:title="@string/my_groups" />
     <item
-        android:id="@+id/contactUsFragment"
-        android:icon="@drawable/contact_us_icon"
-        android:title="@string/contact_us" />
-    <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/settings_icon"
         android:title="@string/my_profile" />
-    <item
-        android:id="@+id/reportFragment"
-        android:icon="@drawable/report_icon"
-        android:title="@string/report" />
     <item
         android:id="@+id/signOutFragment"
         android:icon="@drawable/sign_out_icon"

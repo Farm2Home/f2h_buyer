@@ -121,7 +121,6 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
             uiElement.orderedDate = df.format(df.parse(order.orderedDate))
             uiElement.orderedQuantity = order.orderedQuantity ?: 0.0
             uiElement.confirmedQuantity = order.confirmedQuantity ?: 0.0
-            uiElement.orderUom = order.uom ?: ""
             uiElement.orderId = order.orderId ?: -1L
             uiElement.orderAmount = order.orderedAmount ?: 0.0
             uiElement.discountAmount = order.discountAmount ?: 0.0

@@ -30,6 +30,10 @@ interface OrderApiService {
             Deferred<List<Order>>
 
     @GET("order")
+    fun getOrdersForGroup(@Query("group_id") groupId: Long):
+            Deferred<List<Order>>
+
+    @GET("order")
     fun getOrdersForGroupUserAndItem(@Query("group_id") groupId: Long, @Query("buyer_user_id") buyerUserId: Long,
                                      @Query("item_id") itemId: Long, @Query("start_date") startDate: String,
                                      @Query("end_date") endDate: String):

@@ -61,7 +61,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/itemDescription"
+                    android:id="@+id/date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -86,14 +86,14 @@
                     app:layout_constraintTop_toBottomOf="@+id/nextAvailable" />
 
                 <TextView
-                    android:id="@+id/farmer"
+                    android:id="@+id/orderedQuantity"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@{`Farmer - ` + item.farmerUserName}"
                     android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/itemDescription"
-                    app:layout_constraintStart_toStartOf="@+id/itemDescription"
-                    app:layout_constraintTop_toBottomOf="@+id/itemDescription" />
+                    app:layout_constraintEnd_toEndOf="@+id/date"
+                    app:layout_constraintStart_toStartOf="@+id/date"
+                    app:layout_constraintTop_toBottomOf="@+id/date" />
 
                 <TextView
                     android:id="@+id/nextAvailable"
@@ -101,9 +101,9 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     app:availableDateFormatted="@{item}"
-                    app:layout_constraintEnd_toEndOf="@+id/farmer"
-                    app:layout_constraintStart_toStartOf="@+id/farmer"
-                    app:layout_constraintTop_toBottomOf="@+id/farmer" />
+                    app:layout_constraintEnd_toEndOf="@+id/orderedQuantity"
+                    app:layout_constraintStart_toStartOf="@+id/orderedQuantity"
+                    app:layout_constraintTop_toBottomOf="@+id/orderedQuantity" />
 
                 <View
                     android:id="@+id/view"

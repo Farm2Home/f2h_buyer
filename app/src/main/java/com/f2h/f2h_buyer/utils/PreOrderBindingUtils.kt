@@ -46,12 +46,12 @@ fun TextView.setDateFormattedPreOrderItems(data: PreOrderItemsModel?){
 fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
     data?.let {
         var freezeString = ""
-        if (isOrderFreezed(data) && "ORDERED".equals(data.orderStatus)){
+        if (isOrderFreezed(data)){
             freezeString = "\nFreeze"
         }
-        var orderedString = String.format("%s %s%s", getFormattedQtyNumber(data.orderedQuantity), data.orderUom, freezeString)
+        var orderedString = String.format("%s %s", getFormattedQtyNumber(data.orderedQuantity), freezeString)
         if (data.orderStatus.equals("CONFIRMED")){
-            orderedString = String.format("%s %s%s",getFormattedQtyNumber(data.confirmedQuantity), data.orderUom, freezeString)
+            orderedString = String.format("%s %s",getFormattedQtyNumber(data.confirmedQuantity), freezeString)
         }
         text = orderedString
     }
@@ -120,10 +120,10 @@ private fun getFormattedQtyNumber(number: Double): String {
 }
 
 private fun isOrderFreezed(data: PreOrderItemsModel) : Boolean {
-    if (data.isFreezed.equals(false) &&
+    if (data.isFreezed.equals(true) &&
         (data.orderStatus.equals("ORDERED") ||
                 data.orderStatus.isBlank())){
-        return false
+        return true
     }
-    return true
+    return false
 }

@@ -115,7 +115,6 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
                     preOrderItem.confirmedQuantity = order.first().confirmedQuantity ?: 0.0
                     preOrderItem.orderStatus = order.first().orderStatus ?: ""
                     preOrderItem.deliveryStatus = order.first().deliveryStatus ?: ""
-                    preOrderItem.orderUom = order.first().uom ?: ""
                     preOrderItem.orderId = order.first().orderId ?: -1L
                 }
                 list.add(preOrderItem)
@@ -262,7 +261,6 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
             itemAvailabilityId = preOrder.itemAvailabilityId,
             orderDescription = "Successfully created new order",
             deliveryLocation = sessionData.address,
-            uom = preOrder.orderUom,
             orderedQuantity = preOrder.orderedQuantity,
             orderedAmount = calculateOrderAmount(preOrder.orderedQuantity),
             discountAmount = 0.0,
