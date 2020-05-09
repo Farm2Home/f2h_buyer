@@ -20,7 +20,11 @@ fun TextView.setPriceFormattedFromItem(data: Item?){
 fun ImageView.setCustomImageFormatted(itemId: Long){
     var wvItems = arrayListOf<Long>(138,139,153,154,1065,1067,1069)
     var wvTonedMilk = arrayListOf<Long>(147,1166,1168,1170)
-    var egg = arrayListOf<Long>(176)
+    var egg = arrayListOf<Long>(176,1900)
+    var pavakka = arrayListOf<Long>(1901)
+    var beans = arrayListOf<Long>(1902)
+    var pappaya = arrayListOf<Long>(1903)
+    var fish = arrayListOf<Long>(1904)
 
     if (wvItems.contains(itemId)) {
         setImageResource(R.drawable.wv_milk)
@@ -34,6 +38,26 @@ fun ImageView.setCustomImageFormatted(itemId: Long){
 
     if (egg.contains(itemId)) {
         setImageResource(R.drawable.egg)
+        return
+    }
+
+    if (pavakka.contains(itemId)) {
+        setImageResource(R.drawable.item_1901)
+        return
+    }
+
+    if (beans.contains(itemId)) {
+        setImageResource(R.drawable.item_1902)
+        return
+    }
+
+    if (pappaya.contains(itemId)) {
+        setImageResource(R.drawable.item_1903)
+        return
+    }
+
+    if (fish.contains(itemId)) {
+        setImageResource(R.drawable.item_1904)
         return
     }
 

@@ -12,11 +12,13 @@ data class ReportItemsModel (
     var orderedQuantity: Double = 0.0,
     var confirmedQuantity: Double = 0.0,
     var availableQuantity: Double = 0.0,
+    var displayQuantity: Double = 0.0,
     var orderAmount: Double = 0.0,
     var orderStatus: String = "",
     var orderComment: String = "",
     var paymentStatus: String = "",
     var deliveryStatus: String = "",
+    var displayStatus: String = "",
     var deliveryAddress: String = "",
     var isFreezed: Boolean = false,
     var discountAmount: Double = 0.0

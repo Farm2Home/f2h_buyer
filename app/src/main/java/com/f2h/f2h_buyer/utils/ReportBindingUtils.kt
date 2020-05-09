@@ -38,10 +38,7 @@ fun TextView.setOrderedQuantityFormatted(data: ReportItemsModel){
         freezeString = "\nFreeze"
     }
 
-    var orderedString = String.format("%s  %s%s", getFormattedQtyNumber(data.orderedQuantity), data.itemUom ,freezeString)
-    if (data.orderStatus.equals("CONFIRMED")){
-        orderedString = String.format("%s  %s%s",getFormattedQtyNumber(data.confirmedQuantity), data.itemUom, freezeString)
-    }
+    var orderedString = String.format("%s  %s%s", getFormattedQtyNumber(data.displayQuantity), data.itemUom ,freezeString)
 
     text = orderedString
 }
@@ -87,8 +84,8 @@ fun TextView.setTotalPriceFormatted(data: ReportItemsModel){
 
     val receivableString = String.format("Receivable  %s ₹%.0f \n%s", markupPrice, data.orderAmount, data.paymentStatus)
     val receivaableStringFormatted = SpannableString(receivableString)
-    receivaableStringFormatted.setSpan(StrikethroughSpan(),10,10+markupPrice.length,0)
-    receivaableStringFormatted.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),10,10+markupPrice.length,0)
+    receivaableStringFormatted.setSpan(StrikethroughSpan(),11,12+markupPrice.length,0)
+    receivaableStringFormatted.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),11,12+markupPrice.length,0)
     receivaableStringFormatted.setSpan(RelativeSizeSpan(0.6F), receivableString.length-data.paymentStatus.length, receivableString.length,0)
 
     text = receivaableStringFormatted
@@ -96,14 +93,18 @@ fun TextView.setTotalPriceFormatted(data: ReportItemsModel){
 
 
 
-@BindingAdapter("totalAmountFormatted")
-fun TextView.setTotalAmountFormatted(list: List<ReportItemsModel>?){
+@BindingAdapter("aggregationFormatted")
+fun TextView.setAggregationFormatted(list: List<ReportItemsModel>?){
     if (list != null) {
         var totalAmount = (0).toDouble()
+        var totalQuantity = (0).toDouble()
+        var uom = ""
         list.forEach { element ->
             totalAmount += (element.orderAmount)
+            totalQuantity += element.displayQuantity
+            uom = element.itemUom
         }
-        text = String.format("₹%.0f", totalAmount)
+        text = String.format("₹%.0f  -  %s %s", totalAmount, getFormattedQtyNumber(totalQuantity), uom)
     }
 }
 

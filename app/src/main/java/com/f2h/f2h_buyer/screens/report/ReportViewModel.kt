@@ -18,7 +18,9 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.stream.Collectors
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class ReportViewModel(val database: SessionDatabaseDao, application: Application) : AndroidViewModel(application) {
 
@@ -117,11 +119,28 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
             uiElement.orderComment = order.orderComment ?: ""
             uiElement.buyerName = "Buyer " + order.buyerUserId.toString() ?: ""
             uiElement.deliveryAddress = order.deliveryLocation ?: ""
+            uiElement.displayStatus = getDisplayStatus(uiElement.orderStatus, uiElement.deliveryStatus)
+            uiElement.displayQuantity = getDisplayQuantity(uiElement.displayStatus, uiElement.orderedQuantity, uiElement.confirmedQuantity)
             allUiData.add(uiElement)
         }
 
         allUiData.sortByDescending { it.orderedDate }
         return allUiData
+    }
+
+    private fun getDisplayQuantity(displayStatus: String, orderedQuantity: Double, confirmedQuantity: Double): Double {
+        if (displayStatus.equals("ORDERED")) return orderedQuantity
+        return confirmedQuantity
+    }
+
+
+    private fun getDisplayStatus(orderStatus: String?, deliveryStatus: String?): String {
+        var displayStatus = orderStatus ?: ""
+        if (deliveryStatus.equals("DELIVERY_STARTED") ||
+            deliveryStatus.equals("DELIVERED")){
+            displayStatus = deliveryStatus ?: ""
+        }
+        return displayStatus
     }
 
 
@@ -132,17 +151,23 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
             .filter { uiElement -> !uiElement.itemName.isNullOrBlank() }
             .map { uiElement -> uiElement.itemName }.distinct())
 
-        filters.orderStatusList = arrayListOf("ALL").plus(allUiData.sortedBy { uiElement -> uiElement.orderStatus }
-            .filter { uiElement -> !uiElement.orderStatus.isNullOrBlank() }
-            .map { uiElement -> uiElement.orderStatus }.distinct())
+        filters.displayStatusList = arrayListOf("ALL").plus(allUiData.sortedBy { uiElement -> uiElement.displayStatus }
+            .filter { uiElement -> !uiElement.displayStatus.isNullOrBlank() }
+            .map { uiElement -> uiElement.displayStatus }.distinct())
 
         filters.paymentStatusList = arrayListOf("ALL").plus(allUiData.sortedBy { uiElement -> uiElement.paymentStatus }
             .filter { uiElement -> !uiElement.paymentStatus.isNullOrBlank() }
             .map { uiElement -> uiElement.paymentStatus }.distinct())
 
+        filters.startDateList = allUiData.sortedBy { uiElement -> uiElement.orderedDate }
+            .filter { uiElement -> !uiElement.orderedDate.isNullOrBlank() }
+            .map { uiElement -> uiElement.orderedDate }.distinct()
+
+        filters.endDateList = filters.startDateList
+
         filters.selectedItem = "ALL"
         filters.selectedPaymentStatus = "ALL"
-        filters.selectedOrderStatus = "ALL"
+        filters.selectedDisplayStatus = "ALL"
 
         return filters
     }
@@ -151,13 +176,19 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
     private fun filterVisibleItems() {
         val elements = allUiData
         var filteredItems = ArrayList<ReportItemsModel>()
-        var selectedItem = reportUiFilterModel.value?.selectedItem
-        var selectedOrderStatus = reportUiFilterModel.value?.selectedOrderStatus
-        var selectedPaymentStatus = reportUiFilterModel.value?.selectedPaymentStatus
+        var selectedItem = reportUiFilterModel.value?.selectedItem ?: ""
+        var selectedDisplayStatus = reportUiFilterModel.value?.selectedDisplayStatus ?: ""
+        var selectedPaymentStatus = reportUiFilterModel.value?.selectedPaymentStatus ?: ""
+        var selectedStartDate = reportUiFilterModel.value?.selectedStartDate ?: ""
+        var selectedEndDate = reportUiFilterModel.value?.selectedEndDate ?: ""
+
         elements.forEach { element ->
             if ((selectedItem == "ALL" || element.itemName.equals(selectedItem)) &&
-                (selectedOrderStatus == "ALL" || element.orderStatus.equals(selectedOrderStatus)) &&
-                (selectedPaymentStatus == "ALL" || element.paymentStatus.equals(selectedPaymentStatus))) {
+                (selectedDisplayStatus == "ALL" || element.displayStatus.equals(selectedDisplayStatus)) &&
+                (selectedPaymentStatus == "ALL" || element.paymentStatus.equals(selectedPaymentStatus)) &&
+                (element.orderedDate >= selectedStartDate && element.orderedDate <= selectedEndDate)) {
+
+                //TODO - add date range not just one date
                 filteredItems.add(element)
             }
         }
@@ -191,7 +222,7 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
     }
 
     fun onOrderStatusSelected(position: Int) {
-        _reportUiFilterModel.value?.selectedOrderStatus = _reportUiFilterModel.value?.orderStatusList?.get(position) ?: ""
+        _reportUiFilterModel.value?.selectedDisplayStatus = _reportUiFilterModel.value?.displayStatusList?.get(position) ?: ""
         filterVisibleItems()
     }
 
@@ -200,4 +231,13 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
         filterVisibleItems()
     }
 
+    fun onStartDateSelected(position: Int) {
+        _reportUiFilterModel.value?.selectedStartDate = _reportUiFilterModel.value?.startDateList?.get(position) ?: ""
+        filterVisibleItems()
+    }
+
+    fun onEndDateSelected(position: Int) {
+        _reportUiFilterModel.value?.selectedEndDate = _reportUiFilterModel.value?.endDateList?.get(position) ?: ""
+        filterVisibleItems()
+    }
 }

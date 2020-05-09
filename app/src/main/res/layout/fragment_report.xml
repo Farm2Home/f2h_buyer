@@ -19,13 +19,13 @@
             android:id="@+id/constraintLayout2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintBottom_toTopOf="@+id/aggregation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemSelector">
+            app:layout_constraintTop_toBottomOf="@+id/startDateSelector">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/reportListRecyclerView"
@@ -47,31 +47,21 @@
                 android:indeterminate="true"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="10dp"
-            android:text="Button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/aggregation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="TextView"
-            app:layout_constraintBottom_toBottomOf="@+id/button"
+            android:layout_marginBottom="10dp"
+            android:textSize="18sp"
+            app:aggregationFormatted="@{viewModel.visibleUiData}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/button"
-            app:layout_constraintTop_toTopOf="@+id/button" />
+            app:layout_constraintStart_toStartOf="parent" />
 
 
         <Spinner
@@ -93,7 +83,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:ellipsize="end"
-            android:entries="@{viewModel.reportUiFilterModel.orderStatusList}"
+            android:entries="@{viewModel.reportUiFilterModel.displayStatusList}"
             android:singleLine="true"
             app:layout_constraintBottom_toBottomOf="@+id/itemSelector"
             app:layout_constraintEnd_toStartOf="@+id/paymentStatusSelector"
@@ -112,6 +102,50 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/orderStatusSelector"
             app:layout_constraintVertical_bias="0.0" />
+
+        <Spinner
+            android:id="@+id/startDateSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:entries="@{viewModel.reportUiFilterModel.startDateList}"
+            android:singleLine="true"
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@+id/textView3"
+            app:layout_constraintTop_toBottomOf="@+id/itemSelector" />
+
+        <Spinner
+            android:id="@+id/endDateSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:entries="@{viewModel.reportUiFilterModel.endDateList}"
+            android:singleLine="true"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/startDateSelector"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/startDateSelector" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="From"
+            app:layout_constraintBottom_toBottomOf="@+id/startDateSelector"
+            app:layout_constraintStart_toStartOf="@+id/itemSelector"
+            app:layout_constraintTop_toTopOf="@+id/startDateSelector" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="To"
+            app:layout_constraintBottom_toBottomOf="@+id/endDateSelector"
+            app:layout_constraintEnd_toStartOf="@+id/endDateSelector"
+            app:layout_constraintTop_toTopOf="@+id/endDateSelector" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

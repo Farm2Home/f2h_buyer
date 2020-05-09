@@ -126,6 +126,39 @@ class ReportFragment : Fragment() {
         }
 
 
+
+        //Start Date Selector Spinner
+        binding.startDateSelector?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                viewModel.onStartDateSelected(position)
+            }
+        }
+
+
+        //End Date Selector Spinner
+        binding.endDateSelector?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                viewModel.onEndDateSelected(position)
+            }
+        }
+
+
     }
 
 }
