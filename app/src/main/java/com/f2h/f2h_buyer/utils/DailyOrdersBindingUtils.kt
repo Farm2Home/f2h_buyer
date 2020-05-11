@@ -9,7 +9,10 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
+import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
 
 
@@ -86,6 +89,27 @@ fun TextView.setTotalPriceFormatted(data: DailyOrdersUiModel){
     payableStringFormatted.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),9,10+markupPrice.length,0)
     payableStringFormatted.setSpan(RelativeSizeSpan(0.6F), payableString.length-data.paymentStatus.length, payableString.length,0)
 
+    //Make PAID Green colour
+    if(data.paymentStatus.equals("PAID")) {
+        payableStringFormatted.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(context,R.color.green_status)),
+            payableString.length - data.paymentStatus.length,
+            payableString.length,
+            0
+        )
+    }
+
+    //Make PENDING RED colour
+    if(data.paymentStatus.equals("PENDING")) {
+        payableStringFormatted.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(context,R.color.red_status)),
+            payableString.length - data.paymentStatus.length,
+            payableString.length,
+            0
+        )
+    }
+
+
     text = payableStringFormatted
 }
 
@@ -116,10 +140,10 @@ fun TextView.setStatusFormatted(data: DailyOrdersUiModel){
     val colouredText = SpannableString(displayedStatus)
     var color = Color.DKGRAY
     when (displayedStatus) {
-        "ORDERED" -> color = Color.parseColor("#FF9800")
-        "CONFIRMED" -> color = Color.parseColor("#FF9800")
-        "REJECTED" -> color = Color.parseColor("#F44336")
-        "DELIVERED" -> color = Color.parseColor("#4CAF50")
+        "ORDERED" -> color = ContextCompat.getColor(context, R.color.orange_status)
+        "CONFIRMED" -> color = ContextCompat.getColor(context, R.color.orange_status)
+        "REJECTED" -> color = ContextCompat.getColor(context, R.color.red_status)
+        "DELIVERED" -> color = ContextCompat.getColor(context, R.color.green_status)
     }
     colouredText.setSpan(ForegroundColorSpan(color),0, displayedStatus.length,0)
 
@@ -130,19 +154,15 @@ fun TextView.setStatusFormatted(data: DailyOrdersUiModel){
 
 @BindingAdapter("buttonVisibilityFormatted")
 fun Button.setButtonVisibilityFormatted(data: DailyOrdersUiModel){
-    if (isOrderFreezed(data)){
-        isEnabled = false
-    } else{
-        isEnabled = true
-    }
+    isEnabled = !isOrderFreezed(data)
 }
 
 
 private fun isOrderFreezed(data: DailyOrdersUiModel) : Boolean {
-    if (data.isFreezed.equals(true) &&
+    if (data.isFreezed.equals(false) &&
         (data.orderStatus.equals("ORDERED") ||
                 data.orderStatus.isBlank())){
-        return true
+        return false
     }
-    return false
+    return true
 }

@@ -6,4 +6,7 @@
     <color name="grey">#AAA</color>
     <color name="gradientColour">#5d5d5d</color>
     <color name="white">#FFFFFF</color>
+    <color name="green_status">#4CAF50</color>
+    <color name="red_status">#F44336</color>
+    <color name="orange_status">#FF9800</color>
 </resources>

@@ -6,7 +6,9 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StrikethroughSpan
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.screens.report.ReportItemsModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -88,6 +90,26 @@ fun TextView.setTotalPriceFormatted(data: ReportItemsModel){
     receivaableStringFormatted.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),11,12+markupPrice.length,0)
     receivaableStringFormatted.setSpan(RelativeSizeSpan(0.6F), receivableString.length-data.paymentStatus.length, receivableString.length,0)
 
+    //Make PAID Green colour
+    if(data.paymentStatus.equals("PAID")) {
+        receivaableStringFormatted.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(context,R.color.green_status)),
+            receivableString.length - data.paymentStatus.length,
+            receivableString.length,
+            0
+        )
+    }
+
+    //Make PENDING RED colour
+    if(data.paymentStatus.equals("PENDING")) {
+        receivaableStringFormatted.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(context,R.color.red_status)),
+            receivableString.length - data.paymentStatus.length,
+            receivableString.length,
+            0
+        )
+    }
+
     text = receivaableStringFormatted
 }
 
@@ -122,10 +144,10 @@ fun TextView.setStatusFormatted(data: ReportItemsModel){
     val colouredText = SpannableString(displayedStatus)
     var color = Color.DKGRAY
     when (displayedStatus) {
-        "ORDERED" -> color = Color.parseColor("#FF9800")
-        "CONFIRMED" -> color = Color.parseColor("#FF9800")
-        "REJECTED" -> color = Color.parseColor("#F44336")
-        "DELIVERED" -> color = Color.parseColor("#4CAF50")
+        "ORDERED" -> color = ContextCompat.getColor(context, R.color.orange_status)
+        "CONFIRMED" -> color = ContextCompat.getColor(context, R.color.orange_status)
+        "REJECTED" -> color = ContextCompat.getColor(context, R.color.red_status)
+        "DELIVERED" -> color = ContextCompat.getColor(context, R.color.green_status)
     }
     colouredText.setSpan(ForegroundColorSpan(color),0, displayedStatus.length,0)
 
@@ -134,10 +156,10 @@ fun TextView.setStatusFormatted(data: ReportItemsModel){
 
 
 private fun isOrderFreezed(data: ReportItemsModel) : Boolean {
-    if (data.isFreezed.equals(true) &&
+    if (data.isFreezed.equals(false) &&
         (data.orderStatus.equals("ORDERED") ||
                 data.orderStatus.isBlank())){
-        return true
+        return false
     }
-    return false
+    return true
 }

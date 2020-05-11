@@ -7,7 +7,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
 import com.f2h.f2h_buyer.screens.group.pre_order.PreOrderItemsModel
 import com.f2h.f2h_buyer.screens.group.pre_order.PreOrderUiModel
@@ -22,6 +24,15 @@ fun TextView.setNamePriceFormattedFromPreOrderUiModel(data: PreOrderUiModel?){
         text = String.format("%s (₹%.0f/%s)", data.itemName, data.itemPrice, data.itemUom)
     }
 }
+
+
+@BindingAdapter("descriptionFormatted")
+fun TextView.setDescriptionFormatted(data: PreOrderUiModel?){
+    data?.let {
+        text = String.format("%s", data.itemDescription)
+    }
+}
+
 
 @BindingAdapter("toolbarTitleFormatted")
 fun CollapsingToolbarLayout.setToolbarTitleFormattedFromPreOrderUiModel(data: PreOrderUiModel?){
@@ -46,7 +57,7 @@ fun TextView.setDateFormattedPreOrderItems(data: PreOrderItemsModel?){
 fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
     data?.let {
         var freezeString = ""
-        if (isOrderFreezed(data)){
+        if (isOrderFreezed(data) && "ORDERED".equals(data.orderStatus)){
             freezeString = "\nFreeze"
         }
         var orderedString = String.format("%s %s", getFormattedQtyNumber(data.orderedQuantity), freezeString)
@@ -91,10 +102,10 @@ fun TextView.setStatusFormatted(data: PreOrderItemsModel){
     val colouredText = SpannableString(displayedStatus)
     var color = Color.DKGRAY
     when (displayedStatus) {
-        "ORDERED" -> color = Color.parseColor("#FF9800")
-        "CONFIRMED" -> color = Color.parseColor("#FF9800")
-        "REJECTED" -> color = Color.parseColor("#F44336")
-        "DELIVERED" -> color = Color.parseColor("#4CAF50")
+        "ORDERED" -> color = ContextCompat.getColor(context, R.color.orange_status)
+        "CONFIRMED" -> color = ContextCompat.getColor(context, R.color.orange_status)
+        "REJECTED" -> color = ContextCompat.getColor(context, R.color.red_status)
+        "DELIVERED" -> color = ContextCompat.getColor(context, R.color.green_status)
     }
     colouredText.setSpan(ForegroundColorSpan(color),0, displayedStatus.length,0)
 
@@ -104,11 +115,7 @@ fun TextView.setStatusFormatted(data: PreOrderItemsModel){
 
 @BindingAdapter("buttonVisibilityFormatted")
 fun Button.setButtonVisibilityFormatted(data: PreOrderItemsModel){
-    if (isOrderFreezed(data)){
-        isEnabled = false
-    } else{
-        isEnabled = true
-    }
+    isEnabled = !isOrderFreezed(data)
 }
 
 
@@ -120,10 +127,10 @@ private fun getFormattedQtyNumber(number: Double): String {
 }
 
 private fun isOrderFreezed(data: PreOrderItemsModel) : Boolean {
-    if (data.isFreezed.equals(true) &&
+    if (data.isFreezed.equals(false) &&
         (data.orderStatus.equals("ORDERED") ||
                 data.orderStatus.isBlank())){
-        return true
+        return false
     }
-    return false
+    return true
 }
