@@ -46,7 +46,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/itemName"
+                    android:id="@+id/description"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -65,9 +65,9 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/itemName"
-                    app:layout_constraintStart_toStartOf="@+id/itemName"
-                    app:layout_constraintTop_toBottomOf="@+id/itemName"
+                    app:layout_constraintEnd_toEndOf="@+id/description"
+                    app:layout_constraintStart_toStartOf="@+id/description"
+                    app:layout_constraintTop_toBottomOf="@+id/description"
                     app:orderDateFormatted="@{uiModel}" />
 
                 <TextView
@@ -83,7 +83,7 @@
                     app:orderedQuantityFormatted="@{uiModel}" />
 
                 <TextView
-                    android:id="@+id/price"
+                    android:id="@+id/amount"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Rs. "
@@ -121,9 +121,9 @@
                     android:textAlignment="center"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/price"
-                    app:layout_constraintStart_toStartOf="@+id/price"
-                    app:layout_constraintTop_toBottomOf="@+id/price"
+                    app:layout_constraintEnd_toEndOf="@+id/amount"
+                    app:layout_constraintStart_toStartOf="@+id/amount"
+                    app:layout_constraintTop_toBottomOf="@+id/amount"
                     app:statusFormatted="@{uiModel}" />
 
                 <TextView
