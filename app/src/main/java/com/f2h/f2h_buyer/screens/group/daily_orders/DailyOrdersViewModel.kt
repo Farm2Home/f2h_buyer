@@ -126,7 +126,6 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
             uiElement.discountAmount = order.discountAmount ?: 0.0
             uiElement.orderStatus = order.orderStatus ?: ""
             uiElement.paymentStatus = order.paymentStatus ?: ""
-            uiElement.deliveryStatus = order.deliveryStatus ?: ""
             uiElement.orderComment = order.orderComment ?: ""
             uiElement.deliveryComment = order.deliveryComment ?: ""
 

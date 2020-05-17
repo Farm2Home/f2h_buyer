@@ -9,6 +9,12 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.f2h.f2h_buyer.R
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_CONFIRMED
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_DELIVERED
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_ORDERED
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_REJECTED
+import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PAID
+import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PENDING
 import com.f2h.f2h_buyer.screens.report.ReportItemsModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -36,7 +42,7 @@ fun TextView.setOrderDateFormatted(data: ReportItemsModel?){
 fun TextView.setOrderedQuantityFormatted(data: ReportItemsModel){
     var freezeString = ""
 
-    if (isOrderFreezed(data) && "ORDERED".equals(data.orderStatus)){
+    if (isOrderFreezed(data) && ORDER_STATUS_ORDERED.equals(data.orderStatus)){
         freezeString = "\nFreeze"
     }
 
@@ -91,7 +97,7 @@ fun TextView.setTotalPriceFormatted(data: ReportItemsModel){
     receivaableStringFormatted.setSpan(RelativeSizeSpan(0.6F), receivableString.length-data.paymentStatus.length, receivableString.length,0)
 
     //Make PAID Green colour
-    if(data.paymentStatus.equals("PAID")) {
+    if(data.paymentStatus.equals(PAYMENT_STATUS_PAID)) {
         receivaableStringFormatted.setSpan(
             ForegroundColorSpan(ContextCompat.getColor(context,R.color.green_status)),
             receivableString.length - data.paymentStatus.length,
@@ -101,7 +107,7 @@ fun TextView.setTotalPriceFormatted(data: ReportItemsModel){
     }
 
     //Make PENDING RED colour
-    if(data.paymentStatus.equals("PENDING")) {
+    if(data.paymentStatus.equals(PAYMENT_STATUS_PENDING)) {
         receivaableStringFormatted.setSpan(
             ForegroundColorSpan(ContextCompat.getColor(context,R.color.red_status)),
             receivableString.length - data.paymentStatus.length,
@@ -136,18 +142,13 @@ fun TextView.setStatusFormatted(data: ReportItemsModel){
 
     var displayedStatus: String = data.orderStatus
 
-    if (data.deliveryStatus.equals("DELIVERY_STARTED") ||
-        data.deliveryStatus.equals("DELIVERED")){
-        displayedStatus = data.deliveryStatus
-    }
-
     val colouredText = SpannableString(displayedStatus)
     var color = Color.DKGRAY
     when (displayedStatus) {
-        "ORDERED" -> color = ContextCompat.getColor(context, R.color.orange_status)
-        "CONFIRMED" -> color = ContextCompat.getColor(context, R.color.orange_status)
-        "REJECTED" -> color = ContextCompat.getColor(context, R.color.red_status)
-        "DELIVERED" -> color = ContextCompat.getColor(context, R.color.green_status)
+        ORDER_STATUS_ORDERED -> color = ContextCompat.getColor(context, R.color.orange_status)
+        ORDER_STATUS_CONFIRMED -> color = ContextCompat.getColor(context, R.color.orange_status)
+        ORDER_STATUS_REJECTED -> color = ContextCompat.getColor(context, R.color.red_status)
+        ORDER_STATUS_DELIVERED -> color = ContextCompat.getColor(context, R.color.green_status)
     }
     colouredText.setSpan(ForegroundColorSpan(color),0, displayedStatus.length,0)
 
@@ -157,7 +158,7 @@ fun TextView.setStatusFormatted(data: ReportItemsModel){
 
 private fun isOrderFreezed(data: ReportItemsModel) : Boolean {
     if (data.isFreezed.equals(false) &&
-        (data.orderStatus.equals("ORDERED") ||
+        (data.orderStatus.equals(ORDER_STATUS_ORDERED) ||
                 data.orderStatus.isBlank())){
         return false
     }

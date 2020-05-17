@@ -114,7 +114,6 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
                     preOrderItem.orderedQuantity = order.first().orderedQuantity ?: 0.0
                     preOrderItem.confirmedQuantity = order.first().confirmedQuantity ?: 0.0
                     preOrderItem.orderStatus = order.first().orderStatus ?: ""
-                    preOrderItem.deliveryStatus = order.first().deliveryStatus ?: ""
                     preOrderItem.orderId = order.first().orderId ?: -1L
                 }
                 list.add(preOrderItem)

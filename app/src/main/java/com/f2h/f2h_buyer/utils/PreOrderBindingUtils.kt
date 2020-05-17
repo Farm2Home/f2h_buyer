@@ -3,14 +3,15 @@ package com.f2h.f2h_buyer.utils
 import android.graphics.Color
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.f2h.f2h_buyer.R
-import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_CONFIRMED
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_DELIVERED
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_ORDERED
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_REJECTED
 import com.f2h.f2h_buyer.screens.group.pre_order.PreOrderItemsModel
 import com.f2h.f2h_buyer.screens.group.pre_order.PreOrderUiModel
 import com.google.android.material.appbar.CollapsingToolbarLayout
@@ -57,11 +58,11 @@ fun TextView.setDateFormattedPreOrderItems(data: PreOrderItemsModel?){
 fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
     data?.let {
         var freezeString = ""
-        if (isOrderFreezed(data) && "ORDERED".equals(data.orderStatus)){
+        if (isOrderFreezed(data) && ORDER_STATUS_ORDERED.equals(data.orderStatus)){
             freezeString = "\nFreeze"
         }
         var orderedString = String.format("%s %s", getFormattedQtyNumber(data.orderedQuantity), freezeString)
-        if (data.orderStatus.equals("CONFIRMED")){
+        if (data.orderStatus.equals(ORDER_STATUS_CONFIRMED)){
             orderedString = String.format("%s %s",getFormattedQtyNumber(data.confirmedQuantity), freezeString)
         }
         text = orderedString
@@ -89,11 +90,6 @@ fun TextView.setStatusFormatted(data: PreOrderItemsModel){
 
     var displayedStatus: String = data.orderStatus
 
-    if (data.deliveryStatus.equals("DELIVERY_STARTED") ||
-        data.deliveryStatus.equals("DELIVERED")){
-        displayedStatus = data.deliveryStatus
-    }
-
     if (displayedStatus.isBlank()){
         text = ""
         return
@@ -102,10 +98,10 @@ fun TextView.setStatusFormatted(data: PreOrderItemsModel){
     val colouredText = SpannableString(displayedStatus)
     var color = Color.DKGRAY
     when (displayedStatus) {
-        "ORDERED" -> color = ContextCompat.getColor(context, R.color.orange_status)
-        "CONFIRMED" -> color = ContextCompat.getColor(context, R.color.orange_status)
-        "REJECTED" -> color = ContextCompat.getColor(context, R.color.red_status)
-        "DELIVERED" -> color = ContextCompat.getColor(context, R.color.green_status)
+        ORDER_STATUS_ORDERED -> color = ContextCompat.getColor(context, R.color.orange_status)
+        ORDER_STATUS_CONFIRMED -> color = ContextCompat.getColor(context, R.color.orange_status)
+        ORDER_STATUS_REJECTED -> color = ContextCompat.getColor(context, R.color.red_status)
+        ORDER_STATUS_DELIVERED -> color = ContextCompat.getColor(context, R.color.green_status)
     }
     colouredText.setSpan(ForegroundColorSpan(color),0, displayedStatus.length,0)
 
@@ -128,7 +124,7 @@ private fun getFormattedQtyNumber(number: Double): String {
 
 private fun isOrderFreezed(data: PreOrderItemsModel) : Boolean {
     if (data.isFreezed.equals(false) &&
-        (data.orderStatus.equals("ORDERED") ||
+        (data.orderStatus.equals(ORDER_STATUS_ORDERED) ||
                 data.orderStatus.isBlank())){
         return false
     }

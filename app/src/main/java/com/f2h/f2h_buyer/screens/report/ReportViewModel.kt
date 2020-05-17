@@ -18,7 +18,6 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -115,7 +114,6 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
             uiElement.discountAmount = order.discountAmount ?: 0.0
             uiElement.orderStatus = order.orderStatus ?: ""
             uiElement.paymentStatus = order.paymentStatus ?: ""
-            uiElement.deliveryStatus = order.deliveryStatus ?: ""
             uiElement.orderComment = order.orderComment ?: ""
             uiElement.buyerName = "Buyer " + order.buyerUserId.toString() ?: ""
             uiElement.deliveryAddress = order.deliveryLocation ?: ""

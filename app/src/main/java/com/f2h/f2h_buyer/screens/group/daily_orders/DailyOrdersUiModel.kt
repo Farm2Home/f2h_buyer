@@ -19,7 +19,6 @@ data class DailyOrdersUiModel (
     var orderComment: String = "",
     var deliveryComment: String = "",
     var paymentStatus: String = "",
-    var deliveryStatus: String = "",
     var isFreezed: Boolean = false,
     var discountAmount: Double = 0.0
 )

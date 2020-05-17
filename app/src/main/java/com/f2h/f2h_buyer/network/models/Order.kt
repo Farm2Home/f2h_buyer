@@ -17,7 +17,6 @@ data class Order (
     @Json(name = "discount_amount") val discountAmount: Double? = 0.0,
     @Json(name = "order_status") val orderStatus: String? = "",
     @Json(name = "payment_status") val paymentStatus: String? = "",
-    @Json(name = "delivery_status") val deliveryStatus: String? = "",
     @Json(name = "delivery_comment") val deliveryComment: String? = "",
     @Json(name = "order_comment") val orderComment: String? = "",
     @Json(name = "delivered_date") val deliveredDate: String? = "",
