@@ -50,7 +50,7 @@ class GroupWalletViewModel(val database: SessionDatabaseDao, application: Applic
                     )
                     allUiData.add(walletItemsModel)
                 }
-                allUiData.sortedByDescending { it.transactionDate }
+                allUiData.sortByDescending { it.transactionDate }
                 _visibleUiData.value = allUiData
             } catch (t:Throwable){
                 println(t.message)
