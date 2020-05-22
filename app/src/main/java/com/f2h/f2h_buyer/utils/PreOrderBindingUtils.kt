@@ -58,7 +58,7 @@ fun TextView.setDateFormattedPreOrderItems(data: PreOrderItemsModel?){
 fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
     data?.let {
         var freezeString = ""
-        if (isOrderFreezed(data) && ORDER_STATUS_ORDERED.equals(data.orderStatus)){
+        if (isFreezeStringDisplayed(data)){
             freezeString = "\nFreeze"
         }
         var orderedString = String.format("%s %s", getFormattedQtyNumber(data.orderedQuantity), freezeString)
@@ -68,6 +68,10 @@ fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
         text = orderedString
     }
 }
+
+private fun isFreezeStringDisplayed(data: PreOrderItemsModel) =
+    isOrderFreezed(data) && (ORDER_STATUS_ORDERED.equals(data.orderStatus) || ORDER_STATUS_ORDERED.isBlank())
+
 
 @BindingAdapter("availableQuantityFormattedPreOrder")
 fun TextView.setAvailableQuantityFormattedPreOrder(data: PreOrderItemsModel?){

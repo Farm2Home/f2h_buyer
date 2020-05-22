@@ -46,7 +46,7 @@
                     app:srcCompat="@drawable/wv_logo" />
 
                 <TextView
-                    android:id="@+id/date"
+                    android:id="@+id/groupName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -59,7 +59,7 @@
                     app:layout_constraintTop_toTopOf="@+id/itemImage" />
 
                 <TextView
-                    android:id="@+id/orderedQuantity"
+                    android:id="@+id/groupDescription"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -73,7 +73,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/itemImage"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/itemImage"
-                    app:layout_constraintTop_toBottomOf="@+id/date" />
+                    app:layout_constraintTop_toBottomOf="@+id/groupName" />
 
                 <View
                     android:layout_width="0dp"

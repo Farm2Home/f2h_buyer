@@ -4,6 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.f2h.f2h_buyer.constants.F2HConstants
+import com.f2h.f2h_buyer.constants.F2HConstants.USER_ROLE_BUYER
+import com.f2h.f2h_buyer.constants.F2HConstants.USER_ROLE_GROUP_ADMIN
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.GroupApi
@@ -18,7 +21,7 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
         get() = _groups
 
 
-    private val roles = listOf<String>("Buyer","Group_Admin")
+    private val roles = listOf<String>(USER_ROLE_BUYER, USER_ROLE_GROUP_ADMIN)
     private var userSession = SessionEntity()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)

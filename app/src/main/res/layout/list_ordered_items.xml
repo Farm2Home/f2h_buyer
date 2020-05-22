@@ -65,7 +65,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/date"
+                    android:id="@+id/groupName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -129,14 +129,14 @@
                     app:priceFormatted="@{uiModel}" />
 
                 <TextView
-                    android:id="@+id/orderedQuantity"
+                    android:id="@+id/groupDescription"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@{`Farmer - ` + uiModel.farmerName}"
                     android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/date"
-                    app:layout_constraintStart_toStartOf="@+id/date"
-                    app:layout_constraintTop_toBottomOf="@+id/date" />
+                    app:layout_constraintEnd_toEndOf="@+id/groupName"
+                    app:layout_constraintStart_toStartOf="@+id/groupName"
+                    app:layout_constraintTop_toBottomOf="@+id/groupName" />
 
 
                 <View
@@ -152,9 +152,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Payable - "
-                    app:layout_constraintEnd_toEndOf="@+id/orderedQuantity"
+                    app:layout_constraintEnd_toEndOf="@+id/groupDescription"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/orderedQuantity"
+                    app:layout_constraintStart_toStartOf="@+id/groupDescription"
                     app:layout_constraintTop_toBottomOf="@+id/discount"
                     app:totalPriceFormatted="@{uiModel}" />
 
@@ -191,10 +191,10 @@
                     android:singleLine="false"
                     android:textSize="10sp"
                     app:commentFormatted="@{uiModel}"
-                    app:layout_constraintEnd_toEndOf="@+id/orderedQuantity"
+                    app:layout_constraintEnd_toEndOf="@+id/groupDescription"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/orderedQuantity"
-                    app:layout_constraintTop_toBottomOf="@+id/orderedQuantity" />
+                    app:layout_constraintStart_toStartOf="@+id/groupDescription"
+                    app:layout_constraintTop_toBottomOf="@+id/groupDescription" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

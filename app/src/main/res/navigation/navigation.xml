@@ -71,4 +71,8 @@
         android:id="@+id/reportFragment"
         android:name="com.f2h.f2h_buyer.screens.report.ReportFragment"
         android:label="@string/report" />
+    <fragment
+        android:id="@+id/searchGroupsFragment"
+        android:name="com.f2h.f2h_buyer.screens.search_group.SearchGroupsFragment"
+        android:label="SearchGroupsFragment" />
 </navigation>

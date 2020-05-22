@@ -33,6 +33,10 @@ interface GroupApiService{
     fun getGroupDetails(@Path("group_id") groupId: Long):
             Deferred<Group>
 
+    @GET("group/search")
+    fun searchGroupsByLocality(@Query("localities") localities: List<String>):
+            Deferred<List<Group>>
+
 }
 
 object GroupApi {

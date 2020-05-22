@@ -59,7 +59,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/date"
+                    android:id="@+id/groupName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -145,9 +145,9 @@
                     android:singleLine="false"
                     android:textSize="10sp"
                     app:addressFormatted="@{uiModel}"
-                    app:layout_constraintEnd_toEndOf="@+id/date"
-                    app:layout_constraintStart_toStartOf="@+id/date"
-                    app:layout_constraintTop_toBottomOf="@+id/date" />
+                    app:layout_constraintEnd_toEndOf="@+id/groupName"
+                    app:layout_constraintStart_toStartOf="@+id/groupName"
+                    app:layout_constraintTop_toBottomOf="@+id/groupName" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

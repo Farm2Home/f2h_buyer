@@ -48,7 +48,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/date"
+                    android:id="@+id/groupName"
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -87,7 +87,7 @@
                     app:layout_constraintTop_toTopOf="@+id/buttonDecrease" />
 
                 <TextView
-                    android:id="@+id/orderedQuantity"
+                    android:id="@+id/groupDescription"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
@@ -107,10 +107,10 @@
                     android:textAlignment="center"
                     android:textSize="12sp"
                     app:availableQuantityFormattedPreOrder="@{uiModel}"
-                    app:layout_constraintBottom_toBottomOf="@+id/date"
+                    app:layout_constraintBottom_toBottomOf="@+id/groupName"
                     app:layout_constraintEnd_toStartOf="@+id/buttonDecrease"
-                    app:layout_constraintStart_toEndOf="@+id/date"
-                    app:layout_constraintTop_toTopOf="@+id/date" />
+                    app:layout_constraintStart_toEndOf="@+id/groupName"
+                    app:layout_constraintTop_toTopOf="@+id/groupName" />
 
                 <TextView
                     android:id="@+id/status"
@@ -120,9 +120,9 @@
                     android:textAlignment="viewStart"
                     android:textSize="10sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/date"
-                    app:layout_constraintStart_toStartOf="@+id/date"
-                    app:layout_constraintTop_toBottomOf="@+id/date"
+                    app:layout_constraintEnd_toEndOf="@+id/groupName"
+                    app:layout_constraintStart_toStartOf="@+id/groupName"
+                    app:layout_constraintTop_toBottomOf="@+id/groupName"
                     app:statusFormatted="@{uiModel}" />
 
 

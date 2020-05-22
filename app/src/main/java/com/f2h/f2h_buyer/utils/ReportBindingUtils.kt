@@ -42,7 +42,7 @@ fun TextView.setOrderDateFormatted(data: ReportItemsModel?){
 fun TextView.setOrderedQuantityFormatted(data: ReportItemsModel){
     var freezeString = ""
 
-    if (isOrderFreezed(data) && ORDER_STATUS_ORDERED.equals(data.orderStatus)){
+    if (isFreezeStringDisplayed(data)){
         freezeString = "\nFreeze"
     }
 
@@ -50,6 +50,9 @@ fun TextView.setOrderedQuantityFormatted(data: ReportItemsModel){
 
     text = orderedString
 }
+
+private fun isFreezeStringDisplayed(data: ReportItemsModel) =
+    isOrderFreezed(data) && (ORDER_STATUS_ORDERED.equals(data.orderStatus) && data.orderStatus.isBlank())
 
 private fun getFormattedQtyNumber(number: Double): String {
     return if (number.compareTo(number.toLong()) == 0)

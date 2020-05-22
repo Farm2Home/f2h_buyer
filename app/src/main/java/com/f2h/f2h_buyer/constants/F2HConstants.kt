@@ -8,4 +8,8 @@ object F2HConstants {
 
     const val PAYMENT_STATUS_PENDING = "PENDING"
     const val PAYMENT_STATUS_PAID = "PAID"
+
+    const val USER_ROLE_BUYER = "BUYER"
+    const val USER_ROLE_BUYER_REQUESTED = "BUYER_REQUESTED"
+    const val USER_ROLE_GROUP_ADMIN = "GROUP_ADMIN"
 }
