@@ -5,17 +5,20 @@
 
     <data>
         <variable
-            name="group"
+            name="uiModel"
             type="com.f2h.f2h_buyer.screens.search_group.SearchGroupsItemsModel" />
         <variable
             name="clickListener"
             type="com.f2h.f2h_buyer.screens.search_group.GroupClickListener" />
+        <variable
+            name="requestMembershipButtonClickListener"
+            type="com.f2h.f2h_buyer.screens.search_group.RequestMembershipButtonClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> clickListener.onClick(group)}">
+        android:onClick="@{() -> clickListener.onClick(uiModel)}">
 
 
         <androidx.cardview.widget.CardView
@@ -52,7 +55,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@{group.groupName}"
+                    android:text="@{uiModel.groupName}"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toStartOf="@+id/request_button"
                     app:layout_constraintStart_toEndOf="@+id/itemImage"
@@ -66,7 +69,7 @@
                     android:layout_marginBottom="5dp"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="@{group.description}"
+                    android:text="@{uiModel.description}"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@+id/itemImage"
                     app:layout_constraintEnd_toEndOf="@+id/groupName"
@@ -86,8 +89,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
-                    android:text="Request"
+                    android:onClick="@{() -> requestMembershipButtonClickListener.onClick(uiModel)}"
+                    android:text="Request\nMembership"
+                    android:textAllCaps="false"
                     android:textSize="10sp"
+                    app:buttonVisibilityFormatted="@{uiModel}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

@@ -9,10 +9,12 @@ import com.f2h.f2h_buyer.databinding.ListGroupsBinding
 import com.f2h.f2h_buyer.databinding.ListSearchGroupsBinding
 import com.f2h.f2h_buyer.network.models.Group
 
-class SearchGroupsAdapter(val clickListener: GroupClickListener): ListAdapter<SearchGroupsItemsModel, SearchGroupsAdapter.ViewHolder>(GroupDiffCallback()) {
+class SearchGroupsAdapter(val clickListener: GroupClickListener,
+                          val requestMembershipButtonClickListener: RequestMembershipButtonClickListener
+): ListAdapter<SearchGroupsItemsModel, SearchGroupsAdapter.ViewHolder>(GroupDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position)!!, clickListener)
+        holder.bind(getItem(position)!!, clickListener, requestMembershipButtonClickListener)
     }
 
 
@@ -25,10 +27,12 @@ class SearchGroupsAdapter(val clickListener: GroupClickListener): ListAdapter<Se
 
         fun bind(
             item: SearchGroupsItemsModel,
-            clickListener: GroupClickListener
+            clickListener: GroupClickListener,
+            requestMembershipButtonClickListener: RequestMembershipButtonClickListener
         ) {
-            binding.group = item
+            binding.uiModel = item
             binding.clickListener = clickListener
+            binding.requestMembershipButtonClickListener = requestMembershipButtonClickListener
             binding.executePendingBindings()
         }
 
@@ -53,5 +57,9 @@ class GroupDiffCallback : DiffUtil.ItemCallback<SearchGroupsItemsModel>() {
 }
 
 class GroupClickListener(val clickListener: (group: SearchGroupsItemsModel) -> Unit) {
+    fun onClick(group: SearchGroupsItemsModel) = clickListener(group)
+}
+
+class RequestMembershipButtonClickListener(val clickListener: (group: SearchGroupsItemsModel) -> Unit) {
     fun onClick(group: SearchGroupsItemsModel) = clickListener(group)
 }

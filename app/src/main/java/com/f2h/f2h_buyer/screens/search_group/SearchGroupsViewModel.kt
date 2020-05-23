@@ -10,10 +10,17 @@ import com.f2h.f2h_buyer.constants.F2HConstants.USER_ROLE_GROUP_ADMIN
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.GroupApi
+import com.f2h.f2h_buyer.network.LocalityApi
 import com.f2h.f2h_buyer.network.models.Group
+import com.f2h.f2h_buyer.network.models.GroupMembershipRequest
+import com.f2h.f2h_buyer.network.models.Locality
 import kotlinx.coroutines.*
 
 class SearchGroupsViewModel(val database: SessionDatabaseDao, application: Application) : AndroidViewModel(application) {
+
+    private val _isProgressBarActive = MutableLiveData<Boolean>()
+    val isProgressBarActive: LiveData<Boolean>
+        get() = _isProgressBarActive
 
     private val _groups = MutableLiveData<List<SearchGroupsItemsModel>>()
     val group: LiveData<List<SearchGroupsItemsModel>>
@@ -39,8 +46,25 @@ class SearchGroupsViewModel(val database: SessionDatabaseDao, application: Appli
         getUserGroupsInformation()
     }
 
+    private fun fetchAllLocalities(){
+        _isProgressBarActive.value = true
+        coroutineScope.launch {
+            var getLocalitiesDataDeferred = LocalityApi.retrofitService.getLocalityDetails()
+            try {
+                var localityNames = arrayListOf<String>()
+                var localityList = getLocalitiesDataDeferred.await()
+                localityList.forEach{locality ->
+                    localityNames.add(locality.locality ?: "")
+                }
+                _localities.value = localityNames.sorted()
+            } catch (t:Throwable){
+                println(t.message)
+            }
+        }
+    }
 
     private fun getUserGroupsInformation() {
+        _isProgressBarActive.value = true
         coroutineScope.launch {
             userSession = retrieveSession()
             var getMemberGroupsDataDeferred = GroupApi.retrofitService.getUserGroups(userSession.userId, roles)
@@ -55,7 +79,6 @@ class SearchGroupsViewModel(val database: SessionDatabaseDao, application: Appli
 
     private fun getGroupsInfoForLocalities() {
         coroutineScope.launch {
-            userSession = retrieveSession()
             var getSearchGroupsDataDeferred = GroupApi.retrofitService.searchGroupsByLocality(_selectedLocality.value ?: listOf())
             try {
                 var searchedGroups = getSearchGroupsDataDeferred.await()
@@ -63,6 +86,7 @@ class SearchGroupsViewModel(val database: SessionDatabaseDao, application: Appli
             } catch (t:Throwable){
                 println(t.message)
             }
+            _isProgressBarActive.value = false
         }
     }
 
@@ -89,24 +113,9 @@ class SearchGroupsViewModel(val database: SessionDatabaseDao, application: Appli
     }
 
 
-    private fun fetchAllLocalities(){
-//        coroutineScope.launch {
-//            userSession = retrieveSession()
-//            var getLocalitiesDataDeferred = GroupApi.retrofitService.searchGroupsByLocality(_selectedLocality.value ?: listOf())
-//            try {
-//                var searchedGroups = getSearchGroupsDataDeferred.await()
-//                _groups.value = createSearchGroupsItemList(userGroups, searchedGroups)
-//            } catch (t:Throwable){
-//                println(t.message)
-//            }
-//        }
-        _localities.value = listOf("ERNAKULAM","KOCHI", "CALICUT")
-    }
-
-
     fun onLocalitiesSelected(position: Int) {
         _selectedLocality.value = arrayListOf(localities.value?.get(position) ?: "")
-        getGroupsInfoForLocalities()
+        getUserGroupsInformation()
     }
 
 
@@ -128,5 +137,23 @@ class SearchGroupsViewModel(val database: SessionDatabaseDao, application: Appli
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+    fun requestMembership(group: SearchGroupsItemsModel) {
+        var membershipRequest = GroupMembershipRequest(
+            group.groupId,
+            userSession.userId,
+            USER_ROLE_BUYER_REQUESTED,
+            userSession.userName
+        )
+        coroutineScope.launch {
+            var getGroupMembershipDataDeferred = GroupApi.retrofitService.requestGroupMembership(membershipRequest)
+            try {
+                var requestedMembership = getGroupMembershipDataDeferred.await()
+                getUserGroupsInformation()
+            } catch (t:Throwable){
+                println(t.message)
+            }
+        }
     }
 }

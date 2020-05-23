@@ -38,9 +38,22 @@ class SearchGroupsFragment : Fragment() {
         binding.viewModel = viewModel
 
 
-        // Adapter for List of groups
+        // Progress Bar loader
+        viewModel.isProgressBarActive.observe(viewLifecycleOwner, Observer { isProgressBarActive ->
+            if(isProgressBarActive){
+                binding.progressBar.visibility = View.VISIBLE
+            } else {
+                binding.progressBar.visibility = View.GONE
+            }
+        })
+
+
+
+        // Adapter for List of Searched groups
         val adapter = SearchGroupsAdapter(GroupClickListener { group ->
             onGroupSelected(group)
+        }, RequestMembershipButtonClickListener { group ->
+            viewModel.requestMembership(group)
         })
         binding.groupListRecyclerView.adapter = adapter
         viewModel.group.observe(viewLifecycleOwner, Observer {
