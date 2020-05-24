@@ -12,8 +12,8 @@
     <string name="sign_out">Sign Out</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
-    <string name="report">Report</string>
-    <string name="search_groups">Search Groups</string>
+    <string name="report">Order History</string>
+    <string name="search_groups">Join Groups</string>
 
     <string-array name="time_slots">
         <item>Morning</item>

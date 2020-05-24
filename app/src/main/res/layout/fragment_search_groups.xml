@@ -19,35 +19,37 @@
             android:id="@+id/groupListRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/localitiesSelector">
+            app:layout_constraintTop_toBottomOf="@+id/textView5">
 
         </androidx.recyclerview.widget.RecyclerView>
 
         <Spinner
             android:id="@+id/localitiesSelector"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:entries="@{viewModel.localities}"
             android:textAlignment="viewStart"
-            app:layout_constraintStart_toEndOf="@+id/textView5"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:text="Select Your Locality"
-            app:layout_constraintBottom_toBottomOf="@+id/localitiesSelector"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="15dp"
+            android:text="Groups in your locality"
+            android:textSize="18sp"
+            android:textStyle="normal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/localitiesSelector" />
+            app:layout_constraintTop_toBottomOf="@+id/localitiesSelector" />
 
         <ProgressBar
             android:id="@+id/progressBar"

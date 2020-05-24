@@ -51,7 +51,7 @@ class GroupDetailsTabsFragment : Fragment() {
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when(position) {
-                0 -> tab.text = "My Orders"
+                0 -> tab.text = "My Cart"
                 1 -> tab.text = "All Items"
                 2 -> tab.text = "Group Wallet"
             }
