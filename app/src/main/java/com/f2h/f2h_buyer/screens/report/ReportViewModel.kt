@@ -18,6 +18,8 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.temporal.TemporalUnit
+import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -236,6 +238,21 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
 
     fun onEndDateSelected(position: Int) {
         _reportUiFilterModel.value?.selectedEndDate = _reportUiFilterModel.value?.endDateList?.get(position) ?: ""
+        filterVisibleItems()
+    }
+
+    fun onClickTodayButton() {
+        var todayDate = Calendar.getInstance()
+        _reportUiFilterModel.value?.selectedStartDate = df.format(todayDate.time)
+        _reportUiFilterModel.value?.selectedEndDate = df.format(todayDate.time)
+        filterVisibleItems()
+    }
+
+    fun onClickTomorrowButton() {
+        var tomorrowDate = Calendar.getInstance()
+        tomorrowDate.add(Calendar.DATE, 1)
+        _reportUiFilterModel.value?.selectedStartDate = df.format(tomorrowDate.time)
+        _reportUiFilterModel.value?.selectedEndDate = df.format(tomorrowDate.time)
         filterVisibleItems()
     }
 }
