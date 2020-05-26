@@ -6,6 +6,7 @@ data class ReportItemsModel (
     var itemName: String = "",
     var itemDescription: String = "",
     var buyerName: String = "",
+    var sellerName: String= "",
     var price: Double = 0.0,
     var itemUom: String = "",
     var orderId: Long = 0,

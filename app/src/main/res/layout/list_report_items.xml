@@ -46,28 +46,28 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/description"
+                    android:id="@+id/itemDetails"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="20dp"
-                    android:text="@{uiModel.itemName}"
-                    android:textSize="15sp"
-                    app:layout_constraintEnd_toStartOf="@+id/confirmedQuantity"
+                    app:itemDetailsFormatted="@{uiModel}"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/itemImage"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/groupName"
+                    android:id="@+id/date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/description"
-                    app:layout_constraintStart_toStartOf="@+id/description"
-                    app:layout_constraintTop_toBottomOf="@+id/description"
+                    app:layout_constraintEnd_toStartOf="@+id/confirmedQuantity"
+                    app:layout_constraintStart_toStartOf="@+id/itemDetails"
+                    app:layout_constraintTop_toBottomOf="@+id/itemDetails"
                     app:orderDateFormatted="@{uiModel}" />
 
                 <TextView
@@ -75,11 +75,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
+                    android:text="0 Pack"
                     android:textAlignment="center"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/imageButton"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/date"
                     app:orderedQuantityFormatted="@{uiModel}" />
 
                 <TextView
@@ -145,9 +146,19 @@
                     android:singleLine="false"
                     android:textSize="10sp"
                     app:addressFormatted="@{uiModel}"
-                    app:layout_constraintEnd_toEndOf="@+id/groupName"
-                    app:layout_constraintStart_toStartOf="@+id/groupName"
-                    app:layout_constraintTop_toBottomOf="@+id/groupName" />
+                    app:layout_constraintEnd_toEndOf="@+id/date"
+                    app:layout_constraintStart_toStartOf="@+id/date"
+                    app:layout_constraintTop_toBottomOf="@+id/date" />
+
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:srcCompat="@drawable/contact_us_icon" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

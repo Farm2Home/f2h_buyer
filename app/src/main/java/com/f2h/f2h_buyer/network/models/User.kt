@@ -11,3 +11,10 @@ data class User (
     @Json(name = "password") val password: String? = ""
 )
 
+data class UserDetails (
+    @Json(name = "user_id") val userId: Long? = -1,
+    @Json(name = "user_name") val userName: String? = "",
+    @Json(name = "address") val address: String? = "",
+    @Json(name = "email") val email: String? = "",
+    @Json(name = "mobile") val mobile: String? = ""
+)

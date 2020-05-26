@@ -9,9 +9,11 @@ import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.ItemAvailabilityApi
 import com.f2h.f2h_buyer.network.OrderApi
+import com.f2h.f2h_buyer.network.UserApi
 import com.f2h.f2h_buyer.network.models.Item
 import com.f2h.f2h_buyer.network.models.ItemAvailability
 import com.f2h.f2h_buyer.network.models.Order
+import com.f2h.f2h_buyer.network.models.UserDetails
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -56,13 +58,20 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
             var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroup(sessionData.value!!.groupId)
             try {
                 var orders = getOrdersDataDeferred.await()
-                var availabilityIds: ArrayList<Long> = arrayListOf()
-                orders.forEach { order ->
-                    availabilityIds.add(order.itemAvailabilityId ?: -1)
-                }
-                var getItemAvailabilitiesDataDeferred = ItemAvailabilityApi.retrofitService.getItemAvailabilities(availabilityIds)
+                var userIds = orders.map { x -> x.buyerUserId ?: -1}
+                    .plus(orders.map { x -> x.sellerUserId ?: -1}).distinct()
+                var availabilityIds = orders.map { x -> x.itemAvailabilityId ?: -1 }
+
+                var getUserDetailsDataDeferred =
+                    UserApi.retrofitService.getUserDetailsByUserIds(userIds)
+
+                var getItemAvailabilitiesDataDeferred =
+                    ItemAvailabilityApi.retrofitService.getItemAvailabilities(availabilityIds)
+
                 var itemAvailabilities = getItemAvailabilitiesDataDeferred.await()
-                allUiData = createAllUiData(itemAvailabilities, orders)
+                var userDetailsList = getUserDetailsDataDeferred.await()
+
+                allUiData = createAllUiData(itemAvailabilities, orders, userDetailsList)
                 _reportUiFilterModel.value = createAllUiFilters()
                 if (allUiData.size > 0) {
                     filterVisibleItems()
@@ -75,7 +84,20 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
     }
 
 
-    private fun createAllUiData(itemAvailabilitys: List<ItemAvailability>, orders: List<Order>): ArrayList<ReportItemsModel> {
+    fun getAllUserDetails(userIds: List<Long>) {
+        coroutineScope.launch {
+            var getUserDetailsDataDeferred = UserApi.retrofitService.getUserDetailsByUserIds(userIds)
+            try {
+                var userDetailsList = getUserDetailsDataDeferred.await()
+            } catch (t:Throwable){
+                println(t.message)
+            }
+        }
+    }
+
+
+    private fun createAllUiData(itemAvailabilitys: List<ItemAvailability>,
+                                orders: List<Order>, userDetailsList: List<UserDetails>): ArrayList<ReportItemsModel> {
         var allUiData = ArrayList<ReportItemsModel>()
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
@@ -117,7 +139,8 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
             uiElement.orderStatus = order.orderStatus ?: ""
             uiElement.paymentStatus = order.paymentStatus ?: ""
             uiElement.orderComment = order.orderComment ?: ""
-            uiElement.buyerName = "Buyer " + order.buyerUserId.toString() ?: ""
+            uiElement.buyerName = userDetailsList.filter { x -> x.userId?.equals(order.buyerUserId) ?: false }.single().userName ?: ""
+            uiElement.sellerName = userDetailsList.filter { x -> x.userId?.equals(order.sellerUserId) ?: false }.single().userName ?: ""
             uiElement.deliveryAddress = order.deliveryLocation ?: ""
             uiElement.displayStatus = getDisplayStatus(uiElement.orderStatus, uiElement.deliveryStatus)
             uiElement.displayQuantity = getDisplayQuantity(uiElement.displayStatus, uiElement.orderedQuantity, uiElement.confirmedQuantity)

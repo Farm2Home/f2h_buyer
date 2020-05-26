@@ -52,7 +52,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/description"
+                    android:id="@+id/itemDetails"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -65,16 +65,16 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/groupName"
+                    android:id="@+id/date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="@{uiModel.itemDescription}"
                     android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/description"
-                    app:layout_constraintStart_toStartOf="@+id/description"
-                    app:layout_constraintTop_toBottomOf="@+id/description" />
+                    app:layout_constraintEnd_toEndOf="@+id/itemDetails"
+                    app:layout_constraintStart_toStartOf="@+id/itemDetails"
+                    app:layout_constraintTop_toBottomOf="@+id/itemDetails" />
 
                 <Button
                     android:id="@+id/buttonDecrease"
@@ -134,9 +134,9 @@
                     android:layout_height="wrap_content"
                     android:text="@{`Farmer - ` + uiModel.farmerName}"
                     android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/groupName"
-                    app:layout_constraintStart_toStartOf="@+id/groupName"
-                    app:layout_constraintTop_toBottomOf="@+id/groupName" />
+                    app:layout_constraintEnd_toEndOf="@+id/date"
+                    app:layout_constraintStart_toStartOf="@+id/date"
+                    app:layout_constraintTop_toBottomOf="@+id/date" />
 
 
                 <View

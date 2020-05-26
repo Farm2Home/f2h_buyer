@@ -23,9 +23,18 @@ import java.text.SimpleDateFormat
 @BindingAdapter("priceFormatted")
 fun TextView.setPriceFormatted(data: ReportItemsModel?){
     data?.let {
-        text = "₹ " + String.format("%.0f", data.price) + "/" + data.itemUom
+        text =  String.format("₹ %.0f /%s", data.price, data.itemUom)
     }
 }
+
+
+@BindingAdapter("itemDetailsFormatted")
+fun TextView.setItemDetailsFormatted(data: ReportItemsModel?){
+    data?.let {
+        text = String.format("%s  (%s)", data.itemName, data.sellerName )
+    }
+}
+
 
 
 @BindingAdapter("orderDateFormatted")
@@ -54,7 +63,8 @@ fun TextView.setOrderedQuantityFormatted(data: ReportItemsModel){
 private fun isFreezeStringDisplayed(data: ReportItemsModel) =
     isOrderFreezed(data) && (ORDER_STATUS_ORDERED.equals(data.orderStatus) && data.orderStatus.isBlank())
 
-private fun getFormattedQtyNumber(number: Double): String {
+private fun getFormattedQtyNumber(number: Double?): String {
+    if (number == null) return ""
     return if (number.compareTo(number.toLong()) == 0)
         String.format("%d", number.toLong())
     else
@@ -74,7 +84,7 @@ fun TextView.setDiscountFormatted(data: ReportItemsModel){
 
 @BindingAdapter("addressFormatted")
 fun TextView.setAddressFormatted(data: ReportItemsModel){
-    var address = data.deliveryAddress
+    var address = String.format("%s - %s",data.buyerName, data.deliveryAddress)
     text = address
 }
 
@@ -128,14 +138,21 @@ fun TextView.setTotalPriceFormatted(data: ReportItemsModel){
 fun TextView.setAggregationFormatted(list: List<ReportItemsModel>?){
     if (list != null) {
         var totalAmount = (0).toDouble()
-        var totalQuantity = (0).toDouble()
+        var totalQuantity: Double? = (0).toDouble()
         var uom = ""
         list.forEach { element ->
             totalAmount += (element.orderAmount)
-            totalQuantity += element.displayQuantity
+            totalQuantity = totalQuantity?.plus((element.displayQuantity))
             uom = element.itemUom
         }
-        text = String.format("₹%.0f  -  %s %s", totalAmount, getFormattedQtyNumber(totalQuantity), uom)
+
+        //If there are multiple types of UoMs do not show the UOM/Quantity
+        if (list.map { x -> x.itemUom }.distinct().count() == 1){
+            text = String.format("₹%.0f - %s %s", totalAmount, getFormattedQtyNumber(totalQuantity), uom)
+        } else {
+            text = String.format("₹%.0f", totalAmount)
+        }
+
     }
 }
 
