@@ -5,6 +5,7 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StrikethroughSpan
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -40,9 +41,7 @@ fun TextView.setItemDetailsFormatted(data: ReportItemsModel?){
 @BindingAdapter("orderDateFormatted")
 fun TextView.setOrderDateFormatted(data: ReportItemsModel?){
     data?.let {
-        val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val df: DateFormat = SimpleDateFormat("dd-MMM-yyyy")
-        text = df.format(parser.parse(data.orderedDate))
+        text = data.orderedDate
     }
 }
 
@@ -87,7 +86,6 @@ fun TextView.setAddressFormatted(data: ReportItemsModel){
     var address = String.format("%s - %s",data.buyerName, data.deliveryAddress)
     text = address
 }
-
 
 
 @BindingAdapter("totalPriceFormatted")

@@ -158,6 +158,20 @@ class ReportFragment : Fragment() {
             }
         }
 
+        //Buyer Selector Spinner
+        binding.buyerNameSelector?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                viewModel.onBuyerSelected(position)
+            }
+        }
 
     }
 
