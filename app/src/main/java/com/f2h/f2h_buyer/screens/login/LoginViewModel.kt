@@ -46,6 +46,10 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
         tryToLogin(session)
     }
 
+    fun onClickSignUpButton() {
+
+    }
+
     private suspend fun saveSession(updatedUserData: User, preSavedSession: SessionEntity) {
         return withContext(Dispatchers.IO) {
             database.clearSessions()
