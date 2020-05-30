@@ -204,12 +204,13 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
 
     private fun filterVisibleItems() {
         val elements = allUiData
+        var todayDate = Calendar.getInstance()
         var filteredItems = ArrayList<ReportItemsModel>()
         var selectedItem = reportUiFilterModel.value?.selectedItem ?: ""
         var selectedDisplayStatus = reportUiFilterModel.value?.selectedDisplayStatus ?: ""
         var selectedPaymentStatus = reportUiFilterModel.value?.selectedPaymentStatus ?: ""
-        var selectedStartDate = reportUiFilterModel.value?.selectedStartDate ?: ""
-        var selectedEndDate = reportUiFilterModel.value?.selectedEndDate ?: ""
+        var selectedStartDate = reportUiFilterModel.value?.selectedStartDate ?: formatter.format(todayDate.time)
+        var selectedEndDate = reportUiFilterModel.value?.selectedEndDate ?: formatter.format(todayDate.time)
         var selectedBuyer = reportUiFilterModel.value?.selectedBuyer ?: ""
 
         elements.forEach { element ->
@@ -217,13 +218,27 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
                 (selectedDisplayStatus == "ALL" || element.displayStatus.equals(selectedDisplayStatus)) &&
                 (selectedPaymentStatus == "ALL" || element.paymentStatus.equals(selectedPaymentStatus)) &&
                 (selectedBuyer == "ALL" || element.buyerName.equals(selectedBuyer)) &&
-                (element.orderedDate >= selectedStartDate && element.orderedDate <= selectedEndDate)) {
+                (isInSelectedDateRange(element, selectedStartDate, selectedEndDate))) {
 
                 //TODO - add date range not just one date
                 filteredItems.add(element)
             }
         }
         _visibleUiData.value = filteredItems
+    }
+
+    private fun isInSelectedDateRange(
+        element: ReportItemsModel,
+        selectedStartDate: String,
+        selectedEndDate: String
+    ) : Boolean {
+
+        if (element.orderedDate.isNullOrBlank() ||
+                selectedEndDate.isNullOrBlank() ||
+                selectedStartDate.isNullOrBlank()) return true
+
+        return formatter.parse(element.orderedDate) >= formatter.parse(selectedStartDate) &&
+                formatter.parse(element.orderedDate) <= formatter.parse(selectedEndDate)
     }
 
 
