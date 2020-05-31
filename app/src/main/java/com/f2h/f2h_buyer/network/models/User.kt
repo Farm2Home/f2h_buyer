@@ -18,3 +18,13 @@ data class UserDetails (
     @Json(name = "email") val email: String? = "",
     @Json(name = "mobile") val mobile: String? = ""
 )
+
+data class UserCreateRequest (
+    @Json(name = "user_name") var userName: String? = "",
+    @Json(name = "address") var address: String? = "",
+    @Json(name = "email") var email: String? = "",
+    @Json(name = "mobile") var mobile: String? = "",
+    @Json(name = "password") var password: String? = "",
+    @Json(name = "created_by") var createdBy: String? = "",
+    @Json(name = "updated_by") var updatedBy: String? = ""
+)

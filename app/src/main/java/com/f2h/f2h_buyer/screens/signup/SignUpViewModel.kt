@@ -6,112 +6,83 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
-import com.f2h.f2h_buyer.network.LoginApi
+import com.f2h.f2h_buyer.network.UserApi
 import com.f2h.f2h_buyer.network.models.User
+import com.f2h.f2h_buyer.network.models.UserCreateRequest
 import kotlinx.coroutines.*
-import retrofit2.await
 
 
 class SignUpViewModel(val database: SessionDatabaseDao, application: Application) : AndroidViewModel(application) {
 
-    val loginPassword = MutableLiveData<String>()
-    val loginMobile = MutableLiveData<String>()
+    val userName = MutableLiveData<String>()
+    val mobile = MutableLiveData<String>()
+    val password = MutableLiveData<String>()
+    val address = MutableLiveData<String>()
+    val email = MutableLiveData<String>()
 
-    private val _loginResponse = MutableLiveData<User>()
-    val loginResponse: LiveData<User>
-        get() = _loginResponse
-
-    private val _isLoginComplete = MutableLiveData<Boolean>()
-    val isLoginComplete: LiveData<Boolean>
-        get() = _isLoginComplete
 
     private val _isProgressBarActive = MutableLiveData<Boolean>()
     val isProgressBarActive: LiveData<Boolean>
         get() = _isProgressBarActive
 
+    private val _isSignUpComplete = MutableLiveData<Boolean>()
+    val isSignUpComplete: LiveData<Boolean>
+        get() = _isSignUpComplete
+
+    private val signUpUiModel = SignUpUiModel()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     init {
-        _isLoginComplete.value = false
+       _isProgressBarActive.value = false
+        _isSignUpComplete.value = false
+    }
+
+
+    fun onCreateButtonClick() {
         _isProgressBarActive.value = true
-        fetchSavedSession()
-    }
-
-    fun onClickLoginButton() {
-        _isProgressBarActive.value = true
-        val mobile: String = loginMobile.value.toString()
-        val password: String = loginPassword.value.toString()
-        var session = SessionEntity(mobile = mobile, password = password )
-        tryToLogin(session)
-    }
-
-    fun onClickSignUpButton() {
-
-    }
-
-    private suspend fun saveSession(updatedUserData: User, preSavedSession: SessionEntity) {
-        return withContext(Dispatchers.IO) {
-            database.clearSessions()
-            preSavedSession.address = updatedUserData.address ?: ""
-            preSavedSession.email = updatedUserData.email ?: ""
-            preSavedSession.userId = updatedUserData.userId ?: -1L
-            preSavedSession.mobile = updatedUserData.mobile ?: ""
-            preSavedSession.userName = updatedUserData.userName ?: ""
-            preSavedSession.password = updatedUserData.password ?: ""
-            database.insert(preSavedSession)
-        }
-    }
-
-    private suspend fun retrieveSession() : SessionEntity {
-        return withContext(Dispatchers.IO) {
-            val sessions = database.getAll()
-            var session = SessionEntity()
-            if (sessions.size==1) {
-                session = sessions[0]
-                println(session.toString())
-            } else {
-                database.clearSessions()
-            }
-            return@withContext session
-        }
-    }
-
-    private fun fetchSavedSession(): SessionEntity {
-        var session = SessionEntity()
+        var newUser = createUserRequestObject()
         coroutineScope.launch {
-            session = retrieveSession()
-            loginPassword.value = session.password
-            loginMobile.value = session.mobile
-            if (session.id != 0L){
-                tryToLogin(session)
-            } else{
-                _isLoginComplete.value = false
-                _isProgressBarActive.value = false
-            }
-        }
-        return session
-    }
-
-    private fun tryToLogin (session: SessionEntity){
-        coroutineScope.launch {
-            var getUserDataDeferred = LoginApi.retrofitService.tryUserLogin(session.mobile, session.password)
+            val getCreatedUser = UserApi.retrofitService.createUser(newUser)
             try {
-                var updatedUserData = getUserDataDeferred.await()
-                if (updatedUserData != null){
-                    _loginResponse.value = updatedUserData
-                    saveSession(updatedUserData, session)
-                    println("Successfully logged in : "+ updatedUserData.toString())
+                var createdUser = getCreatedUser.await()
+                if (createdUser != null){
+                    saveSession(createdUser)
                 }
-                _isLoginComplete.value = true
+                _isSignUpComplete.value = true
             } catch (t:Throwable){
                 println(t.message)
-                _loginResponse.value = null
-                _isLoginComplete.value = true
+                _isSignUpComplete.value = false
             }
-            _isProgressBarActive.value = false
         }
     }
+
+    private fun createUserRequestObject() : UserCreateRequest{
+        var userObject = UserCreateRequest()
+        userObject.userName = userName.value
+        userObject.address = address.value
+        userObject.mobile = mobile.value
+        userObject.email = email.value
+        userObject.password = password.value
+        userObject.createdBy = userName.value
+        userObject.updatedBy = userName.value
+        return userObject
+    }
+
+    private suspend fun saveSession(updatedUserData: User) {
+        return withContext(Dispatchers.IO) {
+            database.clearSessions()
+            var savedSession = SessionEntity()
+            savedSession.address = updatedUserData.address ?: ""
+            savedSession.email = updatedUserData.email ?: ""
+            savedSession.userId = updatedUserData.userId ?: -1L
+            savedSession.mobile = updatedUserData.mobile ?: ""
+            savedSession.userName = updatedUserData.userName ?: ""
+            savedSession.password = updatedUserData.password ?: ""
+            database.insert(savedSession)
+        }
+    }
+
 
     override fun onCleared() {
         super.onCleared()

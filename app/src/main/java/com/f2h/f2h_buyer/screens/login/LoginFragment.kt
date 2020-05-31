@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.database.F2HDatabase
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
@@ -40,6 +41,11 @@ class LoginFragment: Fragment() {
             }
         })
 
+        binding.signUp.setOnClickListener {
+            onSignUpClicked()
+        }
+
+
         viewModel.isProgressBarActive.observe(viewLifecycleOwner, Observer { isProgressBarActive ->
             if(isProgressBarActive){
                 binding.progressBar.visibility = View.VISIBLE
@@ -51,6 +57,7 @@ class LoginFragment: Fragment() {
         return binding.root
     }
 
+
     private fun onLoginComplete() {
         if (viewModel.loginResponse.value != null) {
             Toast.makeText(this.context, "Login Successful", Toast.LENGTH_SHORT).show()
@@ -59,6 +66,12 @@ class LoginFragment: Fragment() {
         } else {
             Toast.makeText(this.activity, "Please Login Again", Toast.LENGTH_SHORT).show()
         }
+    }
+
+
+    private fun onSignUpClicked() {
+        val action = LoginFragmentDirections.actionLoginFragmentToAgreementFragment()
+        view?.let { Navigation.findNavController(it).navigate(action) }
     }
 
 }

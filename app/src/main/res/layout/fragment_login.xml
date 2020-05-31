@@ -22,7 +22,7 @@
             android:id="@+id/mobileNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="50dp"
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/mobile_number"
@@ -64,7 +64,6 @@
             android:id="@+id/signUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> viewModel.onClickSignUpButton()}"
             android:text="Sign Up"
             app:buttonStatus="@{!viewModel.isProgressBarActive()}"
             app:layout_constraintBottom_toBottomOf="@+id/loginButton"
@@ -87,8 +86,8 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
