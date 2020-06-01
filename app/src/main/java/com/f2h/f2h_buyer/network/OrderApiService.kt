@@ -26,7 +26,7 @@ private val retrofit = Retrofit.Builder()
 interface OrderApiService {
 
     @GET("order")
-    fun getOrdersForGroupAndUser(@Query("group_id") groupId: Long, @Query("buyer_user_id") buyerUserId: Long):
+    fun getOrdersForUser(@Query("buyer_user_id") buyerUserId: Long):
             Deferred<List<Order>>
 
     @GET("order")

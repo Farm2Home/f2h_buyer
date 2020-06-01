@@ -15,7 +15,7 @@ import com.f2h.f2h_buyer.database.F2HDatabase
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.databinding.FragmentAllItemsBinding
 import com.f2h.f2h_buyer.network.models.Item
-import com.f2h.f2h_buyer.screens.group.daily_orders.AllItemsViewModelFactory
+import com.f2h.f2h_buyer.screens.daily_orders.AllItemsViewModelFactory
 import com.f2h.f2h_buyer.screens.group.group_tabs.GroupDetailsTabsFragmentDirections
 
 

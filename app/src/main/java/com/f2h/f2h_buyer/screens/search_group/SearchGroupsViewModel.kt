@@ -109,7 +109,7 @@ class SearchGroupsViewModel(val database: SessionDatabaseDao, application: Appli
             searchGroupsItemList.add(uiElement)
         }
 
-        return searchGroupsItemList
+        return searchGroupsItemList.sortedBy { x -> x.groupName }
     }
 
 

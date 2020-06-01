@@ -10,7 +10,6 @@ import com.f2h.f2h_buyer.network.ItemApi
 import com.f2h.f2h_buyer.network.ItemAvailabilityApi
 import com.f2h.f2h_buyer.network.OrderApi
 import com.f2h.f2h_buyer.network.models.*
-import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
 import kotlinx.coroutines.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -65,7 +64,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
                 val item = getItemDataDeferred.await()
 
                 //Fetch existing Orders Data
-                val getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupUserAndItem(sessionData.groupId,
+                val getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupUserAndItem(item.groupId ?: 0,
                     sessionData.userId, item.itemId!!, startDate, endDate)
                 val orders = ArrayList(getOrdersDataDeferred.await())
 

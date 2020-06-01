@@ -5,22 +5,18 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StrikethroughSpan
-import android.view.View
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import com.f2h.f2h_buyer.R
-import com.f2h.f2h_buyer.constants.F2HConstants
 import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_CONFIRMED
 import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_DELIVERED
 import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_ORDERED
 import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_REJECTED
 import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PAID
 import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PENDING
-import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
+import com.f2h.f2h_buyer.screens.daily_orders.DailyOrdersUiModel
 
 
 @BindingAdapter("priceFormatted")
