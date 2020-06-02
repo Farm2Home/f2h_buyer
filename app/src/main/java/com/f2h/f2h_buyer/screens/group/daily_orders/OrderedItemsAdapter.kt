@@ -1,4 +1,4 @@
-package com.f2h.f2h_buyer.screens.daily_orders
+package com.f2h.f2h_buyer.screens.group.daily_orders
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

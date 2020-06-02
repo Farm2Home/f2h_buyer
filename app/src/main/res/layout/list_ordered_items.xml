@@ -6,16 +6,16 @@
     <data>
         <variable
             name="uiModel"
-            type="com.f2h.f2h_buyer.screens.daily_orders.DailyOrdersUiModel" />
+            type="com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel" />
         <variable
             name="clickListener"
-            type="com.f2h.f2h_buyer.screens.daily_orders.OrderedItemClickListener" />
+            type="com.f2h.f2h_buyer.screens.group.daily_orders.OrderedItemClickListener" />
         <variable
             name="increaseButtonClickListener"
-            type="com.f2h.f2h_buyer.screens.daily_orders.IncreaseButtonClickListener" />
+            type="com.f2h.f2h_buyer.screens.group.daily_orders.IncreaseButtonClickListener" />
         <variable
             name="decreaseButtonClickListener"
-            type="com.f2h.f2h_buyer.screens.daily_orders.DecreaseButtonClickListener" />
+            type="com.f2h.f2h_buyer.screens.group.daily_orders.DecreaseButtonClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

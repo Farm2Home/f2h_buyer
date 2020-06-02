@@ -8,7 +8,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.f2h.f2h_buyer.screens.daily_orders.DailyOrdersViewModel" />
+            type="com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -72,8 +72,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
-            android:text="@string/cancel"
             android:onClick="@{() -> viewModel.onClickCancelButton()}"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            app:buttonStatus="@{!viewModel.isProgressBarActive()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/saveButton" />
 
@@ -83,8 +85,10 @@
             android:layout_height="0dp"
             android:layout_marginStart="30dp"
             android:layout_marginBottom="10dp"
-            android:text="@string/save"
             android:onClick="@{() -> viewModel.onClickSaveButton()}"
+            android:text="@string/save"
+            android:textAllCaps="false"
+            app:buttonStatus="@{!viewModel.isProgressBarActive()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

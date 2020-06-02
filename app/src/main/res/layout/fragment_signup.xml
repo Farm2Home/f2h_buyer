@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
-            android:text="Create your Farm To Home Account"
+            android:text="Create your Farm To Home account"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -55,8 +55,8 @@
             android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="Delivery address"
+            android:inputType="textImeMultiLine|textPostalAddress"
             android:text="@={viewModel.address}"
-            android:inputType="textPostalAddress"
             app:layout_constraintStart_toStartOf="@+id/name"
             app:layout_constraintTop_toBottomOf="@+id/name" />
 
@@ -73,15 +73,17 @@
             app:layout_constraintStart_toEndOf="@+id/textView12"
             app:layout_constraintTop_toBottomOf="@+id/address" />
 
-        <TextView
+        <EditText
             android:id="@+id/textView12"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:gravity="center_vertical"
             android:text="+91"
             android:textAlignment="gravity"
-            android:gravity="center_vertical"
             android:textSize="18sp"
-            android:textStyle="bold"
+            android:textStyle="normal"
+            android:editable="false"
+            android:inputType="none"
             app:layout_constraintBottom_toBottomOf="@+id/mobile"
             app:layout_constraintStart_toStartOf="@+id/address"
             app:layout_constraintTop_toTopOf="@+id/mobile" />

@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.f2h.f2h_buyer.constants.F2HConstants
 import com.f2h.f2h_buyer.constants.F2HConstants.USER_ROLE_BUYER
 import com.f2h.f2h_buyer.constants.F2HConstants.USER_ROLE_GROUP_ADMIN
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
@@ -17,6 +16,14 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
 
     private val _groups = MutableLiveData<List<Group>>()
 
+    private val _isProgressBarActive = MutableLiveData<Boolean>()
+    val isProgressBarActive: LiveData<Boolean>
+        get() = _isProgressBarActive
+
+    private val _isGroupListEmpty = MutableLiveData<Boolean>()
+    val isGroupListEmpty: LiveData<Boolean>
+        get() = _isGroupListEmpty
+
     val group: LiveData<List<Group>>
         get() = _groups
 
@@ -27,6 +34,8 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
+        _isGroupListEmpty.value = false
+        _isProgressBarActive.value = true
         getUserGroupsInformation()
     }
 
@@ -39,6 +48,7 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
     }
 
     private fun getUserGroupsInformation() {
+        _isProgressBarActive.value = true
         coroutineScope.launch {
             userSession = retrieveSession()
             var getGroupsDataDeferred = GroupApi.retrofitService.getUserGroups(userSession.userId, roles)
@@ -46,10 +56,14 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
                 var userGroups = getGroupsDataDeferred.await()
                 if (userGroups != null && userGroups.size > 0) {
                     _groups.value = userGroups
+                    _isGroupListEmpty.value = false
+                } else {
+                    _isGroupListEmpty.value = true
                 }
             } catch (t:Throwable){
                 println(t.message)
             }
+            _isProgressBarActive.value = false
         }
     }
 

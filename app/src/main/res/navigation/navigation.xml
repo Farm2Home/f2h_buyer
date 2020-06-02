@@ -7,11 +7,7 @@
 
     <fragment
         android:id="@+id/dailyOrdersFragment"
-        android:name="com.f2h.f2h_buyer.screens.daily_orders.DailyOrdersFragment" >
-        <action
-            android:id="@+id/action_dailyOrdersFragment_to_preOrderFragment"
-            app:destination="@id/preOrderFragment" />
-    </fragment>
+        android:name="com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersFragment" />
     <fragment
         android:id="@+id/groupsFragment"
         android:name="com.f2h.f2h_buyer.screens.group_list.GroupsFragment">
@@ -19,6 +15,9 @@
             android:id="@+id/action_groupsFragment_to_groupDetailsTabsFragment"
             app:destination="@id/groupDetailsTabsFragment"
             app:enterAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_groupsFragment_to_searchGroupsFragment"
+            app:destination="@id/searchGroupsFragment" />
     </fragment>
     <fragment
         android:id="@+id/groupDetailsTabsFragment"
@@ -40,6 +39,9 @@
             android:id="@+id/action_groupDetailsTabsFragment_to_preOrderFragment"
             app:destination="@id/preOrderFragment"
             app:enterAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_groupDetailsTabsFragment_to_dailyOrdersFragment"
+            app:destination="@id/dailyOrdersFragment" />
     </fragment>
     <fragment
         android:id="@+id/allItemsFragment"

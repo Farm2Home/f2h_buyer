@@ -15,6 +15,7 @@ import com.f2h.f2h_buyer.network.models.Group
 import com.f2h.f2h_buyer.network.models.GroupMembershipRequest
 import com.f2h.f2h_buyer.network.models.Locality
 import kotlinx.coroutines.*
+import java.util.*
 
 class SearchGroupsViewModel(val database: SessionDatabaseDao, application: Application) : AndroidViewModel(application) {
 

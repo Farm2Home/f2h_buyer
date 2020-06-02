@@ -1,4 +1,4 @@
-package com.f2h.f2h_buyer.screens.daily_orders
+package com.f2h.f2h_buyer.screens.group.daily_orders
 
 import android.app.Application
 import android.util.Log
@@ -58,7 +58,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         _isProgressBarActive.value = true
         coroutineScope.launch {
             sessionData.value = retrieveSession()
-            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForUser(sessionData.value!!.userId)
+            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForUserAndGroup(sessionData.value!!.groupId, sessionData.value!!.userId)
             try {
                 var orders = getOrdersDataDeferred.await()
                 var availabilityIds: ArrayList<Long> = arrayListOf()

@@ -29,6 +29,10 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
     val isSignUpComplete: LiveData<Boolean>
         get() = _isSignUpComplete
 
+    private val _toastText = MutableLiveData<String>()
+    val toastText: LiveData<String>
+        get() = _toastText
+
     private val signUpUiModel = SignUpUiModel()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -40,6 +44,9 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
 
 
     fun onCreateButtonClick() {
+        if(isAnyFieldInvalid()){
+            return
+        }
         _isProgressBarActive.value = true
         var newUser = createUserRequestObject()
         coroutineScope.launch {
@@ -52,9 +59,36 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
                 _isSignUpComplete.value = true
             } catch (t:Throwable){
                 println(t.message)
-                _isSignUpComplete.value = false
+                _toastText.value = "Oops, looks like the user already exists"
             }
+            _isProgressBarActive.value = false
         }
+    }
+
+
+    fun isAnyFieldInvalid(): Boolean{
+        if (userName.value.isNullOrBlank()) {
+            _toastText.value = "Please enter a name"
+            return true
+        }
+        if (address.value.isNullOrBlank()) {
+            _toastText.value = "Please enter a delivery address"
+            return true
+        }
+        if (mobile.value.isNullOrBlank()) {
+            _toastText.value = "Please enter a mobile number"
+            return true
+        }
+        if (email.value.isNullOrBlank()) {
+            _toastText.value = "Please enter an email"
+            return true
+        }
+        if (password.value.isNullOrBlank()) {
+            _toastText.value = "Please enter a password"
+            return true
+        }
+
+        return false
     }
 
     private fun createUserRequestObject() : UserCreateRequest{

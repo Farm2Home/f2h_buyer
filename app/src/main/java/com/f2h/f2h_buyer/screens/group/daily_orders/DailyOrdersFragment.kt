@@ -1,4 +1,4 @@
-package com.f2h.f2h_buyer.screens.daily_orders
+package com.f2h.f2h_buyer.screens.group.daily_orders
 
 import android.app.Application
 import android.os.Bundle
@@ -15,6 +15,7 @@ import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.database.F2HDatabase
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.databinding.FragmentDailyOrdersBinding
+import com.f2h.f2h_buyer.screens.group.group_tabs.GroupDetailsTabsFragmentDirections
 import devs.mulham.horizontalcalendar.HorizontalCalendar
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener
 import java.util.*
@@ -118,7 +119,7 @@ class DailyOrdersFragment : Fragment() {
     }
 
     private fun navigateToPreOrderPage(uiData: DailyOrdersUiModel) {
-        val action = DailyOrdersFragmentDirections.actionDailyOrdersFragmentToPreOrderFragment(uiData.itemId)
+        val action = GroupDetailsTabsFragmentDirections.actionGroupDetailsTabsFragmentToPreOrderFragment(uiData.itemId)
         view?.let { Navigation.findNavController(it).navigate(action) }
     }
 

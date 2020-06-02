@@ -45,7 +45,10 @@ class SignUpFragment: Fragment() {
             if (isSignUpComplete){
                 onSignUpComplete()
             }
+        })
 
+        viewModel.toastText.observe(viewLifecycleOwner, Observer { message ->
+            Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
         })
 
         return binding.root
