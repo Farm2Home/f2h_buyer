@@ -34,6 +34,9 @@ interface UserApiService{
 
     @POST("user")
     fun createUser(@Body user: UserCreateRequest) : Deferred<User>
+
+    @PUT("user/{user_id}")
+    fun updateUser(@Path("user_id") userId: Long, @Body user: UserCreateRequest) : Deferred<User>
 }
 
 object UserApi {

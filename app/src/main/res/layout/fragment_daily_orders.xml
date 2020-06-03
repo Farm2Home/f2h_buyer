@@ -37,7 +37,7 @@
             android:layout_height="0dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/saveButton"
+            app:layout_constraintBottom_toTopOf="@+id/editProfileButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/calendarView">
@@ -71,26 +71,26 @@
             android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
             android:onClick="@{() -> viewModel.onClickCancelButton()}"
             android:text="@string/cancel"
             android:textAllCaps="false"
             app:buttonStatus="@{!viewModel.isProgressBarActive()}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/saveButton" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editProfileButton" />
 
         <Button
-            android:id="@+id/saveButton"
+            android:id="@+id/editProfileButton"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_marginBottom="10dp"
             android:onClick="@{() -> viewModel.onClickSaveButton()}"
             android:text="@string/save"
             android:textAllCaps="false"
             app:buttonStatus="@{!viewModel.isProgressBarActive()}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/totalAmount"
@@ -99,10 +99,10 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/saveButton"
+            app:layout_constraintBottom_toBottomOf="@+id/editProfileButton"
             app:layout_constraintEnd_toStartOf="@+id/cancelButton"
-            app:layout_constraintStart_toEndOf="@+id/saveButton"
-            app:layout_constraintTop_toTopOf="@+id/saveButton"
+            app:layout_constraintStart_toEndOf="@+id/editProfileButton"
+            app:layout_constraintTop_toTopOf="@+id/editProfileButton"
             app:totalAmountFormatted="@{viewModel.visibleUiData}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

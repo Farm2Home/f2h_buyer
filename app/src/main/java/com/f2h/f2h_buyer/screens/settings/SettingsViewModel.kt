@@ -24,16 +24,18 @@ class SettingsViewModel(val database: SessionDatabaseDao, application: Applicati
         getProfileInformation()
     }
 
-    private fun getProfileInformation() {
+    fun getProfileInformation() {
         coroutineScope.launch {
             userSession = retrieveSession()
-            var getUserDataDeferred = UserApi.retrofitService.getUserDetails(userSession.userId)
-            try {
-                var userData = getUserDataDeferred.await()
+                var userData = User (
+                    userSession.userId,
+                    userSession.userName,
+                    userSession.address,
+                    userSession.email,
+                    userSession.mobile,
+                    userSession.password
+                )
                 _response.value = userData;
-            } catch (t:Throwable){
-                println(t.message)
-            }
         }
     }
 

@@ -55,21 +55,24 @@
             android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="Delivery address"
-            android:inputType="textImeMultiLine|textPostalAddress"
+            android:inputType="textMultiLine|textImeMultiLine"
+            android:lines="3"
             android:text="@={viewModel.address}"
+            app:layout_constraintEnd_toEndOf="@+id/name"
             app:layout_constraintStart_toStartOf="@+id/name"
             app:layout_constraintTop_toBottomOf="@+id/name" />
 
         <EditText
             android:id="@+id/mobile"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="Mobile Number"
-            android:text="@={viewModel.mobile}"
             android:inputType="phone"
+            android:text="@={viewModel.mobile}"
+            app:layout_constraintEnd_toEndOf="@+id/address"
             app:layout_constraintStart_toEndOf="@+id/textView12"
             app:layout_constraintTop_toBottomOf="@+id/address" />
 
@@ -95,8 +98,9 @@
             android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="Email"
-            android:text="@={viewModel.email}"
             android:inputType="textEmailAddress"
+            android:text="@={viewModel.email}"
+            app:layout_constraintEnd_toEndOf="@+id/mobile"
             app:layout_constraintStart_toStartOf="@+id/textView12"
             app:layout_constraintTop_toBottomOf="@+id/mobile" />
 
@@ -107,8 +111,9 @@
             android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="Password"
-            android:text="@={viewModel.password}"
             android:inputType="textPassword"
+            android:text="@={viewModel.password}"
+            app:layout_constraintEnd_toEndOf="@+id/email"
             app:layout_constraintStart_toStartOf="@+id/email"
             app:layout_constraintTop_toBottomOf="@+id/email" />
 

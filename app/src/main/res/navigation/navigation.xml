@@ -68,7 +68,11 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.f2h.f2h_buyer.screens.settings.SettingsFragment"
-        android:label="@string/my_profile" />
+        android:label="@string/my_profile" >
+        <action
+            android:id="@+id/action_settingsFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
     <fragment
         android:id="@+id/reportFragment"
         android:name="com.f2h.f2h_buyer.screens.report.ReportFragment"
@@ -77,4 +81,8 @@
         android:id="@+id/searchGroupsFragment"
         android:name="com.f2h.f2h_buyer.screens.search_group.SearchGroupsFragment"
         android:label="SearchGroupsFragment" />
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.f2h.f2h_buyer.screens.settings.edit_profile.EditProfileFragment"
+        android:label="EditProfileFragment" />
 </navigation>
