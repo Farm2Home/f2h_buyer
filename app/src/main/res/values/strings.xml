@@ -12,7 +12,8 @@
     <string name="sign_out">Sign Out</string>
     <string name="my_cart">My Cart</string>
     <string name="cancel">Clear Changes</string>
-    <string name="save">Place Order</string>
+    <string name="save">Place Orders</string>
+    <string name="update_orders">Update Orders</string>
     <string name="report">Order Reports</string>
     <string name="search_groups">Join Groups</string>
 

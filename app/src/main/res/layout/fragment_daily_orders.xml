@@ -86,7 +86,7 @@
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="10dp"
             android:onClick="@{() -> viewModel.onClickSaveButton()}"
-            android:text="@string/save"
+            android:text="@string/update_orders"
             android:textAllCaps="false"
             app:buttonStatus="@{!viewModel.isProgressBarActive()}"
             app:layout_constraintBottom_toBottomOf="parent"
