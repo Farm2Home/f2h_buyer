@@ -263,7 +263,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
             orderedAmount = calculateOrderAmount(preOrder.orderedQuantity),
             discountAmount = 0.0,
             orderStatus = "ORDERED",
-            paymentStatus = "PENDING",
+            paymentStatus = "",
             createdBy = "BUYER-" + sessionData.userName,
             updatedBy = "BUYER-" + sessionData.userName
         )
