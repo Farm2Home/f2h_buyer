@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_CONFIRMED
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_ORDERED
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.ItemAvailabilityApi
@@ -20,7 +22,6 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.time.temporal.TemporalUnit
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -56,7 +57,7 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
         _isProgressBarActive.value = true
         coroutineScope.launch {
             sessionData.value = retrieveSession()
-            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroup(sessionData.value!!.groupId)
+            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForUserAndGroup(sessionData.value!!.groupId, sessionData.value!!.userId)
             try {
                 var orders = getOrdersDataDeferred.await()
                 var userIds = orders.map { x -> x.buyerUserId ?: -1}
@@ -81,18 +82,6 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
                 println(t.message)
             }
             _isProgressBarActive.value = false
-        }
-    }
-
-
-    fun getAllUserDetails(userIds: List<Long>) {
-        coroutineScope.launch {
-            var getUserDetailsDataDeferred = UserApi.retrofitService.getUserDetailsByUserIds(userIds)
-            try {
-                var userDetailsList = getUserDetailsDataDeferred.await()
-            } catch (t:Throwable){
-                println(t.message)
-            }
         }
     }
 
@@ -148,7 +137,7 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
             allUiData.add(uiElement)
         }
 
-        allUiData.sortByDescending { it.orderedDate }
+        allUiData.sortByDescending { formatter.parse(it.orderedDate) }
         return allUiData
     }
 
@@ -175,28 +164,28 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
             .filter { uiElement -> !uiElement.itemName.isNullOrBlank() }
             .map { uiElement -> uiElement.itemName }.distinct().sorted())
 
-        filters.displayStatusList = arrayListOf("ALL").plus(allUiData.sortedBy { uiElement -> uiElement.displayStatus }
-            .filter { uiElement -> !uiElement.displayStatus.isNullOrBlank() }
-            .map { uiElement -> uiElement.displayStatus }.distinct().sorted())
+        filters.orderStatusList = arrayListOf("ALL", "Open Orders")
 
         filters.paymentStatusList = arrayListOf("ALL").plus(allUiData.sortedBy { uiElement -> uiElement.paymentStatus }
             .filter { uiElement -> !uiElement.paymentStatus.isNullOrBlank() }
             .map { uiElement -> uiElement.paymentStatus }.distinct().sorted())
 
-        filters.startDateList = allUiData.sortedBy { uiElement -> uiElement.orderedDate }
-            .filter { uiElement -> !uiElement.orderedDate.isNullOrBlank() }
-            .map { uiElement -> uiElement.orderedDate }.distinct().sortedBy{x -> df.format(formatter.parse(x))}
-
-        filters.buyerNameList = arrayListOf("ALL").plus(allUiData.sortedBy { uiElement -> uiElement.buyerName }
+        filters.buyerNameList = allUiData.sortedBy { uiElement -> uiElement.buyerName }
             .filter { uiElement -> !uiElement.buyerName.isNullOrBlank() }
-            .map { uiElement -> uiElement.buyerName }.distinct().sorted())
+            .map { uiElement -> uiElement.buyerName }.distinct().sorted()
 
-        filters.endDateList = filters.startDateList
+        filters.farmerNameList = arrayListOf("ALL").plus(allUiData.sortedBy { uiElement -> uiElement.sellerName }
+            .filter { uiElement -> !uiElement.sellerName.isNullOrBlank() }
+            .map { uiElement -> uiElement.sellerName }.distinct().sorted())
+
+        filters.timeFilterList = arrayListOf("Today", "Tomorrow", "Last 7 days", "Last 15 days", "Last 30 days")
 
         filters.selectedItem = "ALL"
         filters.selectedPaymentStatus = "ALL"
-        filters.selectedDisplayStatus = "ALL"
-        filters.selectedBuyer = "ALL"
+        filters.selectedOrderStatus = "ALL"
+        filters.selectedFarmer = "ALL"
+        filters.selectedBuyer = filters.buyerNameList.first()
+        setTimeFilterToday()
 
         return filters
     }
@@ -207,23 +196,26 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
         var todayDate = Calendar.getInstance()
         var filteredItems = ArrayList<ReportItemsModel>()
         var selectedItem = reportUiFilterModel.value?.selectedItem ?: ""
-        var selectedDisplayStatus = reportUiFilterModel.value?.selectedDisplayStatus ?: ""
+        var selectedOrderStatus = reportUiFilterModel.value?.selectedOrderStatus ?: ""
         var selectedPaymentStatus = reportUiFilterModel.value?.selectedPaymentStatus ?: ""
         var selectedStartDate = reportUiFilterModel.value?.selectedStartDate ?: formatter.format(todayDate.time)
         var selectedEndDate = reportUiFilterModel.value?.selectedEndDate ?: formatter.format(todayDate.time)
         var selectedBuyer = reportUiFilterModel.value?.selectedBuyer ?: ""
+        var selectedFarmer = reportUiFilterModel.value?.selectedFarmer ?: ""
 
         elements.forEach { element ->
             if ((selectedItem == "ALL" || element.itemName.equals(selectedItem)) &&
-                (selectedDisplayStatus == "ALL" || element.displayStatus.equals(selectedDisplayStatus)) &&
+                (selectedOrderStatus == "ALL" || selectedOrderStatus.split(",").contains(element.displayStatus)) &&
                 (selectedPaymentStatus == "ALL" || element.paymentStatus.equals(selectedPaymentStatus)) &&
                 (selectedBuyer == "ALL" || element.buyerName.equals(selectedBuyer)) &&
+                (selectedFarmer == "ALL" || element.sellerName.equals(selectedFarmer)) &&
                 (isInSelectedDateRange(element, selectedStartDate, selectedEndDate))) {
 
                 //TODO - add date range not just one date
                 filteredItems.add(element)
             }
         }
+        filteredItems.sortByDescending { formatter.parse(it.orderedDate) }
         _visibleUiData.value = filteredItems
     }
 
@@ -268,7 +260,12 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
     }
 
     fun onOrderStatusSelected(position: Int) {
-        _reportUiFilterModel.value?.selectedDisplayStatus = _reportUiFilterModel.value?.displayStatusList?.get(position) ?: ""
+        if (position == 0){
+            _reportUiFilterModel.value?.selectedOrderStatus = "ALL"
+        }
+        if (position == 1){
+            _reportUiFilterModel.value?.selectedOrderStatus = String.format("%s,%s",ORDER_STATUS_ORDERED, ORDER_STATUS_CONFIRMED)
+        }
         filterVisibleItems()
     }
 
@@ -277,13 +274,22 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
         filterVisibleItems()
     }
 
-    fun onStartDateSelected(position: Int) {
-        _reportUiFilterModel.value?.selectedStartDate = _reportUiFilterModel.value?.startDateList?.get(position) ?: ""
-        filterVisibleItems()
-    }
-
-    fun onEndDateSelected(position: Int) {
-        _reportUiFilterModel.value?.selectedEndDate = _reportUiFilterModel.value?.endDateList?.get(position) ?: ""
+    fun onTimeFilterSelected(position: Int) {
+        if (position.equals(0)){
+            setTimeFilterToday()
+        }
+        if (position.equals(1)){
+            setTimeFilterTomorrow()
+        }
+        if (position.equals(2)){
+            setTimeFilterHistoryRange(7)
+        }
+        if (position.equals(3)){
+            setTimeFilterHistoryRange(15)
+        }
+        if (position.equals(4)){
+            setTimeFilterHistoryRange(30)
+        }
         filterVisibleItems()
     }
 
@@ -292,18 +298,32 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
         filterVisibleItems()
     }
 
-    fun onClickTodayButton() {
+    fun onFarmerSelected(position: Int) {
+        _reportUiFilterModel.value?.selectedFarmer = _reportUiFilterModel.value?.farmerNameList?.get(position) ?: ""
+        filterVisibleItems()
+    }
+
+    fun setTimeFilterToday() {
         var todayDate = Calendar.getInstance()
         _reportUiFilterModel.value?.selectedStartDate = formatter.format(todayDate.time)
         _reportUiFilterModel.value?.selectedEndDate = formatter.format(todayDate.time)
         filterVisibleItems()
     }
 
-    fun onClickTomorrowButton() {
+    fun setTimeFilterTomorrow() {
         var tomorrowDate = Calendar.getInstance()
         tomorrowDate.add(Calendar.DATE, 1)
         _reportUiFilterModel.value?.selectedStartDate = formatter.format(tomorrowDate.time)
         _reportUiFilterModel.value?.selectedEndDate = formatter.format(tomorrowDate.time)
+        filterVisibleItems()
+    }
+
+    fun setTimeFilterHistoryRange(days: Int) {
+        var rangeStartDate = Calendar.getInstance()
+        var rangeEndDate = Calendar.getInstance()
+        rangeStartDate.add(Calendar.DATE, -1 * days)
+        _reportUiFilterModel.value?.selectedStartDate = formatter.format(rangeStartDate.time)
+        _reportUiFilterModel.value?.selectedEndDate = formatter.format(rangeEndDate.time)
         filterVisibleItems()
     }
 }

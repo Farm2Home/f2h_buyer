@@ -15,8 +15,6 @@ import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.database.F2HDatabase
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.databinding.FragmentReportBinding
-import com.f2h.f2h_buyer.databinding.FragmentReportBindingImpl
-import com.google.android.material.datepicker.MaterialDatePicker
 
 /**
  * A simple [Fragment] subclass.
@@ -128,7 +126,7 @@ class ReportFragment : Fragment() {
 
 
         //End Date Selector Spinner
-        binding.endDateSelector?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.timeFilterSelector?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
@@ -138,7 +136,7 @@ class ReportFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                viewModel.onEndDateSelected(position)
+                viewModel.onTimeFilterSelected(position)
             }
         }
 
@@ -154,6 +152,21 @@ class ReportFragment : Fragment() {
                 id: Long
             ) {
                 viewModel.onBuyerSelected(position)
+            }
+        }
+
+        //Farmer Selector Spinner
+        binding.farmerNameSelector?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                viewModel.onFarmerSelected(position)
             }
         }
 

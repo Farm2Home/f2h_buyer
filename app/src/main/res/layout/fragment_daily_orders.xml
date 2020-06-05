@@ -65,6 +65,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/itemListRecyclerView" />
 
+            <TextView
+                android:id="@+id/noOrdersText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Looks like you don't have any orders on this day."
+                app:textVisibility="@{viewModel.visibleUiData}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/itemListRecyclerView" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button

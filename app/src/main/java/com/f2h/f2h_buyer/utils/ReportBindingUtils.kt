@@ -144,8 +144,8 @@ fun TextView.setAggregationFormatted(list: List<ReportItemsModel>?){
             uom = element.itemUom
         }
 
-        //If there are multiple types of UoMs do not show the UOM/Quantity
-        if (list.map { x -> x.itemUom }.distinct().count() == 1){
+        //If there are multiple items do not show the UOM/Quantity
+        if (list.map { x -> x.itemName }.distinct().count() == 1){
             text = String.format("₹%.0f - %s %s", totalAmount, getFormattedQtyNumber(totalQuantity), uom)
         } else {
             text = String.format("₹%.0f", totalAmount)

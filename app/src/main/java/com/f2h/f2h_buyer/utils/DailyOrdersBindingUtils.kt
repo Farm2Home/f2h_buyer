@@ -5,6 +5,7 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StrikethroughSpan
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -129,6 +130,16 @@ fun TextView.setTotalAmountFormatted(list: List<DailyOrdersUiModel>?){
             totalAmount += (element.orderAmount)
         }
         text = String.format("₹%.0f", totalAmount)
+    }
+}
+
+
+@BindingAdapter("textVisibility")
+fun TextView.setNoOrdersVisibility(list: List<DailyOrdersUiModel>?){
+    if (list.isNullOrEmpty()) {
+        visibility = View.VISIBLE
+    } else {
+        visibility = View.GONE
     }
 }
 
