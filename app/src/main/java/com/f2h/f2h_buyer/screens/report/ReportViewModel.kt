@@ -6,7 +6,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_CONFIRMED
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_DELIVERED
 import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_ORDERED
+import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PENDING
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.ItemAvailabilityApi
@@ -132,8 +134,7 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
             uiElement.buyerName = userDetailsList.filter { x -> x.userId?.equals(order.buyerUserId) ?: false }.single().userName ?: ""
             uiElement.sellerName = userDetailsList.filter { x -> x.userId?.equals(order.sellerUserId) ?: false }.single().userName ?: ""
             uiElement.deliveryAddress = order.deliveryLocation ?: ""
-            uiElement.displayStatus = getDisplayStatus(uiElement.orderStatus, uiElement.deliveryStatus)
-            uiElement.displayQuantity = getDisplayQuantity(uiElement.displayStatus, uiElement.orderedQuantity, uiElement.confirmedQuantity)
+            uiElement.displayQuantity = getDisplayQuantity(uiElement.orderStatus, uiElement.orderedQuantity, uiElement.confirmedQuantity)
             allUiData.add(uiElement)
         }
 
@@ -147,16 +148,6 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
     }
 
 
-    private fun getDisplayStatus(orderStatus: String?, deliveryStatus: String?): String {
-        var displayStatus = orderStatus ?: ""
-        if (deliveryStatus.equals("DELIVERY_STARTED") ||
-            deliveryStatus.equals("DELIVERED")){
-            displayStatus = deliveryStatus ?: ""
-        }
-        return displayStatus
-    }
-
-
     private fun createAllUiFilters(): ReportUiModel {
         var filters = ReportUiModel()
 
@@ -164,7 +155,7 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
             .filter { uiElement -> !uiElement.itemName.isNullOrBlank() }
             .map { uiElement -> uiElement.itemName }.distinct().sorted())
 
-        filters.orderStatusList = arrayListOf("ALL", "Open Orders")
+        filters.orderStatusList = arrayListOf("ALL", "Open Orders", "Delivered Orders", "Payment Pending")
 
         filters.paymentStatusList = arrayListOf("ALL").plus(allUiData.sortedBy { uiElement -> uiElement.paymentStatus }
             .filter { uiElement -> !uiElement.paymentStatus.isNullOrBlank() }
@@ -178,14 +169,14 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
             .filter { uiElement -> !uiElement.sellerName.isNullOrBlank() }
             .map { uiElement -> uiElement.sellerName }.distinct().sorted())
 
-        filters.timeFilterList = arrayListOf("Today", "Tomorrow", "Last 7 days", "Last 15 days", "Last 30 days")
+        filters.timeFilterList = arrayListOf("Today", "Tomorrow", "Next 7 days", "Last 7 days", "Last 15 days", "Last 30 days")
 
         filters.selectedItem = "ALL"
         filters.selectedPaymentStatus = "ALL"
         filters.selectedOrderStatus = "ALL"
         filters.selectedFarmer = "ALL"
         filters.selectedBuyer = filters.buyerNameList.first()
-        setTimeFilterToday()
+        setTimeFilterRange(0,0) //Today
 
         return filters
     }
@@ -205,8 +196,8 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
 
         elements.forEach { element ->
             if ((selectedItem == "ALL" || element.itemName.equals(selectedItem)) &&
-                (selectedOrderStatus == "ALL" || selectedOrderStatus.split(",").contains(element.displayStatus)) &&
-                (selectedPaymentStatus == "ALL" || element.paymentStatus.equals(selectedPaymentStatus)) &&
+                (selectedOrderStatus == "ALL" || selectedOrderStatus.split(",").contains(element.orderStatus)) &&
+                (selectedPaymentStatus == "ALL" || element.paymentStatus.equals(selectedPaymentStatus))  &&
                 (selectedBuyer == "ALL" || element.buyerName.equals(selectedBuyer)) &&
                 (selectedFarmer == "ALL" || element.sellerName.equals(selectedFarmer)) &&
                 (isInSelectedDateRange(element, selectedStartDate, selectedEndDate))) {
@@ -260,36 +251,34 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
     }
 
     fun onOrderStatusSelected(position: Int) {
-        if (position == 0){
+        if (position == 0) {
             _reportUiFilterModel.value?.selectedOrderStatus = "ALL"
+            _reportUiFilterModel.value?.selectedPaymentStatus = "ALL"
         }
-        if (position == 1){
-            _reportUiFilterModel.value?.selectedOrderStatus = String.format("%s,%s",ORDER_STATUS_ORDERED, ORDER_STATUS_CONFIRMED)
+        if (position == 1) {
+            _reportUiFilterModel.value?.selectedOrderStatus =
+                String.format("%s,%s", ORDER_STATUS_ORDERED, ORDER_STATUS_CONFIRMED)
+            _reportUiFilterModel.value?.selectedPaymentStatus = "ALL"
+        }
+        if (position == 2) {
+            _reportUiFilterModel.value?.selectedOrderStatus = ORDER_STATUS_DELIVERED
+            _reportUiFilterModel.value?.selectedPaymentStatus = "ALL"
+        }
+        if (position == 3) {
+            _reportUiFilterModel.value?.selectedOrderStatus = "ALL"
+            _reportUiFilterModel.value?.selectedPaymentStatus = PAYMENT_STATUS_PENDING
         }
         filterVisibleItems()
     }
 
-    fun onPaymentStatusSelected(position: Int) {
-        _reportUiFilterModel.value?.selectedPaymentStatus = _reportUiFilterModel.value?.paymentStatusList?.get(position) ?: ""
-        filterVisibleItems()
-    }
 
     fun onTimeFilterSelected(position: Int) {
-        if (position.equals(0)){
-            setTimeFilterToday()
-        }
-        if (position.equals(1)){
-            setTimeFilterTomorrow()
-        }
-        if (position.equals(2)){
-            setTimeFilterHistoryRange(7)
-        }
-        if (position.equals(3)){
-            setTimeFilterHistoryRange(15)
-        }
-        if (position.equals(4)){
-            setTimeFilterHistoryRange(30)
-        }
+        if (position.equals(0)) setTimeFilterRange(0,0) //Today
+        if (position.equals(1)) setTimeFilterRange(1,1) //Tomorrow
+        if (position.equals(2)) setTimeFilterRange(0,7) //Next 7 Days
+        if (position.equals(3)) setTimeFilterRange(-7,0) //Last week
+        if (position.equals(4)) setTimeFilterRange(-15,0)  //Last 15 days
+        if (position.equals(5)) setTimeFilterRange(-30,0) //Last 30 days
         filterVisibleItems()
     }
 
@@ -303,25 +292,11 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
         filterVisibleItems()
     }
 
-    fun setTimeFilterToday() {
-        var todayDate = Calendar.getInstance()
-        _reportUiFilterModel.value?.selectedStartDate = formatter.format(todayDate.time)
-        _reportUiFilterModel.value?.selectedEndDate = formatter.format(todayDate.time)
-        filterVisibleItems()
-    }
-
-    fun setTimeFilterTomorrow() {
-        var tomorrowDate = Calendar.getInstance()
-        tomorrowDate.add(Calendar.DATE, 1)
-        _reportUiFilterModel.value?.selectedStartDate = formatter.format(tomorrowDate.time)
-        _reportUiFilterModel.value?.selectedEndDate = formatter.format(tomorrowDate.time)
-        filterVisibleItems()
-    }
-
-    fun setTimeFilterHistoryRange(days: Int) {
+    fun setTimeFilterRange(startDateOffset: Int, endDateOffset: Int) {
         var rangeStartDate = Calendar.getInstance()
         var rangeEndDate = Calendar.getInstance()
-        rangeStartDate.add(Calendar.DATE, -1 * days)
+        rangeStartDate.add(Calendar.DATE, startDateOffset)
+        rangeEndDate.add(Calendar.DATE, endDateOffset)
         _reportUiFilterModel.value?.selectedStartDate = formatter.format(rangeStartDate.time)
         _reportUiFilterModel.value?.selectedEndDate = formatter.format(rangeEndDate.time)
         filterVisibleItems()

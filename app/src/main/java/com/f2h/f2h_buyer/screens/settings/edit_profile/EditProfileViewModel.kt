@@ -1,6 +1,7 @@
 package com.f2h.f2h_buyer.screens.settings.edit_profile
 
 import android.app.Application
+import android.util.Base64
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -50,7 +51,7 @@ class EditProfileViewModel(val database: SessionDatabaseDao, application: Applic
                 _response.value = userData;
                 userName.value = userData.userName
                 mobile.value = userData.mobile
-                password.value = userData.password
+                password.value = Base64.decode(userData.password, Base64.DEFAULT).toString()
                 email.value = userData.email
                 address.value = userData.address
             } catch (t:Throwable){
@@ -70,7 +71,7 @@ class EditProfileViewModel(val database: SessionDatabaseDao, application: Applic
                 address.value,
                 email.value,
                 null,
-                password.value,
+                Base64.encodeToString(password.value?.toByteArray(), Base64.DEFAULT),
                 null,
                 userName.value
             )

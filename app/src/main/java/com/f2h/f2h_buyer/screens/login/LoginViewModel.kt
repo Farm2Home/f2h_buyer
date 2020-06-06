@@ -1,6 +1,7 @@
 package com.f2h.f2h_buyer.screens.login
 
 import android.app.Application
+import android.util.Base64
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -41,7 +42,7 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
     fun onClickLoginButton() {
         _isProgressBarActive.value = true
         val mobile: String = loginMobile.value.toString()
-        val password: String = loginPassword.value.toString()
+        val password: String = Base64.encodeToString(loginPassword.value.toString().toByteArray(), Base64.DEFAULT)
         var session = SessionEntity(mobile = mobile, password = password )
         tryToLogin(session)
     }
@@ -78,7 +79,7 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
         var session = SessionEntity()
         coroutineScope.launch {
             session = retrieveSession()
-            loginPassword.value = session.password
+            loginPassword.value = Base64.decode(session.password, Base64.DEFAULT).toString()
             loginMobile.value = session.mobile
             if (session.id != 0L){
                 tryToLogin(session)

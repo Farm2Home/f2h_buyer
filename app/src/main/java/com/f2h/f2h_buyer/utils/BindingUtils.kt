@@ -61,7 +61,7 @@ fun ImageView.setCustomImageFormatted(itemId: Long){
         return
     }
 
-    setImageResource(R.drawable.f2h_logo)
+    setImageResource(R.drawable.main_logo)
 }
 
 @BindingAdapter("buttonStatus")

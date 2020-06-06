@@ -1,6 +1,8 @@
 package com.f2h.f2h_buyer.screens.signup
 
 import android.app.Application
+import android.util.Base64
+import android.util.Base64.DEFAULT
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -33,7 +35,6 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
     val toastText: LiveData<String>
         get() = _toastText
 
-    private val signUpUiModel = SignUpUiModel()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
@@ -97,7 +98,7 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
         userObject.address = address.value
         userObject.mobile = mobile.value
         userObject.email = email.value
-        userObject.password = password.value
+        userObject.password = Base64.encodeToString(password.value?.toByteArray(), DEFAULT)
         userObject.createdBy = userName.value
         userObject.updatedBy = userName.value
         return userObject

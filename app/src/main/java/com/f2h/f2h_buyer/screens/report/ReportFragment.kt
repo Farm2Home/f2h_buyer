@@ -107,24 +107,6 @@ class ReportFragment : Fragment() {
         }
 
 
-
-        //Payment Status Spinner
-        binding.paymentStatusSelector?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                viewModel.onPaymentStatusSelected(position)
-            }
-        }
-
-
-
         //End Date Selector Spinner
         binding.timeFilterSelector?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
