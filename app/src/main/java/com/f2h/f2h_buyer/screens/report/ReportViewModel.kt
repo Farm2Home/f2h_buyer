@@ -59,7 +59,7 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
         _isProgressBarActive.value = true
         coroutineScope.launch {
             sessionData.value = retrieveSession()
-            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForUserAndGroup(sessionData.value!!.groupId, sessionData.value!!.userId)
+            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroup(sessionData.value!!.groupId)
             try {
                 var orders = getOrdersDataDeferred.await()
                 var userIds = orders.map { x -> x.buyerUserId ?: -1}
@@ -161,9 +161,9 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
             .filter { uiElement -> !uiElement.paymentStatus.isNullOrBlank() }
             .map { uiElement -> uiElement.paymentStatus }.distinct().sorted())
 
-        filters.buyerNameList = allUiData.sortedBy { uiElement -> uiElement.buyerName }
+        filters.buyerNameList = arrayListOf("ALL").plus(allUiData.sortedBy { uiElement -> uiElement.buyerName }
             .filter { uiElement -> !uiElement.buyerName.isNullOrBlank() }
-            .map { uiElement -> uiElement.buyerName }.distinct().sorted()
+            .map { uiElement -> uiElement.buyerName }.distinct().sorted())
 
         filters.farmerNameList = arrayListOf("ALL").plus(allUiData.sortedBy { uiElement -> uiElement.sellerName }
             .filter { uiElement -> !uiElement.sellerName.isNullOrBlank() }
