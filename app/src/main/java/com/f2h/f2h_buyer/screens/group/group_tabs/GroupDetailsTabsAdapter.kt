@@ -13,12 +13,12 @@ class GroupDetailsTabsAdapter(fragment: Fragment) : FragmentStateAdapter(fragmen
     override fun createFragment(position: Int): Fragment {
         when(position) {
             0 -> {
-                val fragment = DailyOrdersFragment()
+                val fragment = AllItemsFragment()
                 return fragment
             }
 
             1 -> {
-                val fragment = AllItemsFragment()
+                val fragment = DailyOrdersFragment()
                 return fragment
             }
 
