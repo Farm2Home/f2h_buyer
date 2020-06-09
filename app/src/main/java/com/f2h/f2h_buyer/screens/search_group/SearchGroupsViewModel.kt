@@ -36,7 +36,7 @@ class SearchGroupsViewModel(val database: SessionDatabaseDao, application: Appli
         get() = _selectedLocality
 
 
-    private val roles = listOf<String>(USER_ROLE_BUYER, USER_ROLE_GROUP_ADMIN, USER_ROLE_BUYER_REQUESTED)
+    private val roles = listOf<String>(USER_ROLE_BUYER, USER_ROLE_BUYER_REQUESTED)
     private var userGroups = listOf<Group>()
     private var userSession = SessionEntity()
     private var viewModelJob = Job()

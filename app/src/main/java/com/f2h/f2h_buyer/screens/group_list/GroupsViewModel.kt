@@ -28,7 +28,7 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
         get() = _groups
 
 
-    private val roles = listOf<String>(USER_ROLE_BUYER, USER_ROLE_GROUP_ADMIN)
+    private val roles = listOf<String>(USER_ROLE_BUYER)
     private var userSession = SessionEntity()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
