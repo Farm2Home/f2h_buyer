@@ -114,6 +114,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
                 uiElement.farmerName = item.farmerUserName ?: ""
                 uiElement.price = item.pricePerUnit ?: 0.0
                 uiElement.orderQtyJump = item.orderQtyJump ?: 0.0
+                uiElement.itemImageLink = item.imageLink ?: ""
             }
             uiElement.orderedDate = df.format(df.parse(order.orderedDate))
             uiElement.orderedQuantity = order.orderedQuantity ?: 0.0

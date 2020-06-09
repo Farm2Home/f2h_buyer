@@ -8,6 +8,7 @@ data class DailyOrdersUiModel (
     var farmerName: String = "",
     var price: Double = 0.0,
     var itemUom: String = "",
+    var itemImageLink: String = "",
     var orderId: Long = 0,
     var quantityChange: Double = 0.0,
     var orderedQuantity: Double = 0.0,

@@ -47,6 +47,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:contentDescription="TODO"
+                    app:loadImage="@{uiModel.itemImageLink}"
                     app:customImageFormatted="@{uiModel.itemId}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
