@@ -52,7 +52,7 @@ class GroupDetailsTabsFragment : Fragment() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when(position) {
                 0 -> tab.text = "Products"
-                1 -> tab.text = "My Cart"
+                1 -> tab.text = "Orders"
                 2 -> tab.text = "Group Wallet"
             }
         }.attach()
