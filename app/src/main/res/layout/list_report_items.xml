@@ -41,7 +41,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:contentDescription="TODO"
-                    app:customImageFormatted="@{uiModel.itemId}"
+                    app:loadImage="@{uiModel.itemImageLink}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -78,7 +78,6 @@
                     android:text="0 Pack"
                     android:textAlignment="center"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toTopOf="@+id/imageButton"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/date"
                     app:orderedQuantityFormatted="@{uiModel}" />
@@ -149,16 +148,6 @@
                     app:layout_constraintEnd_toEndOf="@+id/date"
                     app:layout_constraintStart_toStartOf="@+id/date"
                     app:layout_constraintTop_toBottomOf="@+id/date" />
-
-                <ImageButton
-                    android:id="@+id/imageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@drawable/contact_us_icon" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -53,22 +53,10 @@
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="20dp"
                     android:text="@{item.itemName}"
-                    android:textSize="15sp"
+                    android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/itemImage"
                     app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:text="@{item.description}"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/itemDetails"
-                    app:layout_constraintStart_toStartOf="@+id/itemDetails"
-                    app:layout_constraintTop_toBottomOf="@+id/itemDetails" />
 
                 <TextView
                     android:id="@+id/amount"
@@ -77,31 +65,33 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="15dp"
                     android:text="Rs. "
-                    app:priceFormattedFromItem="@{item}"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/nextAvailable"
                     app:layout_constraintStart_toStartOf="@+id/nextAvailable"
-                    app:layout_constraintTop_toBottomOf="@+id/nextAvailable" />
+                    app:layout_constraintTop_toBottomOf="@+id/nextAvailable"
+                    app:priceFormattedFromItem="@{item}" />
 
                 <TextView
-                    android:id="@+id/groupDescription"
+                    android:id="@+id/farmerName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@{`Farmer - ` + item.farmerUserName}"
                     android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/date"
-                    app:layout_constraintStart_toStartOf="@+id/date"
-                    app:layout_constraintTop_toBottomOf="@+id/date" />
+                    app:layout_constraintEnd_toEndOf="@+id/itemDetails"
+                    app:layout_constraintStart_toStartOf="@+id/itemDetails"
+                    app:layout_constraintTop_toBottomOf="@+id/itemDetails" />
 
                 <TextView
                     android:id="@+id/nextAvailable"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
+                    android:textSize="13sp"
                     app:availableDateFormatted="@{item}"
-                    app:layout_constraintEnd_toEndOf="@+id/groupDescription"
-                    app:layout_constraintStart_toStartOf="@+id/groupDescription"
-                    app:layout_constraintTop_toBottomOf="@+id/groupDescription" />
+                    app:layout_constraintEnd_toEndOf="@+id/farmerName"
+                    app:layout_constraintStart_toStartOf="@+id/farmerName"
+                    app:layout_constraintTop_toBottomOf="@+id/farmerName" />
 
                 <View
                     android:id="@+id/view"
