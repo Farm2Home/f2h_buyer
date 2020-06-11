@@ -1,6 +1,13 @@
 package com.f2h.f2h_buyer.constants
 
 object F2HConstants {
+
+    /***********************************************************
+     * Use the below 2 URLs for testing and produciton purposes
+     ***********************************************************/
+//    const val SERVER_URL = "http://f2h-production.herokuapp.com/"
+    const val SERVER_URL = "http://f2h.herokuapp.com/"
+
     const val ORDER_STATUS_ORDERED = "ORDERED"
     const val ORDER_STATUS_CONFIRMED = "CONFIRMED"
     const val ORDER_STATUS_REJECTED = "REJECTED"
