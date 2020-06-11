@@ -47,12 +47,12 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:contentDescription="TODO"
-                    app:customImageFormatted="@{uiModel.itemId}"
+                    app:loadImage="@{uiModel.itemImageLink}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/itemName"
+                    android:id="@+id/itemDetails"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -65,16 +65,16 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/itemDescription"
+                    android:id="@+id/date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="@{uiModel.itemDescription}"
                     android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/itemName"
-                    app:layout_constraintStart_toStartOf="@+id/itemName"
-                    app:layout_constraintTop_toBottomOf="@+id/itemName" />
+                    app:layout_constraintEnd_toEndOf="@+id/itemDetails"
+                    app:layout_constraintStart_toStartOf="@+id/itemDetails"
+                    app:layout_constraintTop_toBottomOf="@+id/itemDetails" />
 
                 <Button
                     android:id="@+id/buttonDecrease"
@@ -90,7 +90,7 @@
                     app:layout_constraintEnd_toEndOf="@+id/buttonIncrease"
                     app:layout_constraintHorizontal_bias="0.507"
                     app:layout_constraintStart_toStartOf="@+id/buttonIncrease"
-                    app:layout_constraintTop_toBottomOf="@+id/quantity" />
+                    app:layout_constraintTop_toBottomOf="@+id/confirmedQuantity" />
 
                 <Button
                     android:id="@+id/buttonIncrease"
@@ -106,7 +106,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/quantity"
+                    android:id="@+id/confirmedQuantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -118,7 +118,7 @@
                     app:orderedQuantityFormatted="@{uiModel}" />
 
                 <TextView
-                    android:id="@+id/price"
+                    android:id="@+id/amount"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Rs. "
@@ -129,14 +129,14 @@
                     app:priceFormatted="@{uiModel}" />
 
                 <TextView
-                    android:id="@+id/farmer"
+                    android:id="@+id/groupDescription"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@{`Farmer - ` + uiModel.farmerName}"
                     android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/itemDescription"
-                    app:layout_constraintStart_toStartOf="@+id/itemDescription"
-                    app:layout_constraintTop_toBottomOf="@+id/itemDescription" />
+                    app:layout_constraintEnd_toEndOf="@+id/date"
+                    app:layout_constraintStart_toStartOf="@+id/date"
+                    app:layout_constraintTop_toBottomOf="@+id/date" />
 
 
                 <View
@@ -152,9 +152,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Payable - "
-                    app:layout_constraintEnd_toEndOf="@+id/farmer"
+                    app:layout_constraintEnd_toEndOf="@+id/groupDescription"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/farmer"
+                    app:layout_constraintStart_toStartOf="@+id/groupDescription"
                     app:layout_constraintTop_toBottomOf="@+id/discount"
                     app:totalPriceFormatted="@{uiModel}" />
 
@@ -166,9 +166,9 @@
                     android:textAlignment="center"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/price"
-                    app:layout_constraintStart_toStartOf="@+id/price"
-                    app:layout_constraintTop_toBottomOf="@+id/price"
+                    app:layout_constraintEnd_toEndOf="@+id/amount"
+                    app:layout_constraintStart_toStartOf="@+id/amount"
+                    app:layout_constraintTop_toBottomOf="@+id/amount"
                     app:statusFormatted="@{uiModel}" />
 
                 <TextView
@@ -178,12 +178,12 @@
                     android:layout_marginTop="5dp"
                     android:textSize="12sp"
                     app:discountFormatted="@{uiModel}"
-                    app:layout_constraintEnd_toEndOf="@+id/comment"
-                    app:layout_constraintStart_toStartOf="@+id/comment"
-                    app:layout_constraintTop_toBottomOf="@+id/comment" />
+                    app:layout_constraintEnd_toEndOf="@+id/deliveryAddress"
+                    app:layout_constraintStart_toStartOf="@+id/deliveryAddress"
+                    app:layout_constraintTop_toBottomOf="@+id/deliveryAddress" />
 
                 <TextView
-                    android:id="@+id/comment"
+                    android:id="@+id/deliveryAddress"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -191,10 +191,10 @@
                     android:singleLine="false"
                     android:textSize="10sp"
                     app:commentFormatted="@{uiModel}"
-                    app:layout_constraintEnd_toEndOf="@+id/farmer"
+                    app:layout_constraintEnd_toEndOf="@+id/groupDescription"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/farmer"
-                    app:layout_constraintTop_toBottomOf="@+id/farmer" />
+                    app:layout_constraintStart_toStartOf="@+id/groupDescription"
+                    app:layout_constraintTop_toBottomOf="@+id/groupDescription" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

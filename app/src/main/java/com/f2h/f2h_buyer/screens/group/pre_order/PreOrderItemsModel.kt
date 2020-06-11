@@ -11,8 +11,6 @@ data class PreOrderItemsModel (
     var orderQuantityJump: Double = 0.0,
     var confirmedQuantity: Double = 0.0,
     var availableQuantity: Double = 0.0,
-    var orderUom: String = "",
     var orderStatus: String = "",
-    var deliveryStatus: String = "",
     var isFreezed: Boolean = false
 )

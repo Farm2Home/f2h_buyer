@@ -25,6 +25,10 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
     val visibleItems: LiveData<List<Item>>
         get() = _visibleItems
 
+    private val _toastText = MutableLiveData<String>()
+    val toastText: LiveData<String>
+        get() = _toastText
+
     private val _sessionData = MutableLiveData<SessionEntity>()
 
     private var allItems = ArrayList<Item>()

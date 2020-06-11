@@ -2,15 +2,15 @@ package com.f2h.f2h_buyer.screens.group_list
 
 import android.app.Application
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 
 import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.database.F2HDatabase
@@ -49,6 +49,31 @@ class GroupsFragment : Fragment() {
             }
         })
 
+        // Progress Bar loader
+        viewModel.isProgressBarActive.observe(viewLifecycleOwner, Observer { isProgressBarActive ->
+            if(isProgressBarActive){
+                binding.progressBar.visibility = View.VISIBLE
+            } else {
+                binding.progressBar.visibility = View.GONE
+            }
+        })
+
+        // Progress Bar loader
+        viewModel.isGroupListEmpty.observe(viewLifecycleOwner, Observer { isGroupListEmpty ->
+            if(isGroupListEmpty){
+                binding.emptyGroupsText.visibility = View.VISIBLE
+                binding.joinButton.visibility = View.VISIBLE
+            } else {
+                binding.emptyGroupsText.visibility = View.GONE
+                binding.joinButton.visibility = View.GONE
+            }
+        })
+
+        binding.joinButton.setOnClickListener {
+            onJoinGroupButtonClicked()
+        }
+
+
         //Set app bar title to group name here
         (context as AppCompatActivity).supportActionBar!!.title = "Farm To Home"
 
@@ -59,6 +84,11 @@ class GroupsFragment : Fragment() {
     fun onGroupSelected(group: Group){
         viewModel.updateSessionWithGroupInfo(group)
         val action = GroupsFragmentDirections.actionGroupsFragmentToGroupDetailsTabsFragment(group.groupName ?: "")
+        view?.let { Navigation.findNavController(it).navigate(action) }
+    }
+
+    fun onJoinGroupButtonClicked() {
+        val action = GroupsFragmentDirections.actionGroupsFragmentToSearchGroupsFragment()
         view?.let { Navigation.findNavController(it).navigate(action) }
     }
 

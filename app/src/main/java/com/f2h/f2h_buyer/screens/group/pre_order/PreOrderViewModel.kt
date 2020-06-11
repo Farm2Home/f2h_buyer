@@ -10,7 +10,6 @@ import com.f2h.f2h_buyer.network.ItemApi
 import com.f2h.f2h_buyer.network.ItemAvailabilityApi
 import com.f2h.f2h_buyer.network.OrderApi
 import com.f2h.f2h_buyer.network.models.*
-import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
 import kotlinx.coroutines.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -65,7 +64,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
                 val item = getItemDataDeferred.await()
 
                 //Fetch existing Orders Data
-                val getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupUserAndItem(sessionData.groupId,
+                val getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupUserAndItem(item.groupId ?: 0,
                     sessionData.userId, item.itemId!!, startDate, endDate)
                 val orders = ArrayList(getOrdersDataDeferred.await())
 
@@ -114,8 +113,6 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
                     preOrderItem.orderedQuantity = order.first().orderedQuantity ?: 0.0
                     preOrderItem.confirmedQuantity = order.first().confirmedQuantity ?: 0.0
                     preOrderItem.orderStatus = order.first().orderStatus ?: ""
-                    preOrderItem.deliveryStatus = order.first().deliveryStatus ?: ""
-                    preOrderItem.orderUom = order.first().uom ?: ""
                     preOrderItem.orderId = order.first().orderId ?: -1L
                 }
                 list.add(preOrderItem)
@@ -252,7 +249,6 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
 
             // Refresh the screen
             fetchAllData(selectedItemId)
-            _isProgressBarActive.value = false
         }
     }
 
@@ -263,12 +259,11 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
             itemAvailabilityId = preOrder.itemAvailabilityId,
             orderDescription = "Successfully created new order",
             deliveryLocation = sessionData.address,
-            uom = preOrder.orderUom,
             orderedQuantity = preOrder.orderedQuantity,
             orderedAmount = calculateOrderAmount(preOrder.orderedQuantity),
             discountAmount = 0.0,
             orderStatus = "ORDERED",
-            paymentStatus = "PENDING",
+            paymentStatus = "",
             createdBy = "BUYER-" + sessionData.userName,
             updatedBy = "BUYER-" + sessionData.userName
         )

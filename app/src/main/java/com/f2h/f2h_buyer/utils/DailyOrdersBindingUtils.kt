@@ -7,9 +7,16 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.StrikethroughSpan
 import android.view.View
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import com.f2h.f2h_buyer.R
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_CONFIRMED
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_DELIVERED
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_ORDERED
+import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_REJECTED
+import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PAID
+import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PENDING
 import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
 
 
@@ -25,17 +32,20 @@ fun TextView.setPriceFormatted(data: DailyOrdersUiModel?){
 fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
     var freezeString = ""
 
-    if (isOrderFreezed(data) && "ORDERED".equals(data.orderStatus)){
+    if (isFreezeStringDisplayed(data)){
         freezeString = "\nFreeze"
     }
 
-    var orderedString = String.format("%s  %s%s", getFormattedQtyNumber(data.orderedQuantity), data.orderUom, freezeString)
-    if (data.orderStatus.equals("CONFIRMED")){
-        orderedString = String.format("%s  %s%s",getFormattedQtyNumber(data.confirmedQuantity), data.orderUom, freezeString)
+    var orderedString = String.format("%s  %s", getFormattedQtyNumber(data.orderedQuantity), freezeString)
+    if (data.orderStatus.equals(ORDER_STATUS_CONFIRMED)){
+        orderedString = String.format("%s  %s",getFormattedQtyNumber(data.confirmedQuantity), freezeString)
     }
 
     text = orderedString
 }
+
+private fun isFreezeStringDisplayed(data: DailyOrdersUiModel) =
+    isOrderFreezed(data) && (ORDER_STATUS_ORDERED.equals(data.orderStatus) || data.orderStatus.isBlank())
 
 private fun getFormattedQtyNumber(number: Double): String {
     return if (number.compareTo(number.toLong()) == 0)
@@ -58,7 +68,7 @@ fun TextView.setDiscountFormatted(data: DailyOrdersUiModel){
 @BindingAdapter("commentFormatted")
 fun TextView.setCommentFormatted(data: DailyOrdersUiModel){
     var comment = data.orderComment
-    if(data.deliveryStatus.equals("DELIVERED")){
+    if(data.orderStatus.equals(ORDER_STATUS_DELIVERED)){
         comment = data.deliveryComment
     }
 
@@ -86,6 +96,27 @@ fun TextView.setTotalPriceFormatted(data: DailyOrdersUiModel){
     payableStringFormatted.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),9,10+markupPrice.length,0)
     payableStringFormatted.setSpan(RelativeSizeSpan(0.6F), payableString.length-data.paymentStatus.length, payableString.length,0)
 
+    //Make PAID Green colour
+    if(data.paymentStatus.equals(PAYMENT_STATUS_PAID)) {
+        payableStringFormatted.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(context,R.color.green_status)),
+            payableString.length - data.paymentStatus.length,
+            payableString.length,
+            0
+        )
+    }
+
+    //Make PENDING RED colour
+    if(data.paymentStatus.equals(PAYMENT_STATUS_PENDING)) {
+        payableStringFormatted.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(context,R.color.red_status)),
+            payableString.length - data.paymentStatus.length,
+            payableString.length,
+            0
+        )
+    }
+
+
     text = payableStringFormatted
 }
 
@@ -103,23 +134,32 @@ fun TextView.setTotalAmountFormatted(list: List<DailyOrdersUiModel>?){
 }
 
 
+@BindingAdapter("textVisibility")
+fun TextView.setNoOrdersVisibility(list: List<DailyOrdersUiModel>?){
+    if (list.isNullOrEmpty()) {
+        visibility = View.VISIBLE
+    } else {
+        visibility = View.GONE
+    }
+}
+
+
 @BindingAdapter("statusFormatted")
 fun TextView.setStatusFormatted(data: DailyOrdersUiModel){
 
     var displayedStatus: String = data.orderStatus
 
-    if (data.deliveryStatus.equals("DELIVERY_STARTED") ||
-        data.deliveryStatus.equals("DELIVERED")){
-        displayedStatus = data.deliveryStatus
+    if (data.orderStatus.equals(ORDER_STATUS_CONFIRMED)){
+        displayedStatus = data.orderStatus
     }
 
     val colouredText = SpannableString(displayedStatus)
     var color = Color.DKGRAY
     when (displayedStatus) {
-        "ORDERED" -> color = Color.parseColor("#FF9800")
-        "CONFIRMED" -> color = Color.parseColor("#FF9800")
-        "REJECTED" -> color = Color.parseColor("#F44336")
-        "DELIVERED" -> color = Color.parseColor("#4CAF50")
+        ORDER_STATUS_ORDERED -> color = ContextCompat.getColor(context, R.color.orange_status)
+        ORDER_STATUS_CONFIRMED -> color = ContextCompat.getColor(context, R.color.orange_status)
+        ORDER_STATUS_REJECTED -> color = ContextCompat.getColor(context, R.color.red_status)
+        ORDER_STATUS_DELIVERED -> color = ContextCompat.getColor(context, R.color.green_status)
     }
     colouredText.setSpan(ForegroundColorSpan(color),0, displayedStatus.length,0)
 
@@ -130,18 +170,14 @@ fun TextView.setStatusFormatted(data: DailyOrdersUiModel){
 
 @BindingAdapter("buttonVisibilityFormatted")
 fun Button.setButtonVisibilityFormatted(data: DailyOrdersUiModel){
-    if (isOrderFreezed(data)){
-        isEnabled = false
-    } else{
-        isEnabled = true
-    }
+    isEnabled = !isOrderFreezed(data)
 }
 
 
 private fun isOrderFreezed(data: DailyOrdersUiModel) : Boolean {
     if (data.isFreezed.equals(false) &&
-       (data.orderStatus.equals("ORDERED") ||
-        data.orderStatus.isBlank())){
+        (data.orderStatus.equals(ORDER_STATUS_ORDERED) ||
+                data.orderStatus.isBlank())){
         return false
     }
     return true

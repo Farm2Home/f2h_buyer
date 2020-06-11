@@ -1,10 +1,12 @@
 package com.f2h.f2h_buyer.screens.group.all_items
 
+import android.animation.Animator
 import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil.inflate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -64,8 +66,13 @@ class AllItemsFragment : Fragment() {
         })
 
 
+        viewModel.toastText.observe(viewLifecycleOwner, Observer { message ->
+            Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
+        })
+
         return binding.root
     }
+
 
     private fun navigateToPreOrderPage(item: Item) {
         val action = GroupDetailsTabsFragmentDirections.actionGroupDetailsTabsFragmentToPreOrderFragment(item.itemId ?: -1L)

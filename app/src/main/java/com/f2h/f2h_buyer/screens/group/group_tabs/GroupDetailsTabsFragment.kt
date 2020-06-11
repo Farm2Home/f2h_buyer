@@ -1,12 +1,12 @@
 package com.f2h.f2h_buyer.screens.group.group_tabs
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.NavigationUI
 import androidx.viewpager2.widget.ViewPager2
 import com.f2h.f2h_buyer.R
 import com.google.android.material.tabs.TabLayout
@@ -24,7 +24,18 @@ class GroupDetailsTabsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_group_details_tabs, container, false)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.group_options_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return NavigationUI.onNavDestinationSelected(item!!, view!!.findNavController()) ||
+                super.onOptionsItemSelected(item)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,8 +51,8 @@ class GroupDetailsTabsFragment : Fragment() {
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when(position) {
-                0 -> tab.text = "My Orders"
-                1 -> tab.text = "All Items"
+                0 -> tab.text = "Products"
+                1 -> tab.text = "My Orders"
                 2 -> tab.text = "Group Wallet"
             }
         }.attach()

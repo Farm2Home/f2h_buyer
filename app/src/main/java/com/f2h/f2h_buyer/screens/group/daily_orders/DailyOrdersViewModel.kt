@@ -9,10 +9,7 @@ import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.ItemAvailabilityApi
 import com.f2h.f2h_buyer.network.OrderApi
-import com.f2h.f2h_buyer.network.models.Item
-import com.f2h.f2h_buyer.network.models.ItemAvailability
-import com.f2h.f2h_buyer.network.models.Order
-import com.f2h.f2h_buyer.network.models.OrderUpdateRequest
+import com.f2h.f2h_buyer.network.models.*
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -53,14 +50,15 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     init {
         _selectedDate.value = Calendar.getInstance().time
         _isProgressBarActive.value = true
-        getItemsAndAvailabilitiesForGroup()
+        getItemsAndAvailabilitiesForUser()
     }
 
 
-    private fun getItemsAndAvailabilitiesForGroup() {
+    fun getItemsAndAvailabilitiesForUser() {
+        _isProgressBarActive.value = true
         coroutineScope.launch {
             sessionData.value = retrieveSession()
-            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupAndUser(sessionData.value!!.groupId, sessionData.value!!.userId)
+            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForUserAndGroup(sessionData.value!!.groupId, sessionData.value!!.userId)
             try {
                 var orders = getOrdersDataDeferred.await()
                 var availabilityIds: ArrayList<Long> = arrayListOf()
@@ -116,17 +114,16 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
                 uiElement.farmerName = item.farmerUserName ?: ""
                 uiElement.price = item.pricePerUnit ?: 0.0
                 uiElement.orderQtyJump = item.orderQtyJump ?: 0.0
+                uiElement.itemImageLink = item.imageLink ?: ""
             }
             uiElement.orderedDate = df.format(df.parse(order.orderedDate))
             uiElement.orderedQuantity = order.orderedQuantity ?: 0.0
             uiElement.confirmedQuantity = order.confirmedQuantity ?: 0.0
-            uiElement.orderUom = order.uom ?: ""
             uiElement.orderId = order.orderId ?: -1L
             uiElement.orderAmount = order.orderedAmount ?: 0.0
             uiElement.discountAmount = order.discountAmount ?: 0.0
             uiElement.orderStatus = order.orderStatus ?: ""
             uiElement.paymentStatus = order.paymentStatus ?: ""
-            uiElement.deliveryStatus = order.deliveryStatus ?: ""
             uiElement.orderComment = order.orderComment ?: ""
             uiElement.deliveryComment = order.deliveryComment ?: ""
 
@@ -235,7 +232,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
             var updateOrdersDataDeferred = OrderApi.retrofitService.updateOrders(orderUpdates)
             try{
                 updateOrdersDataDeferred.await()
-                getItemsAndAvailabilitiesForGroup()
+                getItemsAndAvailabilitiesForUser()
             } catch (t:Throwable){
                 println(t.message)
                 _toastMessage.value = "Out of stock"

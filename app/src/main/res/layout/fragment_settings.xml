@@ -30,48 +30,121 @@
             app:layout_constraintTop_toTopOf="parent">
 
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/userName"
-                    android:layout_width="match_parent"
+                    android:id="@+id/name"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
                     android:fontFamily=""
-                    android:padding="20dp"
-                    android:text="@{viewModel.response.userName}" />
+                    android:text="@{viewModel.response.userName}"
+                    android:textAlignment="viewStart"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/textView14"
+                    app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
                 <View
+                    android:id="@+id/view3"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@android:color/darker_gray" />
+                    android:layout_marginTop="15dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/name" />
 
                 <TextView
                     android:id="@+id/email"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="20dp"
-                    android:paddingTop="10dp"
-                    android:text="@{viewModel.response.email}" />
+                    android:text="@{viewModel.response.email}"
+                    android:textAlignment="viewStart"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="@+id/name"
+                    app:layout_constraintStart_toStartOf="@+id/textView15"
+                    app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
                 <TextView
                     android:id="@+id/mobile"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="20dp"
-                    android:text="@{viewModel.response.mobile}" />
+                    android:text="@{`+91-` + viewModel.response.mobile}"
+                    android:textAlignment="viewStart"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="@+id/email"
+                    app:layout_constraintStart_toStartOf="@+id/email"
+                    app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
                 <TextView
                     android:id="@+id/address"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="20dp"
-                    android:paddingBottom="20dp"
-                    android:text="@{viewModel.response.address}" />
+                    android:text="@{viewModel.response.address}"
+                    android:textAlignment="viewStart"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="@+id/mobile"
+                    app:layout_constraintStart_toStartOf="@+id/mobile"
+                    app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Name"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Email"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="@+id/textView14"
+                    app:layout_constraintTop_toBottomOf="@+id/view3" />
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Mobile Number"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="@+id/textView15"
+                    app:layout_constraintTop_toBottomOf="@+id/email" />
+
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Delivery address"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="@+id/textView16"
+                    app:layout_constraintTop_toBottomOf="@+id/mobile" />
+
+                <Button
+                    android:id="@+id/editProfileButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Edit Profile"
+                    android:textAllCaps="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/address" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 

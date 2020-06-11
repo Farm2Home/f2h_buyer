@@ -18,7 +18,6 @@ import com.f2h.f2h_buyer.databinding.FragmentDailyOrdersBinding
 import com.f2h.f2h_buyer.screens.group.group_tabs.GroupDetailsTabsFragmentDirections
 import devs.mulham.horizontalcalendar.HorizontalCalendar
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener
-import kotlinx.android.synthetic.main.fragment_all_items.view.*
 import java.util.*
 
 
@@ -114,6 +113,10 @@ class DailyOrdersFragment : Fragment() {
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getItemsAndAvailabilitiesForUser()
+    }
 
     private fun navigateToPreOrderPage(uiData: DailyOrdersUiModel) {
         val action = GroupDetailsTabsFragmentDirections.actionGroupDetailsTabsFragmentToPreOrderFragment(uiData.itemId)

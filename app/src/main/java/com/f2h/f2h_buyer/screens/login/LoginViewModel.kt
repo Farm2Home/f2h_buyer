@@ -1,6 +1,7 @@
 package com.f2h.f2h_buyer.screens.login
 
 import android.app.Application
+import android.util.Base64
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +11,7 @@ import com.f2h.f2h_buyer.network.LoginApi
 import com.f2h.f2h_buyer.network.models.User
 import kotlinx.coroutines.*
 import retrofit2.await
+import java.nio.charset.Charset
 
 
 class LoginViewModel(val database: SessionDatabaseDao, application: Application) : AndroidViewModel(application) {
@@ -41,10 +43,11 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
     fun onClickLoginButton() {
         _isProgressBarActive.value = true
         val mobile: String = loginMobile.value.toString()
-        val password: String = loginPassword.value.toString()
+        val password: String = Base64.encodeToString(loginPassword.value.toString().toByteArray(), Base64.DEFAULT)
         var session = SessionEntity(mobile = mobile, password = password )
         tryToLogin(session)
     }
+
 
     private suspend fun saveSession(updatedUserData: User, preSavedSession: SessionEntity) {
         return withContext(Dispatchers.IO) {
@@ -77,7 +80,7 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
         var session = SessionEntity()
         coroutineScope.launch {
             session = retrieveSession()
-            loginPassword.value = session.password
+            loginPassword.value = String(Base64.decode(session.password, Base64.DEFAULT), Charset.defaultCharset())
             loginMobile.value = session.mobile
             if (session.id != 0L){
                 tryToLogin(session)
@@ -108,6 +111,7 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
             _isProgressBarActive.value = false
         }
     }
+
 
     override fun onCleared() {
         super.onCleared()

@@ -15,15 +15,14 @@
             android:id="@+id/action_groupsFragment_to_groupDetailsTabsFragment"
             app:destination="@id/groupDetailsTabsFragment"
             app:enterAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_groupsFragment_to_searchGroupsFragment"
+            app:destination="@id/searchGroupsFragment" />
     </fragment>
     <fragment
         android:id="@+id/groupDetailsTabsFragment"
         android:name="com.f2h.f2h_buyer.screens.group.group_tabs.GroupDetailsTabsFragment"
         tools:layout="@layout/fragment_group_details_tabs">
-        <action
-            android:id="@+id/action_groupDetailsTabsFragment_to_dailyOrdersFragment"
-            app:destination="@id/dailyOrdersFragment"
-            app:enterAnim="@android:anim/slide_in_left" />
         <argument
             android:name="groupName"
             android:defaultValue="Group Name"
@@ -40,6 +39,12 @@
             android:id="@+id/action_groupDetailsTabsFragment_to_preOrderFragment"
             app:destination="@id/preOrderFragment"
             app:enterAnim="@android:anim/slide_in_left" />
+        <action
+            android:id="@+id/action_groupDetailsTabsFragment_to_dailyOrdersFragment"
+            app:destination="@id/dailyOrdersFragment" />
+        <action
+            android:id="@+id/action_groupDetailsTabsFragment_to_reportFragment"
+            app:destination="@id/reportFragment" />
     </fragment>
     <fragment
         android:id="@+id/allItemsFragment"
@@ -66,5 +71,21 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.f2h.f2h_buyer.screens.settings.SettingsFragment"
-        android:label="@string/my_profile" />
+        android:label="@string/my_profile" >
+        <action
+            android:id="@+id/action_settingsFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reportFragment"
+        android:name="com.f2h.f2h_buyer.screens.report.ReportFragment"
+        />
+    <fragment
+        android:id="@+id/searchGroupsFragment"
+        android:name="com.f2h.f2h_buyer.screens.search_group.SearchGroupsFragment"
+        android:label="SearchGroupsFragment" />
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.f2h.f2h_buyer.screens.settings.edit_profile.EditProfileFragment"
+        android:label="EditProfileFragment" />
 </navigation>

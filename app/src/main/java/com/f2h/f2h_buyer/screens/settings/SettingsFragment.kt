@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 
 import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.database.F2HDatabase
@@ -35,7 +36,21 @@ class SettingsFragment : Fragment() {
         binding.setLifecycleOwner(this)
         binding.viewModel = viewModel
 
+        binding.editProfileButton.setOnClickListener {
+            onEditButtonClicked()
+        }
+
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getProfileInformation()
+    }
+
+    private fun onEditButtonClicked(){
+        val action = SettingsFragmentDirections.actionSettingsFragmentToEditProfileFragment()
+        view?.let { Navigation.findNavController(it).navigate(action) }
     }
 
 }
