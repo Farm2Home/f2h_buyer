@@ -36,18 +36,7 @@ class SearchGroupsFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_groups , container, false)
         binding.setLifecycleOwner(this)
         binding.viewModel = viewModel
-
-
-        // Progress Bar loader
-        viewModel.isProgressBarActive.observe(viewLifecycleOwner, Observer { isProgressBarActive ->
-            if(isProgressBarActive){
-                binding.progressBar.visibility = View.VISIBLE
-            } else {
-                binding.progressBar.visibility = View.GONE
-            }
-        })
-
-
+        
 
         // Adapter for List of Searched groups
         val adapter = SearchGroupsAdapter(GroupClickListener { group ->

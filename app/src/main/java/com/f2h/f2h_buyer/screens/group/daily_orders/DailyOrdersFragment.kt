@@ -95,16 +95,6 @@ class DailyOrdersFragment : Fragment() {
                 }
 
 
-        //Progress Bar loader
-        viewModel.isProgressBarActive.observe(viewLifecycleOwner, Observer { isProgressBarActive ->
-            if(isProgressBarActive){
-                binding.progressBar.visibility = View.VISIBLE
-            } else {
-                binding.progressBar.visibility = View.GONE
-            }
-        })
-
-
         //Toast Message
         viewModel.toastMessage.observe(viewLifecycleOwner, Observer { message ->
             Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
