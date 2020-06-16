@@ -18,14 +18,23 @@ android {
         applicationId "com.f2h.f2h_buyer"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 3
-        versionName "3"
+        versionCode 4
+        versionName "4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "SERVER_URL", "\"http://f2h.herokuapp.com/\""
+            buildConfigField "String", "ENVIRONMENT", "\"DEV\""
+            applicationIdSuffix ".debug"
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
+            buildConfigField "String", "SERVER_URL", "\"http://f2h-production.herokuapp.com/\""
+            buildConfigField "String", "ENVIRONMENT", "\"V\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

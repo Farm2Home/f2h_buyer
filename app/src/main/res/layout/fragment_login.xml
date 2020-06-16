@@ -19,8 +19,23 @@
         tools:context=".screens.MainActivity">
 
         <EditText
-            android:id="@+id/mobileNumber"
+            android:id="@+id/textView12"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:editable="false"
+            android:gravity="center_vertical"
+            android:inputType="none"
+            android:text="+91"
+            android:textAlignment="gravity"
+            android:textSize="18sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="@+id/mobileNumber"
+            app:layout_constraintStart_toStartOf="@+id/password"
+            app:layout_constraintTop_toTopOf="@+id/mobileNumber" />
+
+        <EditText
+            android:id="@+id/mobileNumber"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:autofillHints=""
@@ -28,9 +43,9 @@
             android:hint="@string/mobile_number"
             android:inputType="phone"
             android:text="@={viewModel.loginMobile}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintEnd_toEndOf="@+id/password"
+            app:layout_constraintStart_toEndOf="@+id/textView12"
+            app:layout_constraintTop_toBottomOf="@+id/appVersion" />
 
         <EditText
             android:id="@+id/password"
@@ -80,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:visibility="visible"
+            app:progressBarVisibility="@{viewModel.isProgressBarActive().booleanValue()}"
             app:layout_constraintEnd_toStartOf="@+id/loginButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/signUp"
@@ -95,6 +110,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/main_logo" />
+
+        <TextView
+            android:id="@+id/appVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
