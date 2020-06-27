@@ -54,8 +54,10 @@ fun TextView.setOrderedQuantityFormatted(data: ReportItemsModel){
         freezeString = "\nFreeze"
     }
 
-    var orderedString = String.format("%s  %s%s", getFormattedQtyNumber(data.displayQuantity), data.itemUom ,freezeString)
-
+    var orderedString = String.format("%s  %s", getFormattedQtyNumber(data.orderedQuantity), freezeString)
+    if (!data.orderStatus.equals(ORDER_STATUS_ORDERED)){
+        orderedString = String.format("%s  %s",getFormattedQtyNumber(data.confirmedQuantity), freezeString)
+    }
     text = orderedString
 }
 
@@ -101,7 +103,7 @@ fun TextView.setTotalPriceFormatted(data: ReportItemsModel){
         markupPrice = String.format("₹%.0f", data.orderAmount + data.discountAmount)
     }
 
-    val receivableString = String.format("Receivable  %s ₹%.0f \n%s", markupPrice, data.orderAmount, data.paymentStatus)
+    val receivableString = String.format("Payable  %s ₹%.0f \n%s", markupPrice, data.orderAmount, data.paymentStatus)
     val receivaableStringFormatted = SpannableString(receivableString)
     receivaableStringFormatted.setSpan(StrikethroughSpan(),11,12+markupPrice.length,0)
     receivaableStringFormatted.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),11,12+markupPrice.length,0)
