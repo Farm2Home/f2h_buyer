@@ -1,7 +1,11 @@
 package com.f2h.f2h_buyer.utils
 
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.network.models.Item
 import java.lang.Exception
 import java.text.DateFormat
@@ -14,6 +18,7 @@ fun TextView.setAvailableDateFormatted(item: Item?){
         val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd")
         val formatter: DateFormat = SimpleDateFormat("MMM-dd-yyy")
         var formattedDate: String = ""
+        val NOT_AVAILABLE: String = "Not Available"
 
         try {
             var date = item.itemAvailability.get(0).availableDate
@@ -23,9 +28,27 @@ fun TextView.setAvailableDateFormatted(item: Item?){
         }
 
         if(formattedDate.isBlank()){
-            formattedDate = "Not Available"
+            formattedDate = NOT_AVAILABLE
         }
-        text = "Earliest Available - " + formattedDate
+
+        val finalFormattedText = SpannableString("Earliest Available - " + formattedDate)
+        if (formattedDate.equals(NOT_AVAILABLE)){
+            finalFormattedText.setSpan(
+                ForegroundColorSpan(ContextCompat.getColor(context, R.color.red_status)),
+                finalFormattedText.length - formattedDate.length,
+                finalFormattedText.length,
+                0
+            )
+        } else {
+            finalFormattedText.setSpan(
+                ForegroundColorSpan(ContextCompat.getColor(context, R.color.green_status)),
+                finalFormattedText.length - formattedDate.length,
+                finalFormattedText.length,
+                0
+            )
+        }
+
+        text = finalFormattedText
     }
 }
 

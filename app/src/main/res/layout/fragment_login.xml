@@ -37,7 +37,7 @@
             android:id="@+id/mobileNumber"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/mobile_number"
@@ -51,7 +51,7 @@
             android:id="@+id/password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/password"
@@ -64,30 +64,32 @@
 
         <Button
             android:id="@+id/loginButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
             android:onClick="@{() -> viewModel.onClickLoginButton()}"
             android:text="@string/login"
             android:textAllCaps="false"
             app:buttonStatus="@{!viewModel.isProgressBarActive()}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/signUp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/progressBar"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/signUp"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Sign Up"
+            android:layout_marginBottom="30dp"
+            android:background="#00FFFFFF"
+            android:backgroundTint="#00FFFFFF"
+            android:text="Not a member? Register"
             android:textAllCaps="false"
             app:buttonStatus="@{!viewModel.isProgressBarActive()}"
-            app:layout_constraintBottom_toBottomOf="@+id/loginButton"
-            app:layout_constraintEnd_toStartOf="@+id/progressBar"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/loginButton" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/loginButton"
+            app:layout_constraintStart_toStartOf="@+id/loginButton" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -95,16 +97,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            app:progressBarVisibility="@{viewModel.isProgressBarActive().booleanValue()}"
-            app:layout_constraintEnd_toStartOf="@+id/loginButton"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/signUp"
-            app:layout_constraintTop_toTopOf="@+id/loginButton" />
+            app:layout_constraintBottom_toTopOf="@+id/loginButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/password"
+            app:progressBarVisibility="@{viewModel.isProgressBarActive().booleanValue()}" />
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

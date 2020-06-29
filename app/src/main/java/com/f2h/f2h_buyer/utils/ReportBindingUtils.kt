@@ -105,8 +105,8 @@ fun TextView.setTotalPriceFormatted(data: ReportItemsModel){
 
     val receivableString = String.format("Payable  %s ₹%.0f \n%s", markupPrice, data.orderAmount, data.paymentStatus)
     val receivaableStringFormatted = SpannableString(receivableString)
-    receivaableStringFormatted.setSpan(StrikethroughSpan(),11,12+markupPrice.length,0)
-    receivaableStringFormatted.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),11,12+markupPrice.length,0)
+    receivaableStringFormatted.setSpan(StrikethroughSpan(),9,10+markupPrice.length,0)
+    receivaableStringFormatted.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),9,10+markupPrice.length,0)
     receivaableStringFormatted.setSpan(RelativeSizeSpan(0.6F), receivableString.length-data.paymentStatus.length, receivableString.length,0)
 
     //Make PAID Green colour
