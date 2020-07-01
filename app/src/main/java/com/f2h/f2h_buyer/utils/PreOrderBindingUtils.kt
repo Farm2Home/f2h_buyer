@@ -19,14 +19,6 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 
-@BindingAdapter("namePriceFormattedPreOrder")
-fun TextView.setNamePriceFormattedFromPreOrderUiModel(data: PreOrderUiModel?){
-    data?.let {
-        text = String.format("%s (₹%.0f/%s)", data.itemName, data.itemPrice, data.itemUom)
-    }
-}
-
-
 @BindingAdapter("descriptionFormatted")
 fun TextView.setDescriptionFormatted(data: PreOrderUiModel?){
     data?.let {
@@ -70,7 +62,7 @@ fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
 }
 
 private fun isFreezeStringDisplayed(data: PreOrderItemsModel) =
-    isOrderFreezed(data) && (ORDER_STATUS_ORDERED.equals(data.orderStatus) || ORDER_STATUS_ORDERED.isBlank())
+    !isChangeQuantityButtonsEnabled(data) && (ORDER_STATUS_ORDERED.equals(data.orderStatus) || data.orderStatus.isBlank())
 
 
 @BindingAdapter("availableQuantityFormattedPreOrder")
@@ -115,7 +107,7 @@ fun TextView.setStatusFormatted(data: PreOrderItemsModel){
 
 @BindingAdapter("buttonVisibilityFormatted")
 fun Button.setButtonVisibilityFormatted(data: PreOrderItemsModel){
-    isEnabled = !isOrderFreezed(data)
+    isEnabled = isChangeQuantityButtonsEnabled(data)
 }
 
 
@@ -126,11 +118,11 @@ private fun getFormattedQtyNumber(number: Double): String {
         String.format("%.2f", number)
 }
 
-private fun isOrderFreezed(data: PreOrderItemsModel) : Boolean {
+private fun isChangeQuantityButtonsEnabled(data: PreOrderItemsModel) : Boolean {
     if (data.isFreezed.equals(false) &&
         (data.orderStatus.equals(ORDER_STATUS_ORDERED) ||
                 data.orderStatus.isBlank())){
-        return false
+        return true
     }
-    return true
+    return false
 }

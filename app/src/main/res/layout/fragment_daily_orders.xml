@@ -17,20 +17,6 @@
         android:orientation="vertical">
 
 
-        <devs.mulham.horizontalcalendar.HorizontalCalendarView
-            android:id="@+id/calendarView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            app:textColorNormal="@color/grey"
-            app:selectorColor="@color/colorPrimaryDark"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:textColorSelected="@color/colorPrimary">
-
-        </devs.mulham.horizontalcalendar.HorizontalCalendarView>
-
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout2"
             android:layout_width="match_parent"
@@ -40,13 +26,14 @@
             app:layout_constraintBottom_toTopOf="@+id/editProfileButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calendarView">
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/itemListRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -58,23 +45,23 @@
                 style="@style/Widget.AppCompat.ProgressBar"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="80dp"
                 android:indeterminate="true"
-                app:progressBarVisibility="@{viewModel.isProgressBarActive().booleanValue()}"
+                app:layout_constraintBottom_toBottomOf="@+id/itemListRecyclerView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/itemListRecyclerView" />
+                app:layout_constraintTop_toTopOf="@+id/itemListRecyclerView"
+                app:progressBarVisibility="@{viewModel.isProgressBarActive().booleanValue()}" />
 
             <TextView
                 android:id="@+id/noOrdersText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Looks like you don't have any orders on this day."
-                app:textVisibility="@{viewModel.visibleUiData}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/itemListRecyclerView" />
+                app:layout_constraintTop_toTopOf="@+id/itemListRecyclerView"
+                app:textVisibility="@{viewModel.visibleUiData}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
