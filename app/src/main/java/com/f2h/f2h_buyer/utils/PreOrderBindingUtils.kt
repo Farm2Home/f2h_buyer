@@ -3,6 +3,7 @@ package com.f2h.f2h_buyer.utils
 import android.graphics.Color
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -107,7 +108,13 @@ fun TextView.setStatusFormatted(data: PreOrderItemsModel){
 
 @BindingAdapter("buttonVisibilityFormatted")
 fun Button.setButtonVisibilityFormatted(data: PreOrderItemsModel){
-    isEnabled = isChangeQuantityButtonsEnabled(data)
+    if(isChangeQuantityButtonsEnabled(data)){
+        isEnabled = true
+        visibility = View.VISIBLE
+    } else {
+        isEnabled = false
+        visibility = View.INVISIBLE
+    }
 }
 
 

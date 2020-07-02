@@ -49,4 +49,3 @@ fun loadGroupImage(view: ImageView, url: String?) {
         .error(R.drawable.main_logo)
         .into(view)
 }
-
