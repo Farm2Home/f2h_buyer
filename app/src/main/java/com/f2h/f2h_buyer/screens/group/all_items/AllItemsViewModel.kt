@@ -36,7 +36,6 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-
     init {
         _isProgressBarActive.value = true
         getItemsAndAvailabilitiesForGroup()
@@ -76,6 +75,7 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
             }
             filteredItems.add(item)
         }
+        filteredItems.sortWith(compareBy(nullsLast<String>()) {  it.itemAvailability.getOrNull(0)?.availableDate })
         _visibleItems.value = filteredItems
     }
 

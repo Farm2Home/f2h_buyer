@@ -6,7 +6,10 @@
     <data>
     <variable
         name="date"
-        type="String" />
+        type="String"/>
+    <variable
+        name="amount"
+        type="Double" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,7 +26,8 @@
             android:paddingBottom="5dp"
             android:textSize="14sp"
             android:textStyle="bold"
-            app:headerFormatter="@{date}"
+            app:headerDateFormatter="@{date}"
+            app:headerAmountFormatter="@{amount}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -23,12 +23,12 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 
-@BindingAdapter("headerFormatter")
-fun TextView.setHeaderFormatted(date: String?){
+@BindingAdapter(value = ["headerDateFormatter", "headerAmountFormatter"])
+fun TextView.setHeaderFormatted(date: String?, amount: Double?){
     date?.let {
         val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val formatter: DateFormat = SimpleDateFormat("EEEE, dd-MMMM")
-        text = "Delivery on " + formatter.format(parser.parse(date))
+        val formatter: DateFormat = SimpleDateFormat("EEEE dd-MMMM")
+        text = "Delivery on " + formatter.format(parser.parse(date)) + ", Total ₹" + String.format("%.0f", amount)
     }
 }
 
