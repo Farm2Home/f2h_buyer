@@ -34,6 +34,10 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     val toastMessage: LiveData<String>
         get() = _toastMessage
 
+    private var _orderSuccessful = MutableLiveData<Boolean>()
+    val orderSuccessful: LiveData<Boolean>
+        get() = _orderSuccessful
+
     private val df_iso: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'00:00:00'Z'")
     private val preOrderDaysMax = 10
     private var startDate = ""
@@ -54,6 +58,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
 
     fun fetchAllData(itemId: Long) {
         selectedItemId = itemId
+        _orderSuccessful.value = false
         _isProgressBarActive.value = true
         coroutineScope.launch {
             sessionData = retrieveSession()
@@ -242,6 +247,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
             try{
                 updateOrdersDataDeferred.await()
                 createOrdersDataDeferred.await()
+                _orderSuccessful.value = true
             } catch (t:Throwable){
                 println(t.message)
                 _toastMessage.value = "Out of stock"

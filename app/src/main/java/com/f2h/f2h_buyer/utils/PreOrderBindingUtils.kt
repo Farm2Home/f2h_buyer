@@ -3,6 +3,7 @@ package com.f2h.f2h_buyer.utils
 import android.graphics.Color
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -17,14 +18,6 @@ import com.f2h.f2h_buyer.screens.group.pre_order.PreOrderUiModel
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-
-
-@BindingAdapter("namePriceFormattedPreOrder")
-fun TextView.setNamePriceFormattedFromPreOrderUiModel(data: PreOrderUiModel?){
-    data?.let {
-        text = String.format("%s (₹%.0f/%s)", data.itemName, data.itemPrice, data.itemUom)
-    }
-}
 
 
 @BindingAdapter("descriptionFormatted")
@@ -70,7 +63,7 @@ fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
 }
 
 private fun isFreezeStringDisplayed(data: PreOrderItemsModel) =
-    isOrderFreezed(data) && (ORDER_STATUS_ORDERED.equals(data.orderStatus) || ORDER_STATUS_ORDERED.isBlank())
+    !isChangeQuantityButtonsEnabled(data) && (ORDER_STATUS_ORDERED.equals(data.orderStatus) || data.orderStatus.isBlank())
 
 
 @BindingAdapter("availableQuantityFormattedPreOrder")
@@ -115,7 +108,13 @@ fun TextView.setStatusFormatted(data: PreOrderItemsModel){
 
 @BindingAdapter("buttonVisibilityFormatted")
 fun Button.setButtonVisibilityFormatted(data: PreOrderItemsModel){
-    isEnabled = !isOrderFreezed(data)
+    if(isChangeQuantityButtonsEnabled(data)){
+        isEnabled = true
+        visibility = View.VISIBLE
+    } else {
+        isEnabled = false
+        visibility = View.INVISIBLE
+    }
 }
 
 
@@ -126,11 +125,11 @@ private fun getFormattedQtyNumber(number: Double): String {
         String.format("%.2f", number)
 }
 
-private fun isOrderFreezed(data: PreOrderItemsModel) : Boolean {
+private fun isChangeQuantityButtonsEnabled(data: PreOrderItemsModel) : Boolean {
     if (data.isFreezed.equals(false) &&
         (data.orderStatus.equals(ORDER_STATUS_ORDERED) ||
                 data.orderStatus.isBlank())){
-        return false
+        return true
     }
-    return true
+    return false
 }

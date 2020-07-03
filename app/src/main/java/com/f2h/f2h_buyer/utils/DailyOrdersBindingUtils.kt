@@ -18,7 +18,19 @@ import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_REJECTED
 import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PAID
 import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PENDING
 import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
+import kotlinx.android.synthetic.main.list_all_items.view.*
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
+
+@BindingAdapter(value = ["headerDateFormatter", "headerAmountFormatter"])
+fun TextView.setHeaderFormatted(date: String?, amount: Double?){
+    date?.let {
+        val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val formatter: DateFormat = SimpleDateFormat("EEEE dd-MMMM")
+        text = "Delivery on " + formatter.format(parser.parse(date)) + ", Total ₹" + String.format("%.0f", amount)
+    }
+}
 
 @BindingAdapter("priceFormatted")
 fun TextView.setPriceFormatted(data: DailyOrdersUiModel?){
@@ -44,7 +56,7 @@ fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
 }
 
 private fun isFreezeStringDisplayed(data: DailyOrdersUiModel) =
-    isOrderFreezed(data) && (ORDER_STATUS_ORDERED.equals(data.orderStatus) || data.orderStatus.isBlank())
+    !isChangeQuantityButtonsEnabled(data) && (ORDER_STATUS_ORDERED.equals(data.orderStatus) || data.orderStatus.isBlank())
 
 private fun getFormattedQtyNumber(number: Double): String {
     if (number == null) return ""
@@ -170,15 +182,21 @@ fun TextView.setStatusFormatted(data: DailyOrdersUiModel){
 
 @BindingAdapter("buttonVisibilityFormatted")
 fun Button.setButtonVisibilityFormatted(data: DailyOrdersUiModel){
-    isEnabled = !isOrderFreezed(data)
+    if(isChangeQuantityButtonsEnabled(data)){
+        isEnabled = true
+        visibility = View.VISIBLE
+    } else {
+        isEnabled = false
+        visibility = View.INVISIBLE
+    }
 }
 
 
-private fun isOrderFreezed(data: DailyOrdersUiModel) : Boolean {
+private fun isChangeQuantityButtonsEnabled(data: DailyOrdersUiModel) : Boolean {
     if (data.isFreezed.equals(false) &&
         (data.orderStatus.equals(ORDER_STATUS_ORDERED) ||
                 data.orderStatus.isBlank())){
-        return false
+        return true
     }
-    return true
+    return false
 }

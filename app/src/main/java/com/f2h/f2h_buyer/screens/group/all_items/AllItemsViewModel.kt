@@ -10,6 +10,7 @@ import com.f2h.f2h_buyer.network.ItemApi
 import com.f2h.f2h_buyer.network.models.Item
 import com.f2h.f2h_buyer.network.models.ItemAvailability
 import kotlinx.coroutines.*
+import java.lang.Exception
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,7 +35,6 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
     private var allItems = ArrayList<Item>()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
 
     init {
         _isProgressBarActive.value = true
@@ -75,6 +75,7 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
             }
             filteredItems.add(item)
         }
+        filteredItems.sortWith(compareBy(nullsLast<String>()) {  it.itemAvailability.getOrNull(0)?.availableDate })
         _visibleItems.value = filteredItems
     }
 
@@ -85,16 +86,32 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
 
         var itemUpcoming = removeOlderItemAvailability(item)
         if (!itemUpcoming.itemAvailability.isEmpty()) {
-            earliestItemAvailability = itemUpcoming.itemAvailability[0]
+            earliestItemAvailability = getAnyNonZeroAvailability(itemUpcoming)
+            if (earliestItemAvailability.availableQuantity?: 0.0 <= 0.0){
+                //No availability here
+                return earliestItemAvailability
+            }
             itemUpcoming.itemAvailability.forEach { itemAvailability ->
                 val itemAvailabilityDate = parser.parse(itemAvailability.availableDate)
                 val earliestAvailabilityDate = parser.parse(earliestItemAvailability.availableDate)
-                if (itemAvailabilityDate <= earliestAvailabilityDate) {
+                if (itemAvailabilityDate <= earliestAvailabilityDate && (itemAvailability.availableQuantity?: 0.0 > 0.0)) {
                     earliestItemAvailability = itemAvailability
                 }
             }
         }
         return earliestItemAvailability
+    }
+
+    private fun getAnyNonZeroAvailability(itemUpcoming: Item): ItemAvailability {
+        var nonZeroAvailability = ItemAvailability()
+        try {
+            nonZeroAvailability =
+                itemUpcoming.itemAvailability.filter { x -> x.availableQuantity ?: 0.0 > 0.0 }
+                    .first()
+        }catch (e: Exception){
+            //No availability found
+        }
+        return nonZeroAvailability
     }
 
 

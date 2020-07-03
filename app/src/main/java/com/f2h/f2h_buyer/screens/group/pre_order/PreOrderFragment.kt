@@ -59,10 +59,17 @@ class PreOrderFragment : Fragment() {
             }
         })
 
-
         //Toast Message
         viewModel.toastMessage.observe(viewLifecycleOwner, Observer { message ->
             Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+        })
+
+        //Successful dialog Message
+        viewModel.orderSuccessful.observe(viewLifecycleOwner, Observer { isSuccessful ->
+            if(isSuccessful) {
+                val dialog = SuccessDialogFragment()
+                dialog.show(childFragmentManager, "Success Dialog")
+            }
         })
 
         return binding.root

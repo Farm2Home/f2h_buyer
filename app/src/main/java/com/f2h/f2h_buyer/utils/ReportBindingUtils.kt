@@ -5,7 +5,6 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StrikethroughSpan
-import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -17,8 +16,6 @@ import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_REJECTED
 import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PAID
 import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PENDING
 import com.f2h.f2h_buyer.screens.report.ReportItemsModel
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 
 
 @BindingAdapter("priceFormatted")
@@ -62,7 +59,7 @@ fun TextView.setOrderedQuantityFormatted(data: ReportItemsModel){
 }
 
 private fun isFreezeStringDisplayed(data: ReportItemsModel) =
-    isOrderFreezed(data) && (ORDER_STATUS_ORDERED.equals(data.orderStatus) && data.orderStatus.isBlank())
+    isChangeQuantityButtonsEnabled(data) && (ORDER_STATUS_ORDERED.equals(data.orderStatus) && data.orderStatus.isBlank())
 
 private fun getFormattedQtyNumber(number: Double?): String {
     if (number == null) return ""
@@ -105,8 +102,8 @@ fun TextView.setTotalPriceFormatted(data: ReportItemsModel){
 
     val receivableString = String.format("Payable  %s ₹%.0f \n%s", markupPrice, data.orderAmount, data.paymentStatus)
     val receivaableStringFormatted = SpannableString(receivableString)
-    receivaableStringFormatted.setSpan(StrikethroughSpan(),11,12+markupPrice.length,0)
-    receivaableStringFormatted.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),11,12+markupPrice.length,0)
+    receivaableStringFormatted.setSpan(StrikethroughSpan(),9,10+markupPrice.length,0)
+    receivaableStringFormatted.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),9,10+markupPrice.length,0)
     receivaableStringFormatted.setSpan(RelativeSizeSpan(0.6F), receivableString.length-data.paymentStatus.length, receivableString.length,0)
 
     //Make PAID Green colour
@@ -176,7 +173,7 @@ fun TextView.setStatusFormatted(data: ReportItemsModel){
 }
 
 
-private fun isOrderFreezed(data: ReportItemsModel) : Boolean {
+private fun isChangeQuantityButtonsEnabled(data: ReportItemsModel) : Boolean {
     if (data.isFreezed.equals(false) &&
         (data.orderStatus.equals(ORDER_STATUS_ORDERED) ||
                 data.orderStatus.isBlank())){

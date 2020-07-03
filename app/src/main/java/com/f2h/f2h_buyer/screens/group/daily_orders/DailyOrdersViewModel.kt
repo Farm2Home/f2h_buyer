@@ -30,9 +30,9 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     val visibleUiData: LiveData<MutableList<DailyOrdersUiModel>>
         get() = _visibleUiData
 
-    private var _selectedDate = MutableLiveData<Date>()
-    val selectedDate: LiveData<Date>
-        get() = _selectedDate
+//    private var _selectedDate = MutableLiveData<Date>()
+//    val selectedDate: LiveData<Date>
+//        get() = _selectedDate
 
     private var _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String>
@@ -48,7 +48,6 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
 
 
     init {
-        _selectedDate.value = Calendar.getInstance().time
         _isProgressBarActive.value = true
         getItemsAndAvailabilitiesForUser()
     }
@@ -58,7 +57,8 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         _isProgressBarActive.value = true
         coroutineScope.launch {
             sessionData.value = retrieveSession()
-            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForUserAndGroup(sessionData.value!!.groupId, sessionData.value!!.userId)
+            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupUserAndItem(sessionData.value!!.groupId,
+                sessionData.value!!.userId, null, todayDate(), null)
             try {
                 var orders = getOrdersDataDeferred.await()
                 var availabilityIds: ArrayList<Long> = arrayListOf()
@@ -137,21 +137,11 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
 
 
 
-    private fun filterVisibleItems(elements: List<DailyOrdersUiModel>): ArrayList<DailyOrdersUiModel> {
-        var filteredItems = ArrayList<DailyOrdersUiModel>()
-        elements.forEach {element ->
-            if (isDateEqual(element.orderedDate, df.format(_selectedDate.value))){
-                    filteredItems.add(element.copy())
-            }
-        }
+    private fun filterVisibleItems(elements: ArrayList<DailyOrdersUiModel>): ArrayList<DailyOrdersUiModel> {
+        var filteredItems = elements
+        filteredItems.sortByDescending { df.parse(it.orderedDate).time }
         return filteredItems
     }
-
-
-    private fun isDateEqual(itemDate: String, selectedDate: String): Boolean {
-        return df.format(df.parse(itemDate)).equals(df.format(df.parse(selectedDate)))
-    }
-
 
     private suspend fun retrieveSession() : SessionEntity {
         return withContext(Dispatchers.IO) {
@@ -165,12 +155,6 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
             }
             return@withContext session
         }
-    }
-
-
-    fun updateSelectedDate(date: Date){
-        _selectedDate.value = date
-        _visibleUiData.value = filterVisibleItems(allUiData)
     }
 
 
@@ -244,6 +228,12 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
 
     fun onClickCancelButton() {
         _visibleUiData.value = filterVisibleItems(allUiData)
+    }
+
+    fun todayDate(): String {
+        val formatter: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'00:00:00'Z'")
+        var today = Calendar.getInstance()
+        return formatter.format(today.time)
     }
 
     override fun onCleared() {
