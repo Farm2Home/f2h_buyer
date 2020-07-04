@@ -117,7 +117,7 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
         }
         return true;
     }
-    
+
 
     private fun createUserRequestObject() : UserCreateRequest{
         var userObject = UserCreateRequest()
