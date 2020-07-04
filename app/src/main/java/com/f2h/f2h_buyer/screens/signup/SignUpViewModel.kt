@@ -117,13 +117,7 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
         }
         return true;
     }
-
-    protected fun checkPincode(numberString: String): Boolean{
-        if (numberString.length != 6){
-            return false
-        }
-        return true;
-    }
+    
 
     private fun createUserRequestObject() : UserCreateRequest{
         var userObject = UserCreateRequest()
