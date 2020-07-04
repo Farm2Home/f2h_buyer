@@ -20,7 +20,10 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
     val userName = MutableLiveData<String>()
     val mobile = MutableLiveData<String>()
     val password = MutableLiveData<String>()
-    val address = MutableLiveData<String>()
+    val locality = MutableLiveData<String>()
+    val city = MutableLiveData<String>()
+    val state = MutableLiveData<String>()
+    val pincode = MutableLiveData<String>()
     val email = MutableLiveData<String>()
 
 
@@ -73,8 +76,21 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
             _toastText.value = "Please enter a name"
             return true
         }
-        if (address.value.isNullOrBlank()) {
-            _toastText.value = "Please enter a delivery address"
+        if (locality.value.isNullOrBlank()) {
+            _toastText.value = "Please enter a delivery Locality"
+            return true
+        }
+        if (city.value.isNullOrBlank()) {
+            _toastText.value = "Please enter a delivery city"
+            return true
+        }
+        if (state.value.isNullOrBlank()) {
+            _toastText.value = "Please enter a delivery state"
+            return true
+        }
+        if (pincode.value.isNullOrBlank() || !isNumeric((pincode.value.toString())) ||
+            pincode.value.toString().length != 6) {
+            _toastText.value = "Please enter a valid pincode"
             return true
         }
         if (mobile.value.isNullOrBlank() || !isNumeric(mobile.value.toString())) {
@@ -102,10 +118,17 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
         return true;
     }
 
+    protected fun checkPincode(numberString: String): Boolean{
+        if (numberString.length != 6){
+            return false
+        }
+        return true;
+    }
+
     private fun createUserRequestObject() : UserCreateRequest{
         var userObject = UserCreateRequest()
         userObject.userName = userName.value
-        userObject.address = address.value
+        userObject.address = locality.value + ", " +city.value + ", " + state.value + ", " + pincode.value
         userObject.mobile = mobile.value
         userObject.email = email.value
         userObject.password = Base64.encodeToString(password.value?.toByteArray(), DEFAULT)
