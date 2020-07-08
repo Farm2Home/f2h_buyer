@@ -127,7 +127,6 @@
                     android:ems="10"
                     android:hint="Pincode"
                     android:inputType="phone"
-                    android:lines="3"
                     android:text="@={viewModel.pincode}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/state" />
