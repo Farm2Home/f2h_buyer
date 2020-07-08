@@ -79,18 +79,57 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
                 <EditText
-                    android:id="@+id/address"
+                    android:id="@+id/locality"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:ems="10"
-                    android:hint="Delivery address"
+                    android:hint="Locality"
                     android:inputType="textMultiLine|textImeMultiLine"
-                    android:lines="3"
-                    android:text="@={viewModel.address}"
+                    android:lines="2"
+                    android:text="@={viewModel.locality}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/name" />
+
+                <EditText
+                    android:id="@+id/city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:ems="10"
+                    android:hint="City"
+                    android:text="@={viewModel.city}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/locality" />
+
+                <EditText
+                    android:id="@+id/state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:ems="10"
+                    android:hint="State"
+                    android:inputType="text"
+                    android:text="@={viewModel.state}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/city" />
+
+
+                <EditText
+                    android:id="@+id/pincode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:ems="10"
+                    android:hint="Pincode"
+                    android:inputType="phone"
+                    android:text="@={viewModel.pincode}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/state" />
 
                 <TextView
                     android:id="@+id/textView7"
@@ -109,12 +148,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="20dp"
-                    android:ems="10"
+                    android:ems="8"
                     android:hint="Mobile Number"
                     android:inputType="phone"
                     android:text="@={viewModel.mobile}"
                     app:layout_constraintStart_toEndOf="@+id/textView12"
-                    app:layout_constraintTop_toBottomOf="@+id/address" />
+                    app:layout_constraintTop_toBottomOf="@+id/pincode" />
 
                 <EditText
                     android:id="@+id/textView12"
@@ -130,7 +169,7 @@
                     android:textSize="18sp"
                     android:textStyle="normal"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/address" />
+                    app:layout_constraintTop_toBottomOf="@+id/pincode" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
