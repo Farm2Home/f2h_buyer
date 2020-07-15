@@ -38,6 +38,8 @@ class GroupsFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_groups , container, false)
         binding.setLifecycleOwner(this)
         binding.viewModel = viewModel
+        viewModel.refreshFragmentData()
+
 
         val adapter = GroupsAdapter(GroupClickListener { group ->
             onGroupSelected(group)

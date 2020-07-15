@@ -39,6 +39,12 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
         getUserGroupsInformation()
     }
 
+    fun refreshFragmentData(){
+        _isGroupListEmpty.value = false
+        _isProgressBarActive.value = true
+        getUserGroupsInformation()
+    }
+
     fun updateSessionWithGroupInfo(group: Group){
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
@@ -47,7 +53,7 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
         }
     }
 
-    private fun getUserGroupsInformation() {
+    fun getUserGroupsInformation() {
         _isProgressBarActive.value = true
         coroutineScope.launch {
             userSession = retrieveSession()
