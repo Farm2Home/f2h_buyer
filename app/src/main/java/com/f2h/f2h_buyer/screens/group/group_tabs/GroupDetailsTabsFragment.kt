@@ -50,10 +50,11 @@ class GroupDetailsTabsFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.getItemId() == R.id.exitGroup) {
             viewModel.onClickExitGroup()
-            view?.let { Navigation.findNavController(it).popBackStack()}
+
+            requireView().let { Navigation.findNavController(it).popBackStack()}
             return true
         } else {
-            return NavigationUI.onNavDestinationSelected(item!!, view!!.findNavController()) ||
+            return NavigationUI.onNavDestinationSelected(item!!, requireView().findNavController()) ||
                     super.onOptionsItemSelected(item)
         }
     }

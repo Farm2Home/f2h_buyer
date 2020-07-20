@@ -38,11 +38,12 @@ class GroupsFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_groups , container, false)
         binding.setLifecycleOwner(this)
         binding.viewModel = viewModel
+
         return binding.root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.refreshFragmentData()
 
         val adapter = GroupsAdapter(GroupClickListener { group ->
             onGroupSelected(group)
@@ -51,8 +52,10 @@ class GroupsFragment : Fragment() {
         viewModel.group.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
+                adapter.notifyDataSetChanged()
             }
         })
+
 
         viewModel.isGroupListEmpty.observe(viewLifecycleOwner, Observer { isGroupListEmpty ->
             if(isGroupListEmpty){
@@ -63,15 +66,12 @@ class GroupsFragment : Fragment() {
                 binding.joinButton.visibility = View.GONE
             }
         })
-
         binding.joinButton.setOnClickListener {
             onJoinGroupButtonClicked()
         }
 
-
         //Set app bar title to group name here
         (context as AppCompatActivity).supportActionBar!!.title = "Farm To Home"
-
     }
 
 

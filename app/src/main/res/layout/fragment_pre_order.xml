@@ -93,42 +93,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:indeterminate="true"
-                    app:progressBarVisibility="@{viewModel.isProgressBarActive().booleanValue()}"
-                    app:layout_constraintBottom_toBottomOf="@+id/editProfileButton"
-                    app:layout_constraintEnd_toStartOf="@+id/editProfileButton"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/cancelButton"
-                    app:layout_constraintTop_toTopOf="@+id/editProfileButton" />
-
-                <Button
-                    android:id="@+id/cancelButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
-                    android:onClick="@{() -> viewModel.onClickCancelButton()}"
-                    android:text="@string/cancel"
-                    android:textAllCaps="false"
-                    app:buttonStatus="@{!viewModel.isProgressBarActive()}"
-                    app:layout_constraintBottom_toBottomOf="@+id/editProfileButton"
-                    app:layout_constraintEnd_toStartOf="@+id/progressBar"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/editProfileButton" />
-
-                <Button
-                    android:id="@+id/editProfileButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginBottom="10dp"
-                    android:onClick="@{() -> viewModel.onClickSaveButton()}"
-                    android:text="@string/save"
-                    android:textAllCaps="false"
-                    app:buttonStatus="@{!viewModel.isProgressBarActive()}"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/progressBar" />
+                    app:layout_constraintEnd_toEndOf="@+id/preOrderItemRecyclerView"
+                    app:layout_constraintStart_toStartOf="@+id/preOrderItemRecyclerView"
+                    app:layout_constraintTop_toTopOf="@+id/itemDetails"
+                    app:progressBarVisibility="@{viewModel.isProgressBarActive().booleanValue()}" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/preOrderItemRecyclerView"
@@ -191,6 +160,21 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/editProfileButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:onClick="@{() -> viewModel.onClickSaveButton()}"
+                    android:text="@string/save"
+                    android:textAllCaps="false"
+                    app:buttonStatus="@{!viewModel.isProgressBarActive()}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>

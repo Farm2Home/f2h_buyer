@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.Navigation
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.*
@@ -41,8 +40,13 @@ class GroupDetailsTabsViewModel (val database: SessionDatabaseDao, application: 
                 membershipId = memberships[0].groupMembershipId!!
             } catch (t:Throwable){
                 println(t.message)
+                _isProgressBarActive.value = false
+                return@launch
             }
-            role = role?.replace(USER_ROLE_BUYER, "")
+
+            var roleList = role.split(",")
+            role = roleList.minus(USER_ROLE_BUYER).joinToString()
+
 
             if (role.isNullOrBlank()){
                 coroutineScope.launch {
@@ -79,6 +83,7 @@ class GroupDetailsTabsViewModel (val database: SessionDatabaseDao, application: 
         }
 
     }
+
 
     private suspend fun retrieveSession() : SessionEntity {
         return withContext(Dispatchers.IO) {

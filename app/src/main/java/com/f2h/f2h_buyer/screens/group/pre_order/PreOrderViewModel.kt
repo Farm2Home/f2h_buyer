@@ -215,13 +215,6 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         _preOrderItems.value = _preOrderItems.value
     }
 
-
-
-    fun onClickCancelButton() {
-        fetchAllData(selectedItemId)
-    }
-
-
     fun onClickSaveButton() {
         _isProgressBarActive.value = true
         var newOrders: ArrayList<OrderCreateRequest> = arrayListOf()

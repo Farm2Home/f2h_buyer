@@ -43,7 +43,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/amount"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/itemDetails"
-                    app:loadImage="@{item.imageLink}" />
+                    app:loadSquareRoundedImage="@{item.imageLink}" />
 
                 <TextView
                     android:id="@+id/itemDetails"
@@ -63,12 +63,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
                     android:layout_marginBottom="15dp"
                     android:text="Rs. "
                     android:textSize="15sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/nextAvailable"
+                    app:layout_constraintEnd_toStartOf="@+id/textView22"
                     app:layout_constraintStart_toStartOf="@+id/nextAvailable"
                     app:layout_constraintTop_toBottomOf="@+id/nextAvailable"
                     app:priceFormattedFromItem="@{item}" />
@@ -101,6 +102,24 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView22"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#A203A9F4"
+                    android:backgroundTint="#F0B9B5B5"
+                    android:paddingLeft="18dp"
+                    android:paddingTop="7dp"
+                    android:paddingRight="18dp"
+                    android:paddingBottom="7dp"
+                    android:text="Order"
+                    android:textColor="#424242"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toBottomOf="@+id/amount"
+                    app:layout_constraintEnd_toEndOf="@+id/nextAvailable"
+                    app:layout_constraintTop_toTopOf="@+id/amount" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

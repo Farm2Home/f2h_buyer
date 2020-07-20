@@ -7,6 +7,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.CenterInside
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.network.models.Item
 
@@ -31,6 +34,16 @@ fun ProgressBar.setProgressBarVisibility(isVisible: Boolean){
 fun Button.setButtonStatus(status: Boolean){
     isEnabled = status
 }
+
+
+@BindingAdapter("loadSquareRoundedImage")
+fun loadSquareRoundedImage(view: ImageView, url: String?) {
+    Glide.with(view)
+        .load(url ?: "")
+        .transform(CenterCrop(), RoundedCorners(25))
+        .into(view)
+}
+
 
 @BindingAdapter("loadImage")
 fun loadImage(view: ImageView, url: String?) {

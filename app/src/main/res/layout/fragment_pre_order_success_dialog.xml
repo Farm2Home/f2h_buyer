@@ -22,7 +22,7 @@
         android:layout_width="405dp"
         android:layout_height="31dp"
         android:layout_marginTop="20dp"
-        android:text="Payment - Cash On Delivery"
+        android:text="Order placed successfully!"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

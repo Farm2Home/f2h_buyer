@@ -30,10 +30,6 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     val visibleUiData: LiveData<MutableList<DailyOrdersUiModel>>
         get() = _visibleUiData
 
-//    private var _selectedDate = MutableLiveData<Date>()
-//    val selectedDate: LiveData<Date>
-//        get() = _selectedDate
-
     private var _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String>
         get() = _toastMessage
@@ -68,9 +64,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
                 var getItemAvailabilitiesDataDeferred = ItemAvailabilityApi.retrofitService.getItemAvailabilities(availabilityIds)
                 var itemAvailabilities = getItemAvailabilitiesDataDeferred.await()
                 allUiData = createAllUiData(itemAvailabilities, orders)
-                if (allUiData.size > 0) {
-                    _visibleUiData.value = filterVisibleItems(allUiData)
-                }
+                _visibleUiData.value = filterVisibleItems(allUiData)
             } catch (t:Throwable){
                 println(t.message)
             }
@@ -225,10 +219,6 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         }
     }
 
-
-    fun onClickCancelButton() {
-        _visibleUiData.value = filterVisibleItems(allUiData)
-    }
 
     fun todayDate(): String {
         val formatter: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'00:00:00'Z'")

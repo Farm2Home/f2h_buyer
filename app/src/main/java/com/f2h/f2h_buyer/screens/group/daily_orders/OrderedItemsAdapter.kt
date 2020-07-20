@@ -37,6 +37,7 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
         }
     }
 
+
     private fun createListWithHeaders(list: List<DailyOrdersUiModel>): ArrayList<DataItem> {
         val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
         var uniqueDates =
@@ -44,9 +45,11 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
         uniqueDates = uniqueDates.sortedBy { df.parse(it).time }
         val itemsListWithHeaders = arrayListOf<DataItem>()
         uniqueDates.stream().forEach { date ->
-            itemsListWithHeaders.add(DataItem.Header(date))
-            itemsListWithHeaders.addAll(list.filter{ date.equals(DataItem.DailyOrdersItem(it).dailyOrdersUiModel.orderedDate) }
-                .map { DataItem.DailyOrdersItem(it) })
+            val ordersForDate = list.filter{ date.equals(DataItem.DailyOrdersItem(it).dailyOrdersUiModel.orderedDate) }
+                .map { DataItem.DailyOrdersItem(it) }
+            val amountForDay = ordersForDate.sumByDouble { it.dailyOrdersUiModel.orderAmount }
+            itemsListWithHeaders.add(DataItem.Header(date, amountForDay))
+            itemsListWithHeaders.addAll(ordersForDate)
         }
         return itemsListWithHeaders
     }
@@ -60,7 +63,7 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
             }
             is TextViewHolder -> {
                 val header = getItem(position) as DataItem.Header
-                holder.bind(header.date)
+                holder.bind(header.date, header.amount)
             }
         }
     }
@@ -84,9 +87,11 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
 
     class TextViewHolder private constructor(val binding: ListHeaderDateBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(
-            date: String
+            date: String,
+            amount: Double
         ) {
             binding.date = date
+            binding.amount = amount
             binding.executePendingBindings()
         }
 
@@ -154,7 +159,7 @@ sealed class DataItem {
         override val id = dailyOrdersUiModel.orderId
     }
 
-    data class Header(val date: String) : DataItem() {
+    data class Header(val date: String, val amount: Double) : DataItem() {
         override val id = Long.MIN_VALUE
     }
 }
