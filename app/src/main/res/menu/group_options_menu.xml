@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
         android:id="@+id/contactUsFragment"
         android:icon="@drawable/contact_us_icon"
@@ -8,4 +10,9 @@
         android:id="@+id/reportFragment"
         android:icon="@drawable/report_icon"
         android:title="@string/report" />
+
+    <item
+        android:id="@+id/exitGroup"
+        android:icon="@drawable/report_icon"
+        android:title="Exit Group"  />
 </menu>

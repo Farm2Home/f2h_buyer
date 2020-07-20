@@ -112,10 +112,23 @@
                     android:layout_marginTop="5dp"
                     android:textAlignment="center"
                     android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/buttonIncrease"
+                    app:layout_constraintEnd_toStartOf="@+id/itemUom"
                     app:layout_constraintStart_toStartOf="@+id/buttonIncrease"
                     app:layout_constraintTop_toBottomOf="@+id/buttonIncrease"
                     app:orderedQuantityFormatted="@{uiModel}" />
+
+                <TextView
+                    android:id="@+id/itemUom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="12sp"
+                    android:text="@{uiModel.itemUom}"
+                    app:layout_constraintBottom_toBottomOf="@+id/confirmedQuantity"
+                    app:layout_constraintEnd_toEndOf="@+id/buttonIncrease"
+                    app:layout_constraintLeft_toRightOf="@+id/confirmedQuantity"
+                    app:layout_constraintStart_toEndOf="@+id/confirmedQuantity"
+                    app:layout_constraintTop_toTopOf="@+id/confirmedQuantity" />
 
                 <TextView
                     android:id="@+id/amount"
@@ -127,6 +140,7 @@
                     app:layout_constraintStart_toStartOf="@+id/itemImage"
                     app:layout_constraintTop_toBottomOf="@+id/itemImage"
                     app:priceFormatted="@{uiModel}" />
+
 
                 <TextView
                     android:id="@+id/groupDescription"
