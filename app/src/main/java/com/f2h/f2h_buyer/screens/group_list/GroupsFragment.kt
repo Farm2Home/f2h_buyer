@@ -53,7 +53,7 @@ class GroupsFragment : Fragment() {
                 adapter.submitList(it)
             }
         })
-        
+
         viewModel.isGroupListEmpty.observe(viewLifecycleOwner, Observer { isGroupListEmpty ->
             if(isGroupListEmpty){
                 binding.emptyGroupsText.visibility = View.VISIBLE
