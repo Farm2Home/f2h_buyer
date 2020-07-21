@@ -11,11 +11,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
 import androidx.viewpager2.widget.ViewPager2
+import androidx.lifecycle.Observer
 import com.f2h.f2h_buyer.R
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import com.f2h.f2h_buyer.database.F2HDatabase
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 
@@ -50,8 +49,6 @@ class GroupDetailsTabsFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.getItemId() == R.id.exitGroup) {
             viewModel.onClickExitGroup()
-
-            requireView().let { Navigation.findNavController(it).popBackStack()}
             return true
         } else {
             return NavigationUI.onNavDestinationSelected(item!!, requireView().findNavController()) ||
@@ -77,6 +74,21 @@ class GroupDetailsTabsFragment : Fragment() {
                 2 -> tab.text = "Group Wallet"
             }
         }.attach()
+
+        viewModel.hasExitGroup.observe(viewLifecycleOwner, Observer { hasExitGroup ->
+            if (hasExitGroup){
+                onExitGroup()
+            }
+        })
+
+    }
+
+    private fun onExitGroup() {
+        requireView().let {
+            val navController = Navigation.findNavController(it)
+            navController.popBackStack()
+            navController.navigate(R.id.groupsFragment)
+        }
     }
 
 }

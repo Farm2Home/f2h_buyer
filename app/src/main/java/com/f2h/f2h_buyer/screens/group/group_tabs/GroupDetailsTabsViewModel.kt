@@ -16,12 +16,17 @@ class GroupDetailsTabsViewModel (val database: SessionDatabaseDao, application: 
     val isProgressBarActive: LiveData<Boolean>
         get() = _isProgressBarActive
 
+    private val _hasExitGroup = MutableLiveData<Boolean>()
+    val hasExitGroup: LiveData<Boolean>
+        get() = _hasExitGroup
+
     private val sessionData = MutableLiveData<SessionEntity>()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
         _isProgressBarActive.value = false
+        _hasExitGroup.value = false
     }
 
 
@@ -30,7 +35,7 @@ class GroupDetailsTabsViewModel (val database: SessionDatabaseDao, application: 
         coroutineScope.launch {
             sessionData.value = retrieveSession()
             var membershipId: Long = -1L
-            var role: String = ""
+            var role = ""
 
             var getGroupMembershipsDeferred = GroupMembershipApi.retrofitService.getGroupMembership(sessionData.value!!.groupId, sessionData.value!!.userId)
             try {
@@ -45,19 +50,17 @@ class GroupDetailsTabsViewModel (val database: SessionDatabaseDao, application: 
             }
 
             var roleList = role.split(",")
-            role = roleList.minus(USER_ROLE_BUYER).joinToString()
-
+            role = roleList.minus(USER_ROLE_BUYER).joinToString(",")
 
             if (role.isNullOrBlank()){
-                coroutineScope.launch {
-                    var deleteGroupMembershipDataDeferred =
-                        GroupMembershipApi.retrofitService.deleteGroupMembership(membershipId)
-                    try {
-                        var deleteMembership = deleteGroupMembershipDataDeferred.await()
-                    } catch (t:Throwable){
-                        println(t.message)
+                var deleteGroupMembershipDataDeferred =
+                    GroupMembershipApi.retrofitService.deleteGroupMembership(membershipId)
+                try {
+                    var deleteMembership = deleteGroupMembershipDataDeferred.await()
+                    _hasExitGroup.value = true
+                } catch (t:Throwable){
+                    println(t.message)
 
-                    }
                 }
             }
             else{
@@ -68,19 +71,17 @@ class GroupDetailsTabsViewModel (val database: SessionDatabaseDao, application: 
                     role,
                     null
                 )
-                coroutineScope.launch {
-                    var updateGroupMembershipDataDeferred =
-                        GroupMembershipApi.retrofitService.updateGroupMembership(membershipId, membershipRequest)
-                    try {
-                        var updatedMembership = updateGroupMembershipDataDeferred.await()
-                    } catch (t:Throwable){
-                        println(t.message)
-                    }
+                var updateGroupMembershipDataDeferred =
+                    GroupMembershipApi.retrofitService.updateGroupMembership(membershipId, membershipRequest)
+                try {
+                    var updatedMembership = updateGroupMembershipDataDeferred.await()
+                    _hasExitGroup.value = true
+                } catch (t:Throwable){
+                    println(t.message)
                 }
             }
-
-            _isProgressBarActive.value = false
         }
+        _isProgressBarActive.value = false
 
     }
 

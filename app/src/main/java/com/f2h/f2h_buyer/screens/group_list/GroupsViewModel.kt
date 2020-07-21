@@ -36,13 +36,13 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
     init {
         _isGroupListEmpty.value = false
         _isProgressBarActive.value = true
-        getUserGroupsInformation()
     }
 
     fun refreshFragmentData(){
         _isGroupListEmpty.value = false
         _isProgressBarActive.value = true
         getUserGroupsInformation()
+        _isProgressBarActive.value = false
     }
 
     fun updateSessionWithGroupInfo(group: Group){
