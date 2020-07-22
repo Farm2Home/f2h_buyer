@@ -15,6 +15,8 @@ import kotlinx.coroutines.*
 class GroupsViewModel(val database: SessionDatabaseDao, application: Application) : AndroidViewModel(application) {
 
     private val _groups = MutableLiveData<List<Group>>()
+    val group: LiveData<List<Group>>
+        get() = _groups
 
     private val _isProgressBarActive = MutableLiveData<Boolean>()
     val isProgressBarActive: LiveData<Boolean>
@@ -24,8 +26,7 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
     val isGroupListEmpty: LiveData<Boolean>
         get() = _isGroupListEmpty
 
-    val group: LiveData<List<Group>>
-        get() = _groups
+
 
 
     private val roles = listOf<String>(USER_ROLE_BUYER)
@@ -36,13 +37,13 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
     init {
         _isGroupListEmpty.value = false
         _isProgressBarActive.value = true
-        getUserGroupsInformation()
     }
 
     fun refreshFragmentData(){
         _isGroupListEmpty.value = false
         _isProgressBarActive.value = true
         getUserGroupsInformation()
+        _isProgressBarActive.value = false
     }
 
     fun updateSessionWithGroupInfo(group: Group){
@@ -64,6 +65,7 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
                     _groups.value = userGroups
                     _isGroupListEmpty.value = false
                 } else {
+                    _groups.value = userGroups
                     _isGroupListEmpty.value = true
                 }
             } catch (t:Throwable){

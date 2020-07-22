@@ -38,7 +38,7 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
 
     init {
         _isProgressBarActive.value = true
-        getItemsAndAvailabilitiesForGroup()
+//        getItemsAndAvailabilitiesForGroup()
     }
 
 
