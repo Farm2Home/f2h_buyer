@@ -59,6 +59,11 @@ class GroupsFragment : Fragment() {
             onJoinGroupButtonClicked()
         }
 
+        binding.groupsSwipeRefresh.setOnRefreshListener {
+            viewModel.refreshFragmentData()
+            binding.groupsSwipeRefresh.isRefreshing = false
+        }
+
         //Set app bar title to group name here
         (context as AppCompatActivity).supportActionBar!!.title = "Farm To Home"
         return binding.root
@@ -75,5 +80,6 @@ class GroupsFragment : Fragment() {
         val action = GroupsFragmentDirections.actionGroupsFragmentToSearchGroupsFragment()
         view?.let { Navigation.findNavController(it).navigate(action) }
     }
+
 
 }

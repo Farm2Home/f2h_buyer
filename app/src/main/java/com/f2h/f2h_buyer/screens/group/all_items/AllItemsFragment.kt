@@ -1,6 +1,5 @@
 package com.f2h.f2h_buyer.screens.group.all_items
 
-import android.animation.Animator
 import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -53,6 +52,11 @@ class AllItemsFragment : Fragment() {
                 adapter.submitList(it)
             }
         })
+
+        binding.allItemsSwipeRefresh.setOnRefreshListener {
+            viewModel.refreshFragmentData()
+            binding.allItemsSwipeRefresh.isRefreshing = false
+        }
 
 
         viewModel.toastText.observe(viewLifecycleOwner, Observer { message ->
