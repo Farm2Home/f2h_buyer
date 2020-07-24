@@ -97,10 +97,7 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
             _toastText.value = "Please enter a valid mobile number"
             return true
         }
-        if (email.value.isNullOrBlank()) {
-            _toastText.value = "Please enter an email"
-            return true
-        }
+
         if (password.value.isNullOrBlank()) {
             _toastText.value = "Please enter a password"
             return true
