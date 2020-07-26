@@ -28,6 +28,14 @@ fun TextView.setDescriptionFormatted(data: PreOrderUiModel?){
 }
 
 
+@BindingAdapter("farmerFormatted")
+fun TextView.setFarmerFormatted(data: PreOrderUiModel?){
+    data?.let {
+        text = String.format("Farmer - %s (%s)", data.farmerName, data.farmerMobile)
+    }
+}
+
+
 @BindingAdapter("toolbarTitleFormatted")
 fun CollapsingToolbarLayout.setToolbarTitleFormattedFromPreOrderUiModel(data: PreOrderUiModel?){
     data?.let {

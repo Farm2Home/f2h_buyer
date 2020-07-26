@@ -1,6 +1,10 @@
 package com.f2h.f2h_buyer.screens.group.pre_order
 
+import android.Manifest
 import android.app.Application
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -72,6 +76,33 @@ class PreOrderFragment : Fragment() {
             }
         })
 
+        //Call Button
+        binding.preOrderCallButton.setOnClickListener {
+            startPhoneCall()
+        }
+
         return binding.root
     }
+
+    fun startPhoneCall() {
+        requestPermissions(arrayOf(Manifest.permission.CALL_PHONE),42)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if(grantResults[0] == PackageManager.PERMISSION_DENIED){
+            Toast.makeText(activity, "Please accept permission request to continue", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if(viewModel.preOrderUiModel.value?.farmerMobile.isNullOrBlank()){
+            Toast.makeText(activity, "Invalid mobile number", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + viewModel.preOrderUiModel.value?.farmerMobile))
+        startActivity(intent)
+    }
+
 }
