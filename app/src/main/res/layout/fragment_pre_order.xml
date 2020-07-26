@@ -118,12 +118,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="35dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="5dp"
                     android:text="Available Stock"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/textView6"
-                    app:layout_constraintTop_toBottomOf="@+id/itemDetails" />
+                    app:layout_constraintTop_toBottomOf="@+id/preOrderCallButton" />
 
                 <TextView
                     android:id="@+id/textView6"
@@ -175,6 +175,30 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/preOrderFarmer"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="20dp"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    android:textSize="13sp"
+                    app:farmerFormatted="@{viewModel.preOrderUiModel}"
+                    app:layout_constraintBottom_toBottomOf="@+id/preOrderCallButton"
+                    app:layout_constraintEnd_toStartOf="@+id/preOrderCallButton"
+                    app:layout_constraintStart_toStartOf="@+id/itemDetails"
+                    app:layout_constraintTop_toTopOf="@+id/preOrderCallButton" />
+
+                <ImageButton
+                    android:id="@+id/preOrderCallButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/itemDetails"
+                    app:srcCompat="@drawable/contact_us_icon" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
