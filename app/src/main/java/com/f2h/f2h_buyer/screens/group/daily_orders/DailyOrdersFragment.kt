@@ -40,7 +40,10 @@ class DailyOrdersFragment : Fragment() {
         binding = inflate(inflater, R.layout.fragment_daily_orders, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-
+        binding.dailyOrdersSwipeRefresh.setOnRefreshListener {
+            viewModel.getItemsAndAvailabilitiesForUser()
+            binding.dailyOrdersSwipeRefresh.isRefreshing = false
+        }
         return binding.root
     }
 

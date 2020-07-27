@@ -11,7 +11,8 @@
             type="com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersViewModel" />
     </data>
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/dailyOrdersSwipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -78,6 +79,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/itemListRecyclerView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </layout>
