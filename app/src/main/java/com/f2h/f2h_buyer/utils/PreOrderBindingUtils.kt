@@ -58,8 +58,10 @@ fun TextView.setDateFormattedPreOrderItems(data: PreOrderItemsModel?){
 @BindingAdapter("orderedQuantityFormattedPreOrder")
 fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
     data?.let {
+        // Default behaviour, show ordered quantity
         var orderedString = String.format("%s", getFormattedQtyNumber(data.orderedQuantity))
-        if (data.orderStatus.equals(ORDER_STATUS_CONFIRMED)){
+        if (data.orderStatus.equals(ORDER_STATUS_CONFIRMED) ||
+            data.orderStatus.equals(ORDER_STATUS_DELIVERED)){
             orderedString = String.format("%s",getFormattedQtyNumber(data.confirmedQuantity))
         }
         text = orderedString

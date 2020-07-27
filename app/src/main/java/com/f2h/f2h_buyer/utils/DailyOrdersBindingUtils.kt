@@ -48,8 +48,10 @@ fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
         freezeString = "\nFreeze"
     }
 
+    // Default behaviour, show ordered quantity
     var orderedString = String.format("%s  %s", getFormattedQtyNumber(data.orderedQuantity), freezeString)
-    if (data.orderStatus.equals(ORDER_STATUS_CONFIRMED)){
+    if (data.orderStatus.equals(ORDER_STATUS_CONFIRMED) ||
+        data.orderStatus.equals(ORDER_STATUS_DELIVERED)){
         orderedString = String.format("%s  %s",getFormattedQtyNumber(data.confirmedQuantity), freezeString)
     }
     text = orderedString
