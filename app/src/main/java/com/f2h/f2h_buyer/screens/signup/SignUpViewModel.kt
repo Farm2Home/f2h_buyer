@@ -76,23 +76,23 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
             _toastText.value = "Please enter a name"
             return true
         }
-        if (locality.value.isNullOrBlank()) {
-            _toastText.value = "Please enter a delivery Locality"
-            return true
-        }
-        if (city.value.isNullOrBlank()) {
-            _toastText.value = "Please enter a delivery city"
-            return true
-        }
-        if (state.value.isNullOrBlank()) {
-            _toastText.value = "Please enter a delivery state"
-            return true
-        }
-        if (pincode.value.isNullOrBlank() || !isNumeric((pincode.value.toString())) ||
-            pincode.value.toString().length != 6) {
-            _toastText.value = "Please enter a valid pincode"
-            return true
-        }
+//        if (locality.value.isNullOrBlank()) {
+//            _toastText.value = "Please enter a delivery Locality"
+//            return true
+//        }
+//        if (city.value.isNullOrBlank()) {
+//            _toastText.value = "Please enter a delivery city"
+//            return true
+//        }
+//        if (state.value.isNullOrBlank()) {
+//            _toastText.value = "Please enter a delivery state"
+//            return true
+//        }
+//        if (pincode.value.isNullOrBlank() && !isNumeric((pincode.value.toString())) ||
+//            pincode.value.toString().length != 6) {
+//            _toastText.value = "Please enter a valid pincode"
+//            return true
+//        }
         if (mobile.value.isNullOrBlank() || !isNumeric(mobile.value.toString())) {
             _toastText.value = "Please enter a valid mobile number"
             return true
@@ -119,7 +119,10 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
     private fun createUserRequestObject() : UserCreateRequest{
         var userObject = UserCreateRequest()
         userObject.userName = userName.value
-        userObject.address = locality.value + ", " +city.value + ", " + state.value + ", " + pincode.value
+        var address = arrayListOf(locality.value?:"", city.value?:"", state.value?:"",
+                                        pincode.value?:"")
+        address.removeIf(String::isEmpty)
+        userObject.address  = address.joinToString()
         userObject.mobile = mobile.value
         userObject.email = email.value
         userObject.password = Base64.encodeToString(password.value?.toByteArray(), DEFAULT)
