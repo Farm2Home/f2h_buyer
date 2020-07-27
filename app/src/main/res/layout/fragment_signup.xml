@@ -83,7 +83,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:ems="10"
-                    android:hint="Locality"
+                    android:hint="Address"
                     android:inputType="textMultiLine|textImeMultiLine"
                     android:lines="2"
                     android:text="@={viewModel.locality}"
@@ -98,6 +98,7 @@
                     android:layout_marginTop="20dp"
                     android:ems="10"
                     android:hint="City"
+                    android:inputType="text"
                     android:text="@={viewModel.city}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/locality" />
