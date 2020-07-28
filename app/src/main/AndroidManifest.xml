@@ -3,6 +3,7 @@
     package="com.f2h.f2h_buyer"
     android:installLocation="auto">
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application

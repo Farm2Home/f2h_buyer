@@ -9,6 +9,7 @@ import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.ItemApi
 import com.f2h.f2h_buyer.network.ItemAvailabilityApi
 import com.f2h.f2h_buyer.network.OrderApi
+import com.f2h.f2h_buyer.network.UserApi
 import com.f2h.f2h_buyer.network.models.*
 import kotlinx.coroutines.*
 import java.text.DateFormat
@@ -52,7 +53,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
 
     init {
         setPreOrderDateRange()
-        createPreOrderUiElements(Item(), arrayListOf(), arrayListOf())
+        createPreOrderUiElements(Item(), arrayListOf(), arrayListOf(), arrayListOf())
     }
 
 
@@ -77,8 +78,13 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
                 val getItemAvailabilitiesDeferred = ItemAvailabilityApi.retrofitService.getItemAvailabilitiesByItemId(item.itemId!!)
                 val itemAvailabilities = ArrayList(getItemAvailabilitiesDeferred.await())
 
+                //Fetch farmer details
+                var getUserDetailsDataDeferred = UserApi.retrofitService
+                    .getUserDetailsByUserIds(arrayListOf(item.farmerUserId ?: -1))
+                var farmerDetails = getUserDetailsDataDeferred.await()
+
                 //Create the UI Model to populate UI
-                _preOrderItems.value = createPreOrderUiElements(item, orders, itemAvailabilities)
+                _preOrderItems.value = createPreOrderUiElements(item, orders, itemAvailabilities, farmerDetails)
 
             } catch (t:Throwable){
                 println(t.message)
@@ -88,7 +94,9 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     }
 
 
-    private fun createPreOrderUiElements(item: Item, orders: ArrayList<Order>, itemAvailabilities: ArrayList<ItemAvailability>): ArrayList<PreOrderItemsModel> {
+    private fun createPreOrderUiElements(item: Item, orders: ArrayList<Order>,
+                                         itemAvailabilities: ArrayList<ItemAvailability>,
+                                         farmerDetails: List<UserDetails>): ArrayList<PreOrderItemsModel> {
         var list = arrayListOf<PreOrderItemsModel>()
 
         var uiModel = PreOrderUiModel()
@@ -99,6 +107,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         uiModel.itemPrice = item.pricePerUnit ?: 0.0
         uiModel.itemUom = item.uom ?: ""
         uiModel.farmerName = item.farmerUserName ?: ""
+        uiModel.farmerMobile = farmerDetails.firstOrNull()?.mobile ?: ""
         _preOrderUiModel.value = uiModel
 
         itemAvailabilities.filter { compareDates(it.availableDate, startDate) >= 0 &&
@@ -214,13 +223,6 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         }
         _preOrderItems.value = _preOrderItems.value
     }
-
-
-
-    fun onClickCancelButton() {
-        fetchAllData(selectedItemId)
-    }
-
 
     fun onClickSaveButton() {
         _isProgressBarActive.value = true

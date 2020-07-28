@@ -28,6 +28,14 @@ fun TextView.setDescriptionFormatted(data: PreOrderUiModel?){
 }
 
 
+@BindingAdapter("farmerFormatted")
+fun TextView.setFarmerFormatted(data: PreOrderUiModel?){
+    data?.let {
+        text = String.format("Farmer - %s (%s)", data.farmerName, data.farmerMobile)
+    }
+}
+
+
 @BindingAdapter("toolbarTitleFormatted")
 fun CollapsingToolbarLayout.setToolbarTitleFormattedFromPreOrderUiModel(data: PreOrderUiModel?){
     data?.let {
@@ -50,17 +58,31 @@ fun TextView.setDateFormattedPreOrderItems(data: PreOrderItemsModel?){
 @BindingAdapter("orderedQuantityFormattedPreOrder")
 fun TextView.setOrderedQuantityFormattedPreOrder(data: PreOrderItemsModel?){
     data?.let {
-        var freezeString = ""
-        if (isFreezeStringDisplayed(data)){
-            freezeString = "\nFreeze"
-        }
-        var orderedString = String.format("%s %s", getFormattedQtyNumber(data.orderedQuantity), freezeString)
-        if (data.orderStatus.equals(ORDER_STATUS_CONFIRMED)){
-            orderedString = String.format("%s %s",getFormattedQtyNumber(data.confirmedQuantity), freezeString)
+        // Default behaviour, show ordered quantity
+        var orderedString = String.format("%s", getFormattedQtyNumber(data.orderedQuantity))
+        if (data.orderStatus.equals(ORDER_STATUS_CONFIRMED) ||
+            data.orderStatus.equals(ORDER_STATUS_DELIVERED)){
+            orderedString = String.format("%s",getFormattedQtyNumber(data.confirmedQuantity))
         }
         text = orderedString
     }
 }
+
+
+@BindingAdapter("freezeTextFormatted")
+fun TextView.setFreezeTextFormatted(data: PreOrderItemsModel?){
+    var freezeText = ""
+    data?.let {
+        if (isFreezeStringDisplayed(data)){
+            freezeText = "Freeze"
+        }
+    }
+    val colouredText = SpannableString(freezeText)
+    var color = ContextCompat.getColor(context, R.color.orange_status)
+    colouredText.setSpan(ForegroundColorSpan(color),0, freezeText.length,0)
+    text = colouredText
+}
+
 
 private fun isFreezeStringDisplayed(data: PreOrderItemsModel) =
     !isChangeQuantityButtonsEnabled(data) && (ORDER_STATUS_ORDERED.equals(data.orderStatus) || data.orderStatus.isBlank())

@@ -69,9 +69,9 @@
                     android:text="-"
                     android:textStyle="bold"
                     app:buttonVisibilityFormatted="@{uiModel}"
-                    app:layout_constraintBottom_toBottomOf="@+id/availableQuantity"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/buttonIncrease"
-                    app:layout_constraintTop_toTopOf="@+id/availableQuantity" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
                     android:id="@+id/buttonIncrease"
@@ -87,16 +87,29 @@
                     app:layout_constraintTop_toTopOf="@+id/buttonDecrease" />
 
                 <TextView
-                    android:id="@+id/groupDescription"
+                    android:id="@+id/preOrderPageOrderQuantity"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/buttonIncrease"
+                    app:layout_constraintBottom_toTopOf="@+id/preOrderPageItemUom"
                     app:layout_constraintEnd_toStartOf="@+id/buttonIncrease"
                     app:layout_constraintStart_toEndOf="@+id/buttonDecrease"
                     app:layout_constraintTop_toTopOf="@+id/buttonIncrease"
                     app:orderedQuantityFormattedPreOrder="@{uiModel}" />
+
+                <TextView
+                    android:id="@+id/preOrderPageItemUom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="12sp"
+                    android:text="@{uiModel.itemUom}"
+                    app:layout_constraintBottom_toBottomOf="@+id/buttonIncrease"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonIncrease"
+                    app:layout_constraintStart_toEndOf="@+id/buttonDecrease"
+                    app:layout_constraintTop_toBottomOf="@+id/preOrderPageOrderQuantity"
+                    />
 
                 <TextView
                     android:id="@+id/availableQuantity"
@@ -111,6 +124,19 @@
                     app:layout_constraintEnd_toStartOf="@+id/buttonDecrease"
                     app:layout_constraintStart_toEndOf="@+id/date"
                     app:layout_constraintTop_toTopOf="@+id/date" />
+
+
+                <TextView
+                    android:id="@+id/freezeText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="10sp"
+                    app:freezeTextFormatted="@{uiModel}"
+                    app:layout_constraintEnd_toEndOf="@+id/availableQuantity"
+                    app:layout_constraintStart_toStartOf="@+id/availableQuantity"
+                    app:layout_constraintTop_toBottomOf="@+id/availableQuantity" />
+
 
                 <TextView
                     android:id="@+id/status"

@@ -9,9 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
-
 import com.f2h.f2h_buyer.R
 import com.f2h.f2h_buyer.database.F2HDatabase
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
@@ -38,7 +35,7 @@ class GroupsFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_groups , container, false)
         binding.setLifecycleOwner(this)
         binding.viewModel = viewModel
-
+        viewModel.refreshFragmentData()
         val adapter = GroupsAdapter(GroupClickListener { group ->
             onGroupSelected(group)
         })
@@ -49,7 +46,6 @@ class GroupsFragment : Fragment() {
             }
         })
 
-
         viewModel.isGroupListEmpty.observe(viewLifecycleOwner, Observer { isGroupListEmpty ->
             if(isGroupListEmpty){
                 binding.emptyGroupsText.visibility = View.VISIBLE
@@ -59,15 +55,17 @@ class GroupsFragment : Fragment() {
                 binding.joinButton.visibility = View.GONE
             }
         })
-
         binding.joinButton.setOnClickListener {
             onJoinGroupButtonClicked()
         }
 
+        binding.groupsSwipeRefresh.setOnRefreshListener {
+            viewModel.refreshFragmentData()
+            binding.groupsSwipeRefresh.isRefreshing = false
+        }
 
         //Set app bar title to group name here
         (context as AppCompatActivity).supportActionBar!!.title = "Farm To Home"
-
         return binding.root
     }
 
@@ -82,5 +80,6 @@ class GroupsFragment : Fragment() {
         val action = GroupsFragmentDirections.actionGroupsFragmentToSearchGroupsFragment()
         view?.let { Navigation.findNavController(it).navigate(action) }
     }
+
 
 }

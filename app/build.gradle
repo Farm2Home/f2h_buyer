@@ -18,22 +18,28 @@ android {
         applicationId "com.f2h.f2h_buyer"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 6
-        versionName "6.0"
+        versionCode 7 //Should be always increasing - every deploy to playstore, add 1
+        versionName "1.1.0"
+        /*
+             versionName Major.Minor.Patch
+             Major - Not Backward compatible, absolutely new
+             Minor - New functionality in backward compatible manner
+             Patch - Bug fixes in backward compatible manner
+        */
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         debug {
-            buildConfigField "String", "SERVER_URL", "\"http://f2h.herokuapp.com/\""
+            buildConfigField "String", "SERVER_URL", "\"https://f2h.herokuapp.com/\""
             buildConfigField "String", "ENVIRONMENT", "\"DEV\""
             applicationIdSuffix ".debug"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
-            buildConfigField "String", "SERVER_URL", "\"http://f2h-production.herokuapp.com/\""
+            buildConfigField "String", "SERVER_URL", "\"https://f2h-production.herokuapp.com/\""
             buildConfigField "String", "ENVIRONMENT", "\"V\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -42,6 +48,10 @@ android {
 
     dataBinding {
         enabled = true
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 
 }
@@ -70,8 +80,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_kotlin_coroutines"
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$version_retrofit_coroutines_adapter"
 
-    implementation "android.arch.navigation:navigation-fragment-ktx:$version_navigation"
-    implementation "android.arch.navigation:navigation-ui-ktx:$version_navigation"
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
@@ -90,5 +100,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     //noinspection GradleCompatible
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 }

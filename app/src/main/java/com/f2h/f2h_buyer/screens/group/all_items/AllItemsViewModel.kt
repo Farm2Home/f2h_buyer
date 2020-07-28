@@ -38,7 +38,7 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
 
     init {
         _isProgressBarActive.value = true
-        getItemsAndAvailabilitiesForGroup()
+//        getItemsAndAvailabilitiesForGroup()
     }
 
 
@@ -71,7 +71,12 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
         items.forEach {item ->
             if(!item.itemAvailability.isEmpty()) {
                 var earliestItemAvailability = fetchEarliestItemAvailability(item)
-                item.itemAvailability = arrayOf(earliestItemAvailability).toList()
+                if (earliestItemAvailability.itemId!!.equals(-1L)){
+                    item.itemAvailability = listOf<ItemAvailability>()
+                }
+                else {
+                    item.itemAvailability = arrayOf(earliestItemAvailability).toList()
+                }
             }
             filteredItems.add(item)
         }

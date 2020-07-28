@@ -31,7 +31,7 @@ fun TextView.setAvailableDateFormatted(item: Item?){
             formattedDate = NOT_AVAILABLE
         }
 
-        val finalFormattedText = SpannableString("Earliest Available - " + formattedDate)
+        val finalFormattedText = SpannableString("Available On - " + formattedDate)
         if (formattedDate.equals(NOT_AVAILABLE)){
             finalFormattedText.setSpan(
                 ForegroundColorSpan(ContextCompat.getColor(context, R.color.red_status)),
@@ -39,7 +39,15 @@ fun TextView.setAvailableDateFormatted(item: Item?){
                 finalFormattedText.length,
                 0
             )
-        } else {
+        } else if(item.itemAvailability[0].isFreezed?:false) {
+            finalFormattedText.setSpan(
+                ForegroundColorSpan(ContextCompat.getColor(context, R.color.freeze_availability)),
+                finalFormattedText.length - formattedDate.length,
+                finalFormattedText.length,
+                0
+            )
+
+        }else {
             finalFormattedText.setSpan(
                 ForegroundColorSpan(ContextCompat.getColor(context, R.color.green_status)),
                 finalFormattedText.length - formattedDate.length,

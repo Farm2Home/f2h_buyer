@@ -9,6 +9,7 @@ import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.ItemAvailabilityApi
 import com.f2h.f2h_buyer.network.OrderApi
+import com.f2h.f2h_buyer.network.UserApi
 import com.f2h.f2h_buyer.network.models.*
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -29,10 +30,6 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     private var _visibleUiData = MutableLiveData<MutableList<DailyOrdersUiModel>>()
     val visibleUiData: LiveData<MutableList<DailyOrdersUiModel>>
         get() = _visibleUiData
-
-//    private var _selectedDate = MutableLiveData<Date>()
-//    val selectedDate: LiveData<Date>
-//        get() = _selectedDate
 
     private var _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String>
@@ -61,16 +58,16 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
                 sessionData.value!!.userId, null, todayDate(), null)
             try {
                 var orders = getOrdersDataDeferred.await()
-                var availabilityIds: ArrayList<Long> = arrayListOf()
-                orders.forEach { order ->
-                    availabilityIds.add(order.itemAvailabilityId ?: -1)
-                }
-                var getItemAvailabilitiesDataDeferred = ItemAvailabilityApi.retrofitService.getItemAvailabilities(availabilityIds)
+
+                var availabilityIds = orders.map { x -> x.itemAvailabilityId ?: -1}.distinct()
+
+                var getItemAvailabilitiesDataDeferred =
+                    ItemAvailabilityApi.retrofitService.getItemAvailabilities(availabilityIds)
+
                 var itemAvailabilities = getItemAvailabilitiesDataDeferred.await()
+
                 allUiData = createAllUiData(itemAvailabilities, orders)
-                if (allUiData.size > 0) {
-                    _visibleUiData.value = filterVisibleItems(allUiData)
-                }
+                _visibleUiData.value = filterVisibleItems(allUiData)
             } catch (t:Throwable){
                 println(t.message)
             }
@@ -225,10 +222,6 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         }
     }
 
-
-    fun onClickCancelButton() {
-        _visibleUiData.value = filterVisibleItems(allUiData)
-    }
 
     fun todayDate(): String {
         val formatter: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'00:00:00'Z'")

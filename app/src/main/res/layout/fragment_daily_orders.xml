@@ -11,97 +11,81 @@
             type="com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/dailyOrdersSwipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/editProfileButton"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/itemListRecyclerView"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="@style/Widget.AppCompat.ProgressBar"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:indeterminate="true"
-                app:layout_constraintBottom_toBottomOf="@+id/itemListRecyclerView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/itemListRecyclerView"
-                app:progressBarVisibility="@{viewModel.isProgressBarActive().booleanValue()}" />
-
-            <TextView
-                android:id="@+id/noOrdersText"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Looks like you don't have any orders on this day."
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/itemListRecyclerView"
-                app:textVisibility="@{viewModel.visibleUiData}" />
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/itemListRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/cancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:onClick="@{() -> viewModel.onClickCancelButton()}"
-            android:text="@string/cancel"
-            android:textAllCaps="false"
-            app:buttonStatus="@{!viewModel.isProgressBarActive()}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editProfileButton" />
+                </androidx.recyclerview.widget.RecyclerView>
 
-        <Button
-            android:id="@+id/editProfileButton"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="10dp"
-            android:onClick="@{() -> viewModel.onClickSaveButton()}"
-            android:text="@string/update_orders"
-            android:textAllCaps="false"
-            app:buttonStatus="@{!viewModel.isProgressBarActive()}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="@style/Widget.AppCompat.ProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:indeterminate="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/itemListRecyclerView"
+                    app:progressBarVisibility="@{viewModel.isProgressBarActive().booleanValue()}" />
 
-        <TextView
-            android:id="@+id/totalAmount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/editProfileButton"
-            app:layout_constraintEnd_toStartOf="@+id/cancelButton"
-            app:layout_constraintStart_toEndOf="@+id/editProfileButton"
-            app:layout_constraintTop_toTopOf="@+id/editProfileButton" />
+                <TextView
+                    android:id="@+id/noOrdersText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Looks like you don't have any orders on this day."
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/itemListRecyclerView"
+                    app:textVisibility="@{viewModel.visibleUiData}" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <Button
+                    android:id="@+id/editProfileButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="30dp"
+                    android:onClick="@{() -> viewModel.onClickSaveButton()}"
+                    android:text="@string/update_orders"
+                    android:textAllCaps="false"
+                    app:buttonStatus="@{!viewModel.isProgressBarActive()}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/itemListRecyclerView" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </layout>
