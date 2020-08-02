@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
+import com.f2h.f2h_buyer.network.CommentApi
 import com.f2h.f2h_buyer.network.ItemAvailabilityApi
 import com.f2h.f2h_buyer.network.OrderApi
 import com.f2h.f2h_buyer.network.UserApi
@@ -121,8 +122,6 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
             uiElement.discountAmount = order.discountAmount ?: 0.0
             uiElement.orderStatus = order.orderStatus ?: ""
             uiElement.paymentStatus = order.paymentStatus ?: ""
-            uiElement.orderComment = order.orderComment ?: ""
-            uiElement.deliveryComment = order.deliveryComment ?: ""
 
             allUiData.add(uiElement)
         }
@@ -189,6 +188,74 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         _visibleUiData.value = _visibleUiData.value
     }
 
+    fun moreDetailsButtonClicked(element: DailyOrdersUiModel) {
+        if(element.isMoreDetailsDisplayed){
+            _visibleUiData.value?.filter { data -> data.orderId.equals(element.orderId) }
+                ?.firstOrNull()?.isMoreDetailsDisplayed = false
+            _visibleUiData.value = _visibleUiData.value
+            return
+        }
+
+        // Do API call to fetch comments
+        fetchCommentsForOrder(element)
+
+        _visibleUiData.value?.filter { data -> data.orderId.equals(element.orderId) }
+            ?.firstOrNull()?.isMoreDetailsDisplayed = true
+        _visibleUiData.value = _visibleUiData.value
+    }
+
+    private fun fetchCommentsForOrder(element: DailyOrdersUiModel) {
+        setCommentProgressBar(true, element)
+        coroutineScope.launch {
+            var getCommentsDataDeferred = CommentApi.retrofitService.getComments(element.orderId)
+            try {
+                val comments: List<Comment> = getCommentsDataDeferred.await()
+                _visibleUiData.value?.filter { data -> data.orderId.equals(element.orderId) }
+                    ?.firstOrNull()?.comments = ArrayList(comments)
+                _visibleUiData.value = _visibleUiData.value
+            } catch (t: Throwable) {
+                println(t.message)
+            }
+            setCommentProgressBar(false, element)
+        }
+    }
+
+
+    fun onSendCommentButtonClicked(element: DailyOrdersUiModel){
+        if(element.newComment.isNullOrBlank()){
+            return
+        }
+
+        var request = CommentCreateRequest(
+            comment = element.newComment,
+            commenter = sessionData.value?.userName ?: "",
+            commenterUserId = sessionData.value?.userId ?: -1,
+            orderId = element.orderId,
+            createdBy = sessionData.value?.userName ?: "",
+            updatedBy = sessionData.value?.userName ?: ""
+        )
+
+        setCommentProgressBar(true, element)
+        coroutineScope.launch {
+            var createCommentsDataDeferred = CommentApi.retrofitService.createComment(request)
+            try{
+                createCommentsDataDeferred.await()
+                // Do API call to refresh comments
+                fetchCommentsForOrder(element)
+            } catch (t:Throwable){
+                println(t.message)
+            }
+            setCommentProgressBar(false, element)
+        }
+
+    }
+
+
+    private fun setCommentProgressBar(isProgressActive: Boolean, element: DailyOrdersUiModel){
+        _visibleUiData.value?.filter { data -> data.orderId.equals(element.orderId) }
+            ?.firstOrNull()?.isCommentProgressBarActive = isProgressActive
+        _visibleUiData.value = _visibleUiData.value
+    }
 
     private fun calculateOrderAmount(uiElement: DailyOrdersUiModel): Double {
         return uiElement.orderedQuantity.times(uiElement.price)

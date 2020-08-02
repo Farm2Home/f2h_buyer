@@ -53,11 +53,13 @@ class DailyOrdersFragment : Fragment() {
 
         // Daily Orders List recycler view
         val adapter = OrderedItemsAdapter(OrderedItemClickListener { uiDataElement ->
-            navigateToPreOrderPage(uiDataElement)
+            viewModel.moreDetailsButtonClicked(uiDataElement)
         }, IncreaseButtonClickListener { uiDataElement ->
             viewModel.increaseOrderQuantity(uiDataElement)
         }, DecreaseButtonClickListener { uiDataElement ->
             viewModel.decreaseOrderQuantity(uiDataElement)
+        }, SendCommentButtonClickListener { uiDataElement ->
+            viewModel.onSendCommentButtonClicked(uiDataElement)
         })
         binding.itemListRecyclerView.adapter = adapter
         viewModel.visibleUiData.observe(viewLifecycleOwner, Observer {
@@ -80,10 +82,4 @@ class DailyOrdersFragment : Fragment() {
         super.onResume()
         viewModel.getItemsAndAvailabilitiesForUser()
     }
-
-    private fun navigateToPreOrderPage(uiData: DailyOrdersUiModel) {
-        val action = GroupDetailsTabsFragmentDirections.actionGroupDetailsTabsFragmentToPreOrderFragment(uiData.itemId)
-        view?.let { Navigation.findNavController(it).navigate(action) }
-    }
-
 }

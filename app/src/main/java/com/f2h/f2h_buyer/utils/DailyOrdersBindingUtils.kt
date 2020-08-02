@@ -8,6 +8,7 @@ import android.text.style.StrikethroughSpan
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.f2h.f2h_buyer.R
@@ -81,12 +82,25 @@ fun TextView.setDiscountFormatted(data: DailyOrdersUiModel){
 
 @BindingAdapter("commentFormatted")
 fun TextView.setCommentFormatted(data: DailyOrdersUiModel){
-    var comment = data.orderComment
-    if(data.orderStatus.equals(ORDER_STATUS_DELIVERED)){
-        comment = data.deliveryComment
+    val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'")
+    val formatter: DateFormat = SimpleDateFormat("dd-MMMM")
+    var displayText = ""
+    data.comments.sortByDescending { comment -> parser.parse(comment.createdAt) }
+    data.comments.forEach { comment ->
+        var date = formatter.format(parser.parse(comment.createdAt))
+        displayText = String.format("%s%s : %s - %s\n\n", displayText, date, comment.commenter, comment.comment)
     }
+    text = displayText
+}
 
-    text = comment
+
+@BindingAdapter("moreDetailsLayoutFormatted")
+fun ConstraintLayout.setMoreDetailsLayoutFormatted(data: DailyOrdersUiModel){
+    if(data.isMoreDetailsDisplayed){
+        visibility = View.VISIBLE
+        return
+    }
+    visibility = View.GONE
 }
 
 
