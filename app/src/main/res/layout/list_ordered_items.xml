@@ -46,7 +46,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
                     <ImageView
                         android:id="@+id/itemImage"
@@ -185,9 +185,9 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/moreDetailsLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:moreDetailsLayoutFormatted="@{uiModel}"
-                    android:visibility="visible">
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:moreDetailsLayoutFormatted="@{uiModel}">
 
                     <TextView
                         android:id="@+id/dailyOrdersComments"
@@ -233,11 +233,11 @@
                         style="?android:attr/progressBarStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:progressBarVisibility="@{uiModel.isCommentProgressBarActive}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:progressBarVisibility="@{uiModel.isCommentProgressBarActive}" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View

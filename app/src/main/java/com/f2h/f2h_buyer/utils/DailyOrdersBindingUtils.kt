@@ -22,6 +22,7 @@ import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
 import kotlinx.android.synthetic.main.list_all_items.view.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.util.*
 
 
 @BindingAdapter(value = ["headerDateFormatter", "headerAmountFormatter"])
@@ -83,10 +84,11 @@ fun TextView.setDiscountFormatted(data: DailyOrdersUiModel){
 @BindingAdapter("commentFormatted")
 fun TextView.setCommentFormatted(data: DailyOrdersUiModel){
     val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'")
-    val formatter: DateFormat = SimpleDateFormat("dd-MMMM")
+    val formatter: DateFormat = SimpleDateFormat("dd-MMMM, hh:mm a")
     var displayText = ""
     data.comments.sortByDescending { comment -> parser.parse(comment.createdAt) }
     data.comments.forEach { comment ->
+        parser.setTimeZone(TimeZone.getTimeZone("UTC"));
         var date = formatter.format(parser.parse(comment.createdAt))
         displayText = String.format("%s%s : %s - %s\n\n", displayText, date, comment.commenter, comment.comment)
     }
