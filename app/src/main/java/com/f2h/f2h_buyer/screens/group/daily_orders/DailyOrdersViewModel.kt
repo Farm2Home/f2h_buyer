@@ -242,6 +242,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
                 createCommentsDataDeferred.await()
                 // Do API call to refresh comments
                 fetchCommentsForOrder(element)
+                clearCommentTypeBox(element)
             } catch (t:Throwable){
                 println(t.message)
             }
@@ -254,6 +255,12 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     private fun setCommentProgressBar(isProgressActive: Boolean, element: DailyOrdersUiModel){
         _visibleUiData.value?.filter { data -> data.orderId.equals(element.orderId) }
             ?.firstOrNull()?.isCommentProgressBarActive = isProgressActive
+        _visibleUiData.value = _visibleUiData.value
+    }
+
+    private fun clearCommentTypeBox(element: DailyOrdersUiModel){
+        _visibleUiData.value?.filter { data -> data.orderId.equals(element.orderId) }
+            ?.firstOrNull()?.newComment = ""
         _visibleUiData.value = _visibleUiData.value
     }
 
