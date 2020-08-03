@@ -160,6 +160,11 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
             _toastText.value = "Please confirm password"
             return true
         }
+        if (!confirmPassword.value.equals(password.value)) {
+            _toastText.value = "Passwords do not match"
+            return true
+        }
+
         return false
     }
 
@@ -204,6 +209,9 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
                     _toastText.value = "Unable to Verify"
                     updateUi(STATE_VERIFY_FAILED)
                 }
+                else{
+                    _toastText.value = "Something went wrong."
+                }
             }
 
             override fun onCodeSent(verificationId: String,
@@ -237,6 +245,7 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
                 _isEnteringMobile.value = true
                 _isVerifyingOtp.value = false
                 _isProgressBarActive.value = false
+                _isSendOtpClicked.value = false
             }
             STATE_CODE_SENT -> {
                 _isSignUpComplete.value = false
@@ -244,6 +253,7 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
                 _isEnteringMobile.value = true
                 _isVerifyingOtp.value = true
                 _isProgressBarActive.value = false
+                _isSendOtpClicked.value = true
             }
             STATE_CODE_NOT_SENT -> {
                 _isSignUpComplete.value = false
@@ -262,8 +272,8 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
             STATE_VERIFY_FAILED -> {
                 _isSignUpComplete.value = false
                 _isMobileVerified.value = false
-                _isEnteringMobile.value = true
-                _isVerifyingOtp.value = false
+                _isEnteringMobile.value = false
+                _isVerifyingOtp.value = true
                 _isProgressBarActive.value = false
             }
             STATE_SIGNIN_SUCCESS -> {

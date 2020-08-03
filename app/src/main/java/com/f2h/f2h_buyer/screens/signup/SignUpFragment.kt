@@ -82,6 +82,7 @@ class SignUpFragment: Fragment() {
         viewModel.resendOtpClicked.observe(viewLifecycleOwner, Observer { resendOtpClicked ->
             binding.resend.isEnabled = false
             if (resendOtpClicked) {
+                resendVerificationCode(viewModel.mobile.value!!, viewModel.mResendToken)
                 object : CountDownTimer(60000, 1000) {
                     override fun onTick(millisUntilFinished: Long) {
                         binding.resend.setText((millisUntilFinished / 1000).toInt().toString())
