@@ -64,14 +64,13 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         coroutineScope.launch {
             sessionData = retrieveSession()
             try {
-
                 // Fetch Item Data
                 val getItemDataDeferred = ItemApi.retrofitService.getItem(itemId)
                 val item = getItemDataDeferred.await()
 
                 //Fetch existing Orders Data
                 val getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupUserAndItem(item.groupId ?: 0,
-                    sessionData.userId, item.itemId!!, startDate, endDate)
+                    sessionData.userId, itemId, startDate, endDate)
                 val orders = ArrayList(getOrdersDataDeferred.await())
 
                 //Fetch all availabilities for the item
