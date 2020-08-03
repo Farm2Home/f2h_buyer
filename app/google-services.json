@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "499427674094",
+    "firebase_url": "https://villageveggys.firebaseio.com",
+    "project_id": "villageveggys",
+    "storage_bucket": "villageveggys.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499427674094:android:af3ffe5f2d84a8357cf0ff",
+        "android_client_info": {
+          "package_name": "com.f2h.f2h_buyer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "499427674094-n203efuhqbm2obu6j2pmkolhkefa17le.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgJ0cvTmiwl5fOxuBlL5cRMkxfo-5k5jI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "499427674094-n203efuhqbm2obu6j2pmkolhkefa17le.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499427674094:android:5f6dfc5bd6a241777cf0ff",
+        "android_client_info": {
+          "package_name": "com.f2h.f2h_buyer.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "499427674094-n203efuhqbm2obu6j2pmkolhkefa17le.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgJ0cvTmiwl5fOxuBlL5cRMkxfo-5k5jI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "499427674094-n203efuhqbm2obu6j2pmkolhkefa17le.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
