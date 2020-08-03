@@ -5,7 +5,9 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StrikethroughSpan
+import android.view.View
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.f2h.f2h_buyer.R
@@ -15,7 +17,11 @@ import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_ORDERED
 import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_REJECTED
 import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PAID
 import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PENDING
+import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
 import com.f2h.f2h_buyer.screens.report.ReportItemsModel
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 @BindingAdapter("priceFormatted")
@@ -33,6 +39,30 @@ fun TextView.setItemDetailsFormatted(data: ReportItemsModel?){
     }
 }
 
+
+@BindingAdapter("commentFormatted")
+fun TextView.setCommentFormatted(data: ReportItemsModel){
+    val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'")
+    val formatter: DateFormat = SimpleDateFormat("dd-MMMM, hh:mm a")
+    var displayText = ""
+    data.comments.sortByDescending { comment -> parser.parse(comment.createdAt) }
+    data.comments.forEach { comment ->
+        parser.setTimeZone(TimeZone.getTimeZone("UTC"));
+        var date = formatter.format(parser.parse(comment.createdAt))
+        displayText = String.format("%s%s : %s - %s\n\n", displayText, date, comment.commenter, comment.comment)
+    }
+    text = displayText
+}
+
+
+@BindingAdapter("moreDetailsLayoutFormatted")
+fun ConstraintLayout.setMoreDetailsLayoutFormatted(data: ReportItemsModel){
+    if(data.isMoreDetailsDisplayed){
+        visibility = View.VISIBLE
+        return
+    }
+    visibility = View.GONE
+}
 
 
 @BindingAdapter("orderDateFormatted")

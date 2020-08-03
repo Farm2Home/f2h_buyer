@@ -16,6 +16,9 @@
         <variable
             name="decreaseButtonClickListener"
             type="com.f2h.f2h_buyer.screens.group.daily_orders.DecreaseButtonClickListener" />
+        <variable
+            name="sendCommentButtonClickListener"
+            type="com.f2h.f2h_buyer.screens.group.daily_orders.SendCommentButtonClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,180 +38,213 @@
             app:layout_constraintTop_toTopOf="parent">
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/itemImage"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:contentDescription="TODO"
-                    app:loadSquareRoundedImage="@{uiModel.itemImageLink}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/itemDetails"
-                    android:layout_width="0dp"
+                    <ImageView
+                        android:id="@+id/itemImage"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="10dp"
+                        android:contentDescription="TODO"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:loadSquareRoundedImage="@{uiModel.itemImageLink}" />
+
+                    <TextView
+                        android:id="@+id/itemDetails"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="@{uiModel.itemName}"
+                        android:textSize="15sp"
+                        app:layout_constraintEnd_toStartOf="@+id/buttonIncrease"
+                        app:layout_constraintStart_toEndOf="@+id/itemImage"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:id="@+id/buttonDecrease"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:onClick="@{() -> decreaseButtonClickListener.onClick(uiModel)}"
+                        android:text="-"
+                        android:textStyle="bold"
+                        app:buttonVisibilityFormatted="@{uiModel}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/buttonIncrease"
+                        app:layout_constraintHorizontal_bias="0.507"
+                        app:layout_constraintStart_toStartOf="@+id/buttonIncrease"
+                        app:layout_constraintTop_toBottomOf="@+id/confirmedQuantity" />
+
+                    <Button
+                        android:id="@+id/buttonIncrease"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="20dp"
+                        android:onClick="@{() -> increaseButtonClickListener.onClick(uiModel)}"
+                        android:text="+"
+                        android:textStyle="bold"
+                        app:buttonVisibilityFormatted="@{uiModel}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/confirmedQuantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:textAlignment="center"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/itemUom"
+                        app:layout_constraintStart_toStartOf="@+id/buttonIncrease"
+                        app:layout_constraintTop_toBottomOf="@+id/buttonIncrease"
+                        app:orderedQuantityFormatted="@{uiModel}" />
+
+                    <TextView
+                        android:id="@+id/itemUom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{uiModel.itemUom}"
+                        android:textAlignment="center"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/buttonIncrease"
+                        app:layout_constraintLeft_toRightOf="@+id/confirmedQuantity"
+                        app:layout_constraintStart_toEndOf="@+id/confirmedQuantity"
+                        app:layout_constraintTop_toTopOf="@+id/confirmedQuantity" />
+
+                    <TextView
+                        android:id="@+id/amount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/itemImage"
+                        app:layout_constraintStart_toStartOf="@+id/itemImage"
+                        app:layout_constraintTop_toBottomOf="@+id/itemImage"
+                        app:priceFormatted="@{uiModel}" />
+
+
+                    <TextView
+                        android:id="@+id/dailyOrdersFarmerName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@{`Farmer - ` + uiModel.farmerName}"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/itemDetails"
+                        app:layout_constraintStart_toStartOf="@+id/itemDetails"
+                        app:layout_constraintTop_toBottomOf="@+id/itemDetails" />
+
+
+                    <TextView
+                        android:id="@+id/total"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Payable - "
+                        app:layout_constraintEnd_toEndOf="@+id/discount"
+                        app:layout_constraintStart_toStartOf="@+id/dailyOrdersFarmerName"
+                        app:layout_constraintTop_toBottomOf="@+id/discount"
+                        app:totalPriceFormatted="@{uiModel}" />
+
+                    <TextView
+                        android:id="@+id/status"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/amount"
+                        app:layout_constraintStart_toStartOf="@+id/amount"
+                        app:layout_constraintTop_toBottomOf="@+id/amount"
+                        app:statusFormatted="@{uiModel}" />
+
+                    <TextView
+                        android:id="@+id/discount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:textSize="12sp"
+                        app:discountFormatted="@{uiModel}"
+                        app:layout_constraintEnd_toStartOf="@+id/buttonDecrease"
+                        app:layout_constraintStart_toStartOf="@+id/dailyOrdersFarmerName"
+                        app:layout_constraintTop_toBottomOf="@+id/dailyOrdersFarmerName" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/moreDetailsLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="20dp"
-                    android:text="@{uiModel.itemName}"
-                    android:textSize="15sp"
-                    app:layout_constraintEnd_toStartOf="@+id/buttonIncrease"
-                    app:layout_constraintStart_toEndOf="@+id/itemImage"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:visibility="visible"
+                    app:moreDetailsLayoutFormatted="@{uiModel}">
 
-                <TextView
-                    android:id="@+id/dailyOrdersItemDescription"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:text="@{uiModel.itemDescription}"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/itemDetails"
-                    app:layout_constraintStart_toStartOf="@+id/itemDetails"
-                    app:layout_constraintTop_toBottomOf="@+id/itemDetails" />
+                    <TextView
+                        android:id="@+id/dailyOrdersComments"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="5dp"
+                        android:textSize="12sp"
+                        app:commentFormatted="@{uiModel}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/addCommentText" />
 
-                <Button
-                    android:id="@+id/buttonDecrease"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:onClick="@{() -> decreaseButtonClickListener.onClick(uiModel)}"
-                    android:text="-"
-                    android:textStyle="bold"
-                    app:buttonVisibilityFormatted="@{uiModel}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/buttonIncrease"
-                    app:layout_constraintHorizontal_bias="0.507"
-                    app:layout_constraintStart_toStartOf="@+id/buttonIncrease"
-                    app:layout_constraintTop_toBottomOf="@+id/confirmedQuantity" />
+                    <EditText
+                        android:id="@+id/addCommentText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:ems="10"
+                        android:hint="Add a comment"
+                        android:inputType="textPersonName"
+                        android:text="@={uiModel.newComment}"
+                        app:layout_constraintEnd_toStartOf="@+id/sendCommentButton"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
-                    android:id="@+id/buttonIncrease"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="20dp"
-                    android:onClick="@{() -> increaseButtonClickListener.onClick(uiModel)}"
-                    android:text="+"
-                    android:textStyle="bold"
-                    app:buttonVisibilityFormatted="@{uiModel}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <ImageButton
+                        android:id="@+id/sendCommentButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="20dp"
+                        android:onClick="@{() -> sendCommentButtonClickListener.onClick(uiModel)}"
+                        app:layout_constraintBottom_toBottomOf="@+id/addCommentText"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/addCommentText"
+                        app:srcCompat="@drawable/send_icon" />
 
-                <TextView
-                    android:id="@+id/confirmedQuantity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:textAlignment="center"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toStartOf="@+id/itemUom"
-                    app:layout_constraintStart_toStartOf="@+id/buttonIncrease"
-                    app:layout_constraintTop_toBottomOf="@+id/buttonIncrease"
-                    app:orderedQuantityFormatted="@{uiModel}" />
-
-                <TextView
-                    android:id="@+id/itemUom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{uiModel.itemUom}"
-                    android:textAlignment="center"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/buttonIncrease"
-                    app:layout_constraintLeft_toRightOf="@+id/confirmedQuantity"
-                    app:layout_constraintStart_toEndOf="@+id/confirmedQuantity"
-                    app:layout_constraintTop_toTopOf="@+id/confirmedQuantity" />
-
-                <TextView
-                    android:id="@+id/amount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    app:layout_constraintEnd_toEndOf="@+id/itemImage"
-                    app:layout_constraintStart_toStartOf="@+id/itemImage"
-                    app:layout_constraintTop_toBottomOf="@+id/itemImage"
-                    app:priceFormatted="@{uiModel}" />
-
-
-                <TextView
-                    android:id="@+id/dailyOrdersFarmerName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@{`Farmer - ` + uiModel.farmerName}"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/dailyOrdersItemDescription"
-                    app:layout_constraintStart_toStartOf="@+id/dailyOrdersItemDescription"
-                    app:layout_constraintTop_toBottomOf="@+id/dailyOrdersItemDescription" />
-
+                    <ProgressBar
+                        android:id="@+id/isCommentInProgress"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:progressBarVisibility="@{uiModel.isCommentProgressBarActive}" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="0.5dp"
-                    android:background="@color/grey"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-                <TextView
-                    android:id="@+id/total"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Payable - "
-                    app:layout_constraintEnd_toEndOf="@+id/discount"
-                    app:layout_constraintStart_toStartOf="@+id/dailyOrdersFarmerName"
-                    app:layout_constraintTop_toBottomOf="@+id/discount"
-                    app:totalPriceFormatted="@{uiModel}" />
-
-                <TextView
-                    android:id="@+id/status"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:textAlignment="center"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/amount"
-                    app:layout_constraintStart_toStartOf="@+id/amount"
-                    app:layout_constraintTop_toBottomOf="@+id/amount"
-                    app:statusFormatted="@{uiModel}" />
-
-                <TextView
-                    android:id="@+id/discount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="20dp"
-                    android:textSize="12sp"
-                    app:discountFormatted="@{uiModel}"
-                    app:layout_constraintEnd_toStartOf="@+id/buttonDecrease"
-                    app:layout_constraintStart_toStartOf="@+id/dailyOrdersComments"
-                    app:layout_constraintTop_toBottomOf="@+id/dailyOrdersComments" />
-
-                <TextView
-                    android:id="@+id/dailyOrdersComments"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:singleLine="false"
-                    android:textSize="10sp"
-                    app:commentFormatted="@{uiModel}"
-                    app:layout_constraintEnd_toEndOf="@+id/dailyOrdersFarmerName"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/dailyOrdersFarmerName"
-                    app:layout_constraintTop_toBottomOf="@+id/dailyOrdersFarmerName" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:background="@color/grey" />
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 

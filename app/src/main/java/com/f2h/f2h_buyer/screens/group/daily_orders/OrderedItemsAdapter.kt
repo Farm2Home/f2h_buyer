@@ -21,7 +21,8 @@ private val ITEM_VIEW_TYPE_ITEM = 1
 
 class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
                           val increaseButtonClickListener: IncreaseButtonClickListener,
-                          val decreaseButtonClickListener: DecreaseButtonClickListener):
+                          val decreaseButtonClickListener: DecreaseButtonClickListener,
+                          val sendCommentButtonClickListener: SendCommentButtonClickListener):
     ListAdapter<DataItem, RecyclerView.ViewHolder>(ListItemDiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
@@ -59,7 +60,9 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
         when (holder) {
             is ViewHolder -> {
                 val dailyOrdersItem = getItem(position) as DataItem.DailyOrdersItem
-                holder.bind(dailyOrdersItem.dailyOrdersUiModel, clickListener, increaseButtonClickListener, decreaseButtonClickListener)
+                holder.bind(dailyOrdersItem.dailyOrdersUiModel, clickListener,
+                    increaseButtonClickListener, decreaseButtonClickListener,
+                    sendCommentButtonClickListener)
             }
             is TextViewHolder -> {
                 val header = getItem(position) as DataItem.Header
@@ -109,12 +112,14 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
             item: DailyOrdersUiModel,
             clickListener: OrderedItemClickListener,
             increaseButtonClickListener: IncreaseButtonClickListener,
-            decreaseButtonClickListener: DecreaseButtonClickListener
+            decreaseButtonClickListener: DecreaseButtonClickListener,
+            sendCommentButtonClickListener: SendCommentButtonClickListener
         ) {
             binding.uiModel = item
             binding.clickListener = clickListener
             binding.increaseButtonClickListener = increaseButtonClickListener
             binding.decreaseButtonClickListener = decreaseButtonClickListener
+            binding.sendCommentButtonClickListener = sendCommentButtonClickListener
             binding.executePendingBindings()
         }
 
@@ -149,6 +154,10 @@ class IncreaseButtonClickListener(val clickListener: (uiModel: DailyOrdersUiMode
 }
 
 class DecreaseButtonClickListener(val clickListener: (uiModel: DailyOrdersUiModel) -> Unit) {
+    fun onClick(uiModel: DailyOrdersUiModel) = clickListener(uiModel)
+}
+
+class SendCommentButtonClickListener(val clickListener: (uiModel: DailyOrdersUiModel) -> Unit) {
     fun onClick(uiModel: DailyOrdersUiModel) = clickListener(uiModel)
 }
 
