@@ -221,7 +221,6 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
                 // by combining the code with a verification ID.
                 _toastText.value = "Otp Sent"
                 updateUi(STATE_CODE_SENT)
-                _resendOtpClicked.value = false
                 // Save verification ID and resending token so we can use them later
                 mVerificationId = verificationId
                 mResendToken = token
@@ -253,7 +252,7 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
                 _isEnteringMobile.value = true
                 _isVerifyingOtp.value = true
                 _isProgressBarActive.value = false
-                _isSendOtpClicked.value = true
+                _resendOtpClicked.value = false
             }
             STATE_CODE_NOT_SENT -> {
                 _isSignUpComplete.value = false
@@ -272,9 +271,10 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
             STATE_VERIFY_FAILED -> {
                 _isSignUpComplete.value = false
                 _isMobileVerified.value = false
-                _isEnteringMobile.value = false
+                _isEnteringMobile.value = true
                 _isVerifyingOtp.value = true
                 _isProgressBarActive.value = false
+                _resendOtpClicked.value = false
             }
             STATE_SIGNIN_SUCCESS -> {
                 _isSignUpComplete.value = true
