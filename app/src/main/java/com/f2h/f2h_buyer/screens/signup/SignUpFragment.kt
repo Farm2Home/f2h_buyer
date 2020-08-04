@@ -29,6 +29,16 @@ class SignUpFragment: Fragment() {
     private val dataSource: SessionDatabaseDao by lazy { F2HDatabase.getInstance(application).sessionDatabaseDao }
     private val viewModelFactory: SignUpViewModelFactory by lazy { SignUpViewModelFactory(dataSource, application) }
     private val viewModel: SignUpViewModel by lazy { ViewModelProvider(this, viewModelFactory).get(SignUpViewModel::class.java) }
+    private val countDownTimer = object : CountDownTimer(60000, 1000) {
+        override fun onTick(millisUntilFinished: Long) {
+            binding.resend.setText((millisUntilFinished / 1000).toInt().toString())
+        }
+
+        override fun onFinish() {
+            binding.resend.setText("Resend OTP")
+            binding.resend.isEnabled = true
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,16 +76,7 @@ class SignUpFragment: Fragment() {
 
         viewModel.isVerifyingOtp.observe(viewLifecycleOwner, Observer { isVerifyingOtp ->
             if (isVerifyingOtp){
-                object : CountDownTimer(60000, 1000) {
-                    override fun onTick(millisUntilFinished: Long) {
-                        binding.resend.setText((millisUntilFinished / 1000).toInt().toString())
-                    }
-
-                    override fun onFinish() {
-                        binding.resend.setText("Resend OTP")
-                        binding.resend.isEnabled = true
-                    }
-                }.start()
+                countDownTimer.start()
             }
         })
 
@@ -83,16 +84,7 @@ class SignUpFragment: Fragment() {
             binding.resend.isEnabled = false
             if (resendOtpClicked) {
                 resendVerificationCode(viewModel.mobile.value!!, viewModel.mResendToken)
-                object : CountDownTimer(60000, 1000) {
-                    override fun onTick(millisUntilFinished: Long) {
-                        binding.resend.setText((millisUntilFinished / 1000).toInt().toString())
-                    }
-
-                    override fun onFinish() {
-                        binding.resend.setText("Resend OTP")
-                        binding.resend.isEnabled = true
-                    }
-                }.start()
+                countDownTimer.start()
             }
         })
 
