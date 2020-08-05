@@ -127,6 +127,7 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
 
     fun onCreateButtonClick() {
         if(isAnyFieldInvalid()){
+            _isProgressBarActive.value = false
             return
         }
         _isProgressBarActive.value = true
