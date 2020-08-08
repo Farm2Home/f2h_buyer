@@ -21,7 +21,6 @@ import kotlinx.coroutines.*
 import java.lang.Long
 
 
-
 class SignUpViewModel(val database: SessionDatabaseDao, application: Application) : AndroidViewModel(application) {
 
     lateinit var mCallbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
@@ -89,12 +88,12 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
 
     fun onSendOtpButtonClick(){
         _isProgressBarActive.value = true
-        if (mobile.value.isNullOrBlank() || !isNumeric(mobile.value.toString())) {
+        if (mobile.value.isNullOrBlank() || !isNumeric(mobile.value.toString()) || mobile.value.toString().lastIndex<9) {
             _toastText.value = "Please enter a valid mobile number"
             _isProgressBarActive.value = false
         }
         else {
-            _toastText.value = "Sending otp to your mobile number"
+//            _toastText.value = "Sending otp to your mobile number"
             _isSendOtpClicked.value = true
 
         }
@@ -120,14 +119,12 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
         else {
             _toastText.value = "Re-Sending otp to your mobile number"
             _resendOtpClicked.value = true
-
         }
     }
 
 
     fun onCreateButtonClick() {
         if(isAnyFieldInvalid()){
-            _isProgressBarActive.value = false
             return
         }
         _isProgressBarActive.value = true
@@ -165,7 +162,7 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
             _toastText.value = "Passwords do not match"
             return true
         }
-
+        _isProgressBarActive.value = false
         return false
     }
 
@@ -204,7 +201,7 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
                 if (e is FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
                     _toastText.value = "Invalid phone number."
-                    updateUi(STATE_VERIFY_FAILED)
+                    updateUi(STATE_INITIALIZED)
                 } else if (e is FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
                     _toastText.value = "Unable to Verify"
@@ -212,6 +209,8 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
                 }
                 else{
                     _toastText.value = "Something went wrong."
+                    updateUi(STATE_INITIALIZED)
+                    _isProgressBarActive.value = false
                 }
             }
 
@@ -255,13 +254,7 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
                 _isProgressBarActive.value = false
                 _resendOtpClicked.value = false
             }
-            STATE_CODE_NOT_SENT -> {
-                _isSignUpComplete.value = false
-                _isMobileVerified.value = false
-                _isEnteringMobile.value = true
-                _isVerifyingOtp.value = false
-                _isProgressBarActive.value = false
-            }
+
             STATE_VERIFY_SUCCESS -> {
                 _isSignUpComplete.value = false
                 _isMobileVerified.value = true
@@ -294,7 +287,6 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
         private const val STATE_VERIFY_FAILED = 3
         private const val STATE_VERIFY_SUCCESS = 4
         private const val STATE_CODE_SENT = 2
-        private const val STATE_CODE_NOT_SENT = 5
         private const val STATE_SIGNIN_SUCCESS = 6
     }
 
@@ -303,7 +295,7 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
         var userObject = UserCreateRequest()
         userObject.userName = userName.value
         var address = arrayListOf(locality.value?:"", city.value?:"", state.value?:"",
-                                        pincode.value?:"")
+            pincode.value?:"")
         address.removeIf(String::isEmpty)
         userObject.address  = address.joinToString()
         userObject.mobile = mobile.value
