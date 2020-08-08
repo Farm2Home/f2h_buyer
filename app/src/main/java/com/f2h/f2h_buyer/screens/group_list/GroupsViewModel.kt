@@ -27,8 +27,6 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
         get() = _isGroupListEmpty
 
 
-
-
     private val roles = listOf<String>(USER_ROLE_BUYER)
     private var userSession = SessionEntity()
     private var viewModelJob = Job()
@@ -53,6 +51,7 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
             }
         }
     }
+
 
     fun getUserGroupsInformation() {
         _isProgressBarActive.value = true
