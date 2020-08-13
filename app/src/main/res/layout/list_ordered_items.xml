@@ -180,6 +180,16 @@
                         app:layout_constraintStart_toStartOf="@+id/dailyOrdersFarmerName"
                         app:layout_constraintTop_toBottomOf="@+id/dailyOrdersFarmerName" />
 
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/total"
+                        app:layout_constraintStart_toStartOf="@+id/total"
+                        app:srcCompat="@drawable/more_icon" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
