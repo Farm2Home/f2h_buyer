@@ -33,6 +33,10 @@ class GroupWalletViewModel(val database: SessionDatabaseDao, application: Applic
         getWalletInformation()
     }
 
+    fun refreshFragmentData(){
+        getWalletInformation()
+    }
+
     private fun getWalletInformation() {
         _isProgressBarActive.value = true
         coroutineScope.launch {

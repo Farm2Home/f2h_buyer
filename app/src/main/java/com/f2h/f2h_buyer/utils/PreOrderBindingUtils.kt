@@ -31,6 +31,10 @@ fun TextView.setDescriptionFormatted(data: PreOrderUiModel?){
 @BindingAdapter("farmerFormatted")
 fun TextView.setFarmerFormatted(data: PreOrderUiModel?){
     data?.let {
+        if (data.farmerName.isNullOrBlank()){
+            text = ""
+            return
+        }
         text = String.format("Farmer - %s (%s)", data.farmerName, data.farmerMobile)
     }
 }

@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -16,10 +17,10 @@ android {
 
     defaultConfig {
         applicationId "com.f2h.f2h_buyer"
-        minSdkVersion 24
+        minSdkVersion 21
         targetSdkVersion 29
-        versionCode 7 //Should be always increasing - every deploy to playstore, add 1
-        versionName "1.1.0"
+        versionCode 8 //Should be always increasing - every deploy to playstore, add 1
+        versionName "1.2.0"
         /*
              versionName Major.Minor.Patch
              Major - Not Backward compatible, absolutely new
@@ -101,4 +102,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     //noinspection GradleCompatible
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
+    implementation 'com.google.firebase:firebase-auth:19.3.2'
+
 }
