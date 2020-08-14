@@ -97,6 +97,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "499427674094-jfu65psrt6gu73umic8dkikife6fshpd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.f2h.f2h_buyer",
+            "certificate_hash": "e0527a8c1ed892e5d92f4b2fdef2ab9462cfb0f5"
+          }
+        },
+        {
           "client_id": "499427674094-n203efuhqbm2obu6j2pmkolhkefa17le.apps.googleusercontent.com",
           "client_type": 3
         }
