@@ -68,19 +68,34 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
 
     private fun filterEarliestAvailableItemAsVisibleItems(items: List<Item>) {
         var filteredItems = ArrayList<Item>()
+        var freezedItems = ArrayList<Item>()
+        var notAvailableItems = ArrayList<Item>()
         items.forEach {item ->
             if(!item.itemAvailability.isEmpty()) {
                 var earliestItemAvailability = fetchEarliestItemAvailability(item)
                 if (earliestItemAvailability.itemId!!.equals(-1L)){
-                    item.itemAvailability = listOf<ItemAvailability>()
+                    item.itemAvailability = listOf()
+                    notAvailableItems.add(item)
+                }
+                else if (earliestItemAvailability.isFreezed?:false){
+                    item.itemAvailability = arrayOf(earliestItemAvailability).toList()
+                    freezedItems.add(item)
                 }
                 else {
                     item.itemAvailability = arrayOf(earliestItemAvailability).toList()
+                    filteredItems.add(item)
                 }
+
             }
-            filteredItems.add(item)
+            else {
+                notAvailableItems.add(item)
+            }
+
         }
         filteredItems.sortWith(compareBy(nullsLast<String>()) {  it.itemAvailability.getOrNull(0)?.availableDate })
+        freezedItems.sortWith(compareBy(nullsLast<String>()) {  it.itemAvailability.getOrNull(0)?.availableDate })
+        filteredItems.addAll(freezedItems)
+        filteredItems.addAll(notAvailableItems)
         _visibleItems.value = filteredItems
     }
 
