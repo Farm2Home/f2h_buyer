@@ -10,6 +10,7 @@
             type="com.f2h.f2h_buyer.screens.signup.SignUpViewModel" />
     </data>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -51,7 +52,7 @@
 
                 <EditText
                     android:id="@+id/email"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
@@ -66,7 +67,7 @@
 
                 <EditText
                     android:id="@+id/password"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
@@ -82,7 +83,7 @@
 
                 <EditText
                     android:id="@+id/confirmPassword"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
@@ -97,7 +98,7 @@
 
                 <EditText
                     android:id="@+id/name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="30dp"
@@ -112,7 +113,7 @@
 
                 <EditText
                     android:id="@+id/locality"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
@@ -128,7 +129,7 @@
 
                 <EditText
                     android:id="@+id/city"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
@@ -143,7 +144,7 @@
 
                 <EditText
                     android:id="@+id/state"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
@@ -159,7 +160,7 @@
 
                 <EditText
                     android:id="@+id/pincode"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
@@ -195,26 +196,28 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout3"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
             android:layout_marginTop="20dp"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <EditText
                 android:id="@+id/mobile"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
+                android:layout_marginEnd="20dp"
                 android:ems="13"
                 android:hint="Mobile Number*"
                 android:inputType="phone"
                 android:maxLength="10"
                 android:text="@={viewModel.mobile}"
                 app:editTextVisibility="@{viewModel.isEnteringMobile()}"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView12"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -243,11 +246,11 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="10dp"
-                android:text="Send OTP"
                 android:onClick="@{() -> viewModel.onSendOtpButtonClick()}"
+                android:text="Send OTP"
                 app:buttonVisibility="@{!viewModel.isSendOtpClicked()}"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mobile" />
 
             <EditText
@@ -262,6 +265,7 @@
                 android:maxLength="6"
                 android:text="@={viewModel.otp}"
                 app:editTextVisibility="@{viewModel.isVerifyingOtp()}"
+                app:layout_constraintEnd_toEndOf="@+id/mobile"
                 app:layout_constraintStart_toStartOf="@+id/textView12"
                 app:layout_constraintTop_toBottomOf="@+id/resend" />
 
@@ -277,12 +281,12 @@
                 android:onClick="@{() -> viewModel.onVerifyOtpButtonClick()}"
                 android:text="Verify OTP"
                 app:buttonVisibility="@{viewModel.isVerifyingOtp()}"
-                tools:layout_editor_absoluteX="339dp"
-                tools:layout_editor_absoluteY="62dp"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/otp" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/otp"
+                tools:layout_editor_absoluteX="339dp"
+                tools:layout_editor_absoluteY="62dp" />
 
             <Button
                 android:id="@+id/resend"
