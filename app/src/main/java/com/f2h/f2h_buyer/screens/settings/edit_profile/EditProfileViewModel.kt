@@ -74,7 +74,8 @@ class EditProfileViewModel(val database: SessionDatabaseDao, application: Applic
                 null,
                 Base64.encodeToString(password.value?.toByteArray(), Base64.DEFAULT),
                 null,
-                userName.value
+                userName.value,
+                null
             )
 
             var updateUserData = UserApi.retrofitService.updateUser(userSession.userId, updatedUser)

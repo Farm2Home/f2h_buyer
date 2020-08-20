@@ -8,7 +8,8 @@ data class User (
     @Json(name = "address") val address: String? = "",
     @Json(name = "email") val email: String? = "",
     @Json(name = "mobile") val mobile: String? = "",
-    @Json(name = "password") val password: String? = ""
+    @Json(name = "password") val password: String? = "",
+    @Json(name = "buyer_fcm_token") var buyerFcmToken: String? = null
 )
 
 data class UserDetails (
@@ -26,5 +27,6 @@ data class UserCreateRequest (
     @Json(name = "mobile") var mobile: String? = "",
     @Json(name = "password") var password: String? = "",
     @Json(name = "created_by") var createdBy: String? = "",
-    @Json(name = "updated_by") var updatedBy: String? = ""
+    @Json(name = "updated_by") var updatedBy: String? = "",
+    @Json(name = "buyer_fcm_token") var buyerFcmToken: String? = null
 )
