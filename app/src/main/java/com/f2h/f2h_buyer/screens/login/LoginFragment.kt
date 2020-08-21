@@ -3,6 +3,7 @@ package com.f2h.f2h_buyer.screens.login
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,8 @@ import com.f2h.f2h_buyer.database.F2HDatabase
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.databinding.FragmentLoginBinding
 import com.f2h.f2h_buyer.screens.UserPagesActivity
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
 
 class LoginFragment: Fragment() {
 
@@ -37,6 +40,17 @@ class LoginFragment: Fragment() {
         binding.setLifecycleOwner(this)
 
         binding.appVersion.text = String.format("%s-%s", BuildConfig.ENVIRONMENT, BuildConfig.VERSION_NAME)
+
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("TAG", "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
+                val token = task.result?.token
+                Log.d("New Token", token)
+                viewModel.fcmToken.value = token
+            })
 
         viewModel.isLoginComplete.observe(viewLifecycleOwner, Observer { isLoginComplete ->
             if(isLoginComplete) {
