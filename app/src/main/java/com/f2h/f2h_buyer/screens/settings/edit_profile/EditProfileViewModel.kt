@@ -22,6 +22,7 @@ class EditProfileViewModel(val database: SessionDatabaseDao, application: Applic
     val userName = MutableLiveData<String>()
     val mobile = MutableLiveData<String>()
     val password = MutableLiveData<String>()
+    val confirmPassword = MutableLiveData<String>()
     val address = MutableLiveData<String>()
     val email = MutableLiveData<String>()
 
@@ -62,8 +63,30 @@ class EditProfileViewModel(val database: SessionDatabaseDao, application: Applic
         }
     }
 
-
+    fun isAnyFieldInvalid(): Boolean{
+        if (userName.value.isNullOrBlank()) {
+            _toastText.value = "Please enter a name"
+            return true
+        }
+        if (password.value.isNullOrBlank()) {
+            _toastText.value = "Please enter a password"
+            return true
+        }
+        if (confirmPassword.value.isNullOrBlank()) {
+            _toastText.value = "Please confirm password"
+            return true
+        }
+        if (!confirmPassword.value.equals(password.value)) {
+            _toastText.value = "Passwords do not match"
+            return true
+        }
+        _isProgressBarActive.value = false
+        return false
+    }
     fun onSaveButtonClicked() {
+        if(isAnyFieldInvalid()){
+            return
+        }
         coroutineScope.launch {
             _isProgressBarActive.value = true
             userSession = retrieveSession()
