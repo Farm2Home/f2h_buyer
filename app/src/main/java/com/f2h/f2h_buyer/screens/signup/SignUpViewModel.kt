@@ -294,10 +294,9 @@ class SignUpViewModel(val database: SessionDatabaseDao, application: Application
     private fun createUserRequestObject() : UserCreateRequest{
         var userObject = UserCreateRequest()
         userObject.userName = userName.value
-        var address = arrayListOf(locality.value?:"", city.value?:"", state.value?:"",
-            pincode.value?:"")
-        address.removeIf(String::isEmpty)
-        userObject.address  = address.joinToString()
+        var address = arrayListOf(locality.value, city.value, state.value, pincode.value)
+
+        userObject.address  = address.filter { x -> !x.isNullOrEmpty() }.joinToString()
         userObject.mobile = mobile.value
         userObject.email = email.value
         userObject.password = Base64.encodeToString(password.value?.toByteArray(), DEFAULT)
