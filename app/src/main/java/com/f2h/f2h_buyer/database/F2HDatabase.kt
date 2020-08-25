@@ -5,10 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [SessionEntity::class], version = 2, exportSchema = false)
+@Database(entities = [SessionEntity::class, NotificationEntity::class], version = 4, exportSchema = false)
 abstract class F2HDatabase : RoomDatabase() {
 
     abstract val sessionDatabaseDao: SessionDatabaseDao
+    abstract val notificationDatabaseDao: NotificationDatabaseDao
 
     companion object{
 
