@@ -8,7 +8,9 @@ import androidx.lifecycle.MutableLiveData
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.LoginApi
+import com.f2h.f2h_buyer.network.UserApi
 import com.f2h.f2h_buyer.network.models.User
+import com.f2h.f2h_buyer.network.models.UserCreateRequest
 import kotlinx.coroutines.*
 import retrofit2.await
 import java.nio.charset.Charset
@@ -18,6 +20,7 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
 
     val loginPassword = MutableLiveData<String>()
     val loginMobile = MutableLiveData<String>()
+    val fcmToken = MutableLiveData<String>()
 
     private val _loginResponse = MutableLiveData<User>()
     val loginResponse: LiveData<User>
@@ -97,11 +100,16 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
             var getUserDataDeferred = LoginApi.retrofitService.tryUserLogin(session.mobile, session.password)
             try {
                 var updatedUserData = getUserDataDeferred.await()
-                if (updatedUserData != null){
-                    _loginResponse.value = updatedUserData
-                    saveSession(updatedUserData, session)
-                    println("Successfully logged in : "+ updatedUserData.toString())
+                _loginResponse.value = updatedUserData
+
+                if (updatedUserData.buyerFcmToken.isNullOrEmpty() || session.userId <= 0) {
+                    var updateTokenPayload = tokenUpdatePayload()
+                    var updateUserData =
+                        UserApi.retrofitService.updateUser(updatedUserData.userId!!, updateTokenPayload)
+                    updateUserData.await()
                 }
+
+                saveSession(updatedUserData, session)
                 _isLoginComplete.value = true
             } catch (t:Throwable){
                 println(t.message)
@@ -110,6 +118,21 @@ class LoginViewModel(val database: SessionDatabaseDao, application: Application)
             }
             _isProgressBarActive.value = false
         }
+    }
+
+
+    private fun tokenUpdatePayload(): UserCreateRequest {
+        var updatedUserPayload = UserCreateRequest (
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            fcmToken.value
+        )
+        return updatedUserPayload
     }
 
 

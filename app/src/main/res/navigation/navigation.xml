@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_groupsFragment_to_searchGroupsFragment"
             app:destination="@id/searchGroupsFragment" />
+        <action
+            android:id="@+id/action_groupsFragment_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
     </fragment>
     <fragment
         android:id="@+id/groupDetailsTabsFragment"
@@ -88,4 +91,15 @@
         android:id="@+id/editProfileFragment"
         android:name="com.f2h.f2h_buyer.screens.settings.edit_profile.EditProfileFragment"
         android:label="EditProfileFragment" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.f2h.f2h_buyer.screens.notification.NotificationFragment" />
+    <fragment
+        android:id="@+id/referFragment"
+        android:name="com.f2h.f2h_buyer.screens.refer.ReferFragment"
+        android:label="@string/refer" >
+        <action
+            android:id="@+id/action_referFragment_to_groupsFragment"
+            app:destination="@id/groupsFragment" />
+    </fragment>
 </navigation>
