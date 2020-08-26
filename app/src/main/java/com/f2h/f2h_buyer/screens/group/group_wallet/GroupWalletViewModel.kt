@@ -38,6 +38,7 @@ class GroupWalletViewModel(val database: SessionDatabaseDao, application: Applic
     }
 
     private fun getWalletInformation() {
+        allUiData = arrayListOf()
         _isProgressBarActive.value = true
         coroutineScope.launch {
             userSession = retrieveSession()
