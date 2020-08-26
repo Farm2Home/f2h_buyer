@@ -6,13 +6,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.f2h.f2h_buyer.constants.F2HConstants.USER_ROLE_BUYER
 import com.f2h.f2h_buyer.constants.F2HConstants.USER_ROLE_GROUP_ADMIN
+import com.f2h.f2h_buyer.database.NotificationDatabaseDao
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.GroupApi
 import com.f2h.f2h_buyer.network.models.Group
 import kotlinx.coroutines.*
 
-class GroupsViewModel(val database: SessionDatabaseDao, application: Application) : AndroidViewModel(application) {
+class GroupsViewModel(val database: SessionDatabaseDao,
+                      val notificationDatabase: NotificationDatabaseDao,
+                      application: Application) : AndroidViewModel(application) {
 
     private val _groups = MutableLiveData<List<Group>>()
     val group: LiveData<List<Group>>
@@ -25,6 +28,10 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
     private val _isGroupListEmpty = MutableLiveData<Boolean>()
     val isGroupListEmpty: LiveData<Boolean>
         get() = _isGroupListEmpty
+
+    private val _unreadCount= MutableLiveData<Int>()
+    val unreadCount: LiveData<Int>
+        get() = _unreadCount
 
 
     private val roles = listOf<String>(USER_ROLE_BUYER)
@@ -41,7 +48,9 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
         _isGroupListEmpty.value = false
         _isProgressBarActive.value = true
         getUserGroupsInformation()
+        getUnreadNotificationCount()
         _isProgressBarActive.value = false
+
     }
 
     fun updateSessionWithGroupInfo(group: Group){
@@ -74,6 +83,18 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
         }
     }
 
+    fun getUnreadNotificationCount(){
+
+        coroutineScope.launch {
+            var count = 0
+            withContext(Dispatchers.IO) {
+                count =retriveNotificationCount()
+            }
+            _unreadCount.value = count
+        }
+
+    }
+
 
     private suspend fun retrieveSession() : SessionEntity {
         return withContext(Dispatchers.IO) {
@@ -86,6 +107,13 @@ class GroupsViewModel(val database: SessionDatabaseDao, application: Application
                 database.clearSessions()
             }
             return@withContext session
+        }
+    }
+
+    private suspend fun retriveNotificationCount() : Int {
+        return withContext(Dispatchers.IO) {
+            val countUnreadNotification = notificationDatabase.getUnreadCount()
+            return@withContext countUnreadNotification
         }
     }
 
