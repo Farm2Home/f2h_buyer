@@ -2,9 +2,7 @@ package com.f2h.f2h_buyer.utils
 
 import android.os.Bundle
 import android.util.Log
-import com.f2h.f2h_buyer.database.F2HDatabase
-import com.f2h.f2h_buyer.database.SessionDatabaseDao
-import com.f2h.f2h_buyer.database.SessionEntity
+import com.f2h.f2h_buyer.database.*
 import com.f2h.f2h_buyer.network.UserApi
 import com.f2h.f2h_buyer.network.models.UserCreateRequest
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -14,7 +12,8 @@ import kotlinx.coroutines.*
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     val TAG = "Service"
-    private val database: SessionDatabaseDao by lazy { F2HDatabase.getInstance(application).sessionDatabaseDao }
+    private val sessionDatabase: SessionDatabaseDao by lazy { F2HDatabase.getInstance(application).sessionDatabaseDao }
+    private val notificationDatabase: NotificationDatabaseDao by lazy { F2HDatabase.getInstance(application).notificationDatabaseDao }
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
@@ -23,21 +22,29 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Log.i(TAG, "From: " + remoteMessage.from)
         Log.i(TAG, "Notification Message Body: " + remoteMessage.notification?.body!!)
 
+
+        saveNotification(remoteMessage.notification?.title!!, remoteMessage.notification?.body!!)
+
         if (remoteMessage.data.isNotEmpty()){
             val extras = Bundle()
             for ((key, value) in remoteMessage.data) {
                 extras.putString(key, value)
             }
             if(extras.containsKey("message") && !extras.getString("message").isNullOrBlank()) {
-                saveNotification(extras.getString("message")!!)
+//                saveNotification(extras.getString("message")!!)
             }
         }
 
     }
 
 
-    private fun saveNotification(messageBody: String) {
+    private fun saveNotification(messageTitle:String, messageBody: String) {
 
+        coroutineScope.launch {
+
+            var notification = NotificationEntity(title = messageTitle, body = messageBody)
+            saveNotificationInDB(notification)
+        }
     }
 
 
@@ -78,15 +85,22 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     private suspend fun retrieveSession() : SessionEntity {
         return withContext(Dispatchers.IO) {
-            val sessions = database.getAll()
+            val sessions = sessionDatabase.getAll()
             var session = SessionEntity()
             if (sessions.size==1) {
                 session = sessions[0]
                 println(session.toString())
             } else {
-                database.clearSessions()
+                sessionDatabase.clearSessions()
             }
             return@withContext session
+        }
+    }
+
+    private suspend fun saveNotificationInDB(notificationEntity: NotificationEntity)   {
+        return withContext(Dispatchers.IO) {
+            notificationDatabase.insert(notificationEntity)
+            notificationDatabase.removeOldNotifications()
         }
     }
 

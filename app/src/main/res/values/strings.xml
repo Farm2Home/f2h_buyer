@@ -4,7 +4,6 @@
     <string name="password">password</string>
     <string name="login">Login</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="daily_orders">Daily Orders</string>
     <string name="contact_us">Contact Us</string>
     <string name="my_profile">My Profile</string>
@@ -16,11 +15,11 @@
     <string name="update_orders">Update Orders</string>
     <string name="report">Order Reports</string>
     <string name="search_groups">Join Groups</string>
+    <string name="refer">Refer A Friend</string>
 
     <string-array name="time_slots">
         <item>Morning</item>
         <item>Afternoon</item>
         <item>Evening</item>
     </string-array>
-
 </resources>
