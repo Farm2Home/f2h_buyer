@@ -19,7 +19,7 @@ data class NotificationEntity (
     @ColumnInfo(name = "is_read")
     var isRead: Boolean = false,
 
-    @ColumnInfo(name = "received_time")
+    @ColumnInfo(name = "received_time", defaultValue = "CURRENT_TIMESTAMP")
     var receivedTime: String = ""
 
 )

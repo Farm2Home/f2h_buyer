@@ -91,9 +91,7 @@ class GroupsFragment : Fragment() {
         unreadCount.setOnClickListener{
             navigateToNotification()
         }
-//        (menu_notification_bell.findViewById(R.id.notification_bell) as ImageView).setOnClickListener{
-//            navigateToNotification()
-//        }
+
         (menu_notification_bell.findViewById(R.id.notification_bell_view) as RelativeLayout)?.setOnClickListener{
             navigateToNotification()
         }

@@ -23,16 +23,23 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Log.i(TAG, "Notification Message Body: " + remoteMessage.notification?.body!!)
 
 
-        saveNotification(remoteMessage.notification?.title!!, remoteMessage.notification?.body!!)
 
+        var body = ""
+        var title = ""
         if (remoteMessage.data.isNotEmpty()){
             val extras = Bundle()
             for ((key, value) in remoteMessage.data) {
                 extras.putString(key, value)
             }
-            if(extras.containsKey("message") && !extras.getString("message").isNullOrBlank()) {
+            if(extras.containsKey("body") && !extras.getString("body").isNullOrBlank()) {
+                body = extras.getString("body")!!
 //                saveNotification(extras.getString("message")!!)
             }
+            if(extras.containsKey("title") && !extras.getString("title").isNullOrBlank()) {
+                title = extras.getString("title")!!
+//                saveNotification(extras.getString("message")!!)
+            }
+            saveNotification(title, body)
         }
 
     }
@@ -41,7 +48,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     private fun saveNotification(messageTitle:String, messageBody: String) {
 
         coroutineScope.launch {
-
             var notification = NotificationEntity(title = messageTitle, body = messageBody)
             saveNotificationInDB(notification)
         }
