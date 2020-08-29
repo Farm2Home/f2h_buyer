@@ -17,6 +17,10 @@
     <string name="search_groups">Join Groups</string>
     <string name="refer">Refer A Friend</string>
 
+    <string name="channel_name">Notification Channel</string>
+    <string name="channel_description">Channel for pushing notifications</string>
+    <integer name="channel_id">100</integer>
+
     <string-array name="time_slots">
         <item>Morning</item>
         <item>Afternoon</item>
