@@ -1,7 +1,10 @@
 package com.f2h.f2h_buyer.network.models
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class ItemAvailability (
     @Json(name = "item_id") val itemId: Long? = -1,
     @Json(name = "item_availability_id") val itemAvailabilityId: Long? = -1L,
@@ -11,5 +14,5 @@ data class ItemAvailability (
     @Json(name = "committed_quantity") val committedQuantity: Double? = 0.0,
     @Json(name = "available_quantity") val availableQuantity: Double? = 0.0,
     @Json(name = "is_freezed") val isFreezed: Boolean? = false
-)
+): Parcelable
 

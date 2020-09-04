@@ -59,9 +59,8 @@
         android:id="@+id/preOrderFragment"
         android:name="com.f2h.f2h_buyer.screens.group.pre_order.PreOrderFragment">
         <argument
-            android:name="itemId"
-            android:defaultValue="0L"
-            app:argType="long" />
+            android:name="item"
+            app:argType="com.f2h.f2h_buyer.network.models.Item" />
     </fragment>
     <fragment
         android:id="@+id/contactUsFragment"
