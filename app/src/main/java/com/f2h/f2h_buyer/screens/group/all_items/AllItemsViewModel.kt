@@ -79,10 +79,12 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
                 }
                 else if (earliestItemAvailability.isFreezed?:false){
                     item.itemAvailability = arrayOf(earliestItemAvailability).toList()
+                        .plus(item.itemAvailability.filter { it.itemAvailabilityId != earliestItemAvailability.itemAvailabilityId})
                     freezedItems.add(item)
                 }
                 else {
                     item.itemAvailability = arrayOf(earliestItemAvailability).toList()
+                        .plus(item.itemAvailability.filter { it.itemAvailabilityId != earliestItemAvailability.itemAvailabilityId})
                     filteredItems.add(item)
                 }
 
