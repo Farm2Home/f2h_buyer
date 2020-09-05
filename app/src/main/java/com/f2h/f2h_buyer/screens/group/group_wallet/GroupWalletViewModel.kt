@@ -38,7 +38,6 @@ class GroupWalletViewModel(val database: SessionDatabaseDao, application: Applic
     }
 
     private fun getWalletInformation() {
-        allUiData = arrayListOf()
         _isProgressBarActive.value = true
         coroutineScope.launch {
             userSession = retrieveSession()
@@ -51,6 +50,7 @@ class GroupWalletViewModel(val database: SessionDatabaseDao, application: Applic
                     walletTransactions = activeWalletTransactionData
                 }
                 _wallet.value = walletData
+                var walletItemUiData =  ArrayList<WalletItemsModel>()
                 walletTransactions.forEach { transaction ->
                     var walletItemsModel = WalletItemsModel(
                         transaction.walletLedgerId ?: -1,
@@ -58,10 +58,10 @@ class GroupWalletViewModel(val database: SessionDatabaseDao, application: Applic
                         transaction.transactionDescription?.trim() ?: "",
                         transaction.amount ?: 0.0
                     )
-                    allUiData.add(walletItemsModel)
+                    walletItemUiData.add(walletItemsModel)
                 }
-                allUiData.sortByDescending { it.transactionDate }
-                _visibleUiData.value = allUiData
+                walletItemUiData.sortByDescending { it.transactionDate }
+                _visibleUiData.value = walletItemUiData
             } catch (t:Throwable){
                 println(t.message)
             }
