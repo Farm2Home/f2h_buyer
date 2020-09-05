@@ -24,7 +24,6 @@ class GroupWalletViewModel(val database: SessionDatabaseDao, application: Applic
     val visibleUiData: LiveData<MutableList<WalletItemsModel>>
         get() = _visibleUiData
 
-    private var allUiData = ArrayList<WalletItemsModel>()
     private var userSession = SessionEntity()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -38,30 +37,28 @@ class GroupWalletViewModel(val database: SessionDatabaseDao, application: Applic
     }
 
     private fun getWalletInformation() {
-        allUiData = arrayListOf()
         _isProgressBarActive.value = true
         coroutineScope.launch {
             userSession = retrieveSession()
             try {
-                var walletTransactions = listOf<WalletTransaction>()
-                var activeWalletData = WalletApi.retrofitService.getWalletDetails(userSession.groupId, userSession.userId).await()
-                var walletData = activeWalletData.firstOrNull() ?: Wallet()
-                if(walletData != null){
-                    var activeWalletTransactionData = WalletApi.retrofitService.getWalletTransactionDetails(walletData.walletId ?: -1).await()
-                    walletTransactions = activeWalletTransactionData
-                }
+
+                val activeWalletData = WalletApi.retrofitService.getWalletDetails(userSession.groupId, userSession.userId).await()
+                val walletData = activeWalletData.firstOrNull() ?: Wallet()
+                val activeWalletTransactionData = WalletApi.retrofitService.getWalletTransactionDetails(walletData.walletId ?: -1).await()
+                val walletTransactions: List<WalletTransaction> = activeWalletTransactionData
                 _wallet.value = walletData
+                val walletItemUiData =  ArrayList<WalletItemsModel>()
                 walletTransactions.forEach { transaction ->
-                    var walletItemsModel = WalletItemsModel(
-                        transaction.walletLedgerId ?: -1,
-                        transaction.transactionDate ?: "",
-                        transaction.transactionDescription?.trim() ?: "",
-                        transaction.amount ?: 0.0
+                    walletItemUiData.add(WalletItemsModel(
+                            transaction.walletLedgerId ?: -1,
+                            transaction.transactionDate ?: "",
+                            transaction.transactionDescription?.trim() ?: "",
+                            transaction.amount ?: 0.0
+                            )
                     )
-                    allUiData.add(walletItemsModel)
                 }
-                allUiData.sortByDescending { it.transactionDate }
-                _visibleUiData.value = allUiData
+                walletItemUiData.sortByDescending { it.transactionDate }
+                _visibleUiData.value = walletItemUiData
             } catch (t:Throwable){
                 println(t.message)
             }
