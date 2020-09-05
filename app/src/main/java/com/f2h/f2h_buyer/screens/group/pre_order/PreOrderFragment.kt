@@ -44,7 +44,8 @@ class PreOrderFragment : Fragment() {
         binding.viewModel = viewModel
 
         //Call the API to fetch item data to populate page
-        viewModel.fetchAllData(args.itemId)
+        viewModel.setItemAndFarmer(args.item)
+        viewModel.fetchOrderData()
 
         // Item list recycler view
         val adapter =

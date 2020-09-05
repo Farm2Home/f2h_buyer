@@ -43,7 +43,8 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     private val preOrderDaysMax = 10
     private var startDate = ""
     private var endDate = ""
-    private var selectedItemId = 0L
+    private var selectedItem = Item()
+    private var farmerDetails = listOf<UserDetails>()
 
     private val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
     private var sessionData = SessionEntity()
@@ -53,37 +54,41 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
 
     init {
         setPreOrderDateRange()
-        createPreOrderUiElements(Item(), arrayListOf(), arrayListOf(), arrayListOf())
+        createPreOrderUiElements(Item(), arrayListOf())
+        createPreOrderUiModel(Item(), arrayListOf())
+    }
+
+    fun setItemAndFarmer(item: Item){
+        selectedItem = item
+        coroutineScope.launch {
+            sessionData = retrieveSession()
+            try {
+                var getUserDetailsDataDeferred = UserApi.retrofitService
+                    .getUserDetailsByUserIds(arrayListOf(item.farmerUserId ?: -1))
+                farmerDetails = getUserDetailsDataDeferred.await()
+                createPreOrderUiModel(selectedItem, farmerDetails)
+
+            } catch (t:Throwable){
+                println(t.message)
+            }
+        }
+
     }
 
 
-    fun fetchAllData(itemId: Long) {
-        selectedItemId = itemId
+    fun fetchOrderData() {
         _orderSuccessful.value = false
         _isProgressBarActive.value = true
         coroutineScope.launch {
             sessionData = retrieveSession()
             try {
-                // Fetch Item Data
-                val getItemDataDeferred = ItemApi.retrofitService.getItem(itemId)
-                val item = getItemDataDeferred.await()
-
                 //Fetch existing Orders Data
-                val getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupUserAndItem(item.groupId ?: 0,
-                    sessionData.userId, itemId, startDate, endDate)
+                val getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupUserAndItem(selectedItem.groupId ?: 0,
+                    sessionData.userId, selectedItem.itemId, startDate, endDate)
                 val orders = ArrayList(getOrdersDataDeferred.await())
 
-                //Fetch all availabilities for the item
-                val getItemAvailabilitiesDeferred = ItemAvailabilityApi.retrofitService.getItemAvailabilitiesByItemId(item.itemId!!)
-                val itemAvailabilities = ArrayList(getItemAvailabilitiesDeferred.await())
-
-                //Fetch farmer details
-                var getUserDetailsDataDeferred = UserApi.retrofitService
-                    .getUserDetailsByUserIds(arrayListOf(item.farmerUserId ?: -1))
-                var farmerDetails = getUserDetailsDataDeferred.await()
-
                 //Create the UI Model to populate UI
-                _preOrderItems.value = createPreOrderUiElements(item, orders, itemAvailabilities, farmerDetails)
+                _preOrderItems.value = createPreOrderUiElements(selectedItem, orders)
 
             } catch (t:Throwable){
                 println(t.message)
@@ -92,12 +97,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         }
     }
 
-
-    private fun createPreOrderUiElements(item: Item, orders: ArrayList<Order>,
-                                         itemAvailabilities: ArrayList<ItemAvailability>,
-                                         farmerDetails: List<UserDetails>): ArrayList<PreOrderItemsModel> {
-        var list = arrayListOf<PreOrderItemsModel>()
-
+    private fun createPreOrderUiModel(item: Item, farmerDetails: List<UserDetails>){
         var uiModel = PreOrderUiModel()
         uiModel.itemId = item.itemId ?: -1
         uiModel.itemName = item.itemName ?: ""
@@ -108,8 +108,12 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         uiModel.farmerName = item.farmerUserName ?: ""
         uiModel.farmerMobile = farmerDetails.firstOrNull()?.mobile ?: ""
         _preOrderUiModel.value = uiModel
+    }
 
-        itemAvailabilities.filter { compareDates(it.availableDate, startDate) >= 0 &&
+    private fun createPreOrderUiElements(item: Item, orders: ArrayList<Order>): ArrayList<PreOrderItemsModel> {
+        var list = arrayListOf<PreOrderItemsModel>()
+
+        item.itemAvailability.filter { compareDates(it.availableDate, startDate) >= 0 &&
                 compareDates(it.availableDate, endDate) <= 0 }
             .forEach { availability ->
                 var preOrderItem = PreOrderItemsModel()
@@ -255,7 +259,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
             }
 
             // Refresh the screen
-            fetchAllData(selectedItemId)
+            fetchOrderData()
         }
     }
 

@@ -45,7 +45,7 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
             list.map { DataItem.DailyOrdersItem(it).dailyOrdersUiModel.orderedDate }.distinct()
         uniqueDates = uniqueDates.sortedBy { df.parse(it).time }
         val itemsListWithHeaders = arrayListOf<DataItem>()
-        uniqueDates.stream().forEach { date ->
+        uniqueDates.forEach { date ->
             val ordersForDate = list.filter{ date.equals(DataItem.DailyOrdersItem(it).dailyOrdersUiModel.orderedDate) }
                 .map { DataItem.DailyOrdersItem(it) }
             val amountForDay = ordersForDate.sumByDouble { it.dailyOrdersUiModel.orderAmount }
@@ -76,7 +76,7 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
         return when (viewType) {
             ITEM_VIEW_TYPE_HEADER -> TextViewHolder.from(parent)
             ITEM_VIEW_TYPE_ITEM -> ViewHolder.from(parent)
-            else -> throw ClassCastException("Unknown viewType ${viewType}")
+            else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
 
