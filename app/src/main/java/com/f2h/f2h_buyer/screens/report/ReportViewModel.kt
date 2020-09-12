@@ -16,7 +16,6 @@ import com.f2h.f2h_buyer.network.ItemAvailabilityApi
 import com.f2h.f2h_buyer.network.OrderApi
 import com.f2h.f2h_buyer.network.UserApi
 import com.f2h.f2h_buyer.network.models.*
-import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -58,21 +57,21 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
         _isProgressBarActive.value = true
         coroutineScope.launch {
             sessionData.value = retrieveSession()
-            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupUserAndItem(sessionData.value!!.groupId, sessionData.value!!.userId, null, null, null)
+            val getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupUserAndItem(sessionData.value!!.groupId, sessionData.value!!.userId, null, null, null)
             try {
-                var orders = getOrdersDataDeferred.await()
-                var userIds = orders.map { x -> x.buyerUserId ?: -1}
+                val orders = getOrdersDataDeferred.await()
+                val userIds = arrayListOf(sessionData.value!!.userId)
                     .plus(orders.map { x -> x.sellerUserId ?: -1}).distinct()
-                var availabilityIds = orders.map { x -> x.itemAvailabilityId ?: -1 }
+                val availabilityIds = orders.map { x -> x.itemAvailabilityId ?: -1 }
 
-                var getUserDetailsDataDeferred =
+                val getUserDetailsDataDeferred =
                     UserApi.retrofitService.getUserDetailsByUserIds(userIds)
 
-                var getItemAvailabilitiesDataDeferred =
+                val getItemAvailabilitiesDataDeferred =
                     ItemAvailabilityApi.retrofitService.getItemAvailabilities(availabilityIds)
 
-                var itemAvailabilities = getItemAvailabilitiesDataDeferred.await()
-                var userDetailsList = getUserDetailsDataDeferred.await()
+                val itemAvailabilities = getItemAvailabilitiesDataDeferred.await()
+                val userDetailsList = getUserDetailsDataDeferred.await()
 
                 allUiData = createAllUiData(itemAvailabilities, orders, userDetailsList)
                 _reportUiFilterModel.value = createAllUiFilters()
@@ -89,19 +88,19 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
 
     private fun createAllUiData(itemAvailabilitys: List<ItemAvailability>,
                                 orders: List<Order>, userDetailsList: List<UserDetails>): ArrayList<ReportItemsModel> {
-        var allUiData = ArrayList<ReportItemsModel>()
+        val allUiData = ArrayList<ReportItemsModel>()
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
         val jsonAdapter: JsonAdapter<Item> = moshi.adapter(Item::class.java)
         orders.forEach { order ->
 
-            var uiElement = ReportItemsModel()
+            val uiElement = ReportItemsModel()
             var item = Item()
             try {
                 item = jsonAdapter.fromJson(order.orderDescription) ?: Item()
             } catch (e: Exception){
-                Log.e("Parse Error", e.message)
+                Log.e("Parse Error", e.message?:"")
             }
 
             // Check item availability for the order. freezed etc
@@ -184,15 +183,15 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
 
     private fun filterVisibleItems() {
         val elements = allUiData
-        var todayDate = Calendar.getInstance()
-        var filteredItems = ArrayList<ReportItemsModel>()
-        var selectedItem = reportUiFilterModel.value?.selectedItem ?: ""
-        var selectedOrderStatus = reportUiFilterModel.value?.selectedOrderStatus ?: ""
-        var selectedPaymentStatus = reportUiFilterModel.value?.selectedPaymentStatus ?: ""
-        var selectedStartDate = reportUiFilterModel.value?.selectedStartDate ?: formatter.format(todayDate.time)
-        var selectedEndDate = reportUiFilterModel.value?.selectedEndDate ?: formatter.format(todayDate.time)
-        var selectedBuyer = reportUiFilterModel.value?.selectedBuyer ?: ""
-        var selectedFarmer = reportUiFilterModel.value?.selectedFarmer ?: ""
+        val todayDate = Calendar.getInstance()
+        val filteredItems = ArrayList<ReportItemsModel>()
+        val selectedItem = reportUiFilterModel.value?.selectedItem ?: ""
+        val selectedOrderStatus = reportUiFilterModel.value?.selectedOrderStatus ?: ""
+        val selectedPaymentStatus = reportUiFilterModel.value?.selectedPaymentStatus ?: ""
+        val selectedStartDate = reportUiFilterModel.value?.selectedStartDate ?: formatter.format(todayDate.time)
+        val selectedEndDate = reportUiFilterModel.value?.selectedEndDate ?: formatter.format(todayDate.time)
+        val selectedBuyer = reportUiFilterModel.value?.selectedBuyer ?: ""
+        val selectedFarmer = reportUiFilterModel.value?.selectedFarmer ?: ""
 
         elements.forEach { element ->
             if ((selectedItem == "ALL" || element.itemName.equals(selectedItem)) &&
@@ -216,9 +215,9 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
         selectedEndDate: String
     ) : Boolean {
 
-        if (element.orderedDate.isNullOrBlank() ||
-                selectedEndDate.isNullOrBlank() ||
-                selectedStartDate.isNullOrBlank()) return true
+        if (element.orderedDate.isBlank() ||
+                selectedEndDate.isBlank() ||
+                selectedStartDate.isBlank()) return true
 
         return formatter.parse(element.orderedDate) >= formatter.parse(selectedStartDate) &&
                 formatter.parse(element.orderedDate) <= formatter.parse(selectedEndDate)

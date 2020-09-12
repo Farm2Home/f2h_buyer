@@ -10,7 +10,6 @@ import com.f2h.f2h_buyer.database.SessionEntity
 import com.f2h.f2h_buyer.network.CommentApi
 import com.f2h.f2h_buyer.network.ItemAvailabilityApi
 import com.f2h.f2h_buyer.network.OrderApi
-import com.f2h.f2h_buyer.network.UserApi
 import com.f2h.f2h_buyer.network.models.*
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -28,8 +27,8 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     val isProgressBarActive: LiveData<Boolean>
         get() = _isProgressBarActive
 
-    private var _visibleUiData = MutableLiveData<MutableList<DailyOrdersUiModel>>()
-    val visibleUiData: LiveData<MutableList<DailyOrdersUiModel>>
+    private var _visibleUiData = MutableLiveData<MutableList<DailyOrderHeaderUiModel>>()
+    val visibleUiData: LiveData<MutableList<DailyOrderHeaderUiModel>>
         get() = _visibleUiData
 
     private var _toastMessage = MutableLiveData<String>()
@@ -40,7 +39,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
 
 
     private val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
-    private var allUiData = ArrayList<DailyOrdersUiModel>()
+    private var allUiData = ArrayList<DailyOrderHeaderUiModel>()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
@@ -55,19 +54,23 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         _isProgressBarActive.value = true
         coroutineScope.launch {
             sessionData.value = retrieveSession()
-            var getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupUserAndItem(sessionData.value!!.groupId,
+            val getOrdersDataDeferred = OrderApi.retrofitService.getOrderHeadersForGroupUserAndItem(sessionData.value!!.groupId,
                 sessionData.value!!.userId, null, todayDate(), null)
             try {
-                var orders = getOrdersDataDeferred.await()
+                val orderHeaders = getOrdersDataDeferred.await()
 
-                var availabilityIds = orders.map { x -> x.itemAvailabilityId ?: -1}.distinct()
+                val availabilityIds = ArrayList<Long>()
 
-                var getItemAvailabilitiesDataDeferred =
+                orderHeaders.forEach{ orderHeader ->
+                    availabilityIds.addAll(orderHeader.orders.map { x -> x.itemAvailabilityId ?: -1}.distinct())
+                }
+
+                val getItemAvailabilitiesDataDeferred =
                     ItemAvailabilityApi.retrofitService.getItemAvailabilities(availabilityIds)
 
-                var itemAvailabilities = getItemAvailabilitiesDataDeferred.await()
+                val itemAvailabilities = getItemAvailabilitiesDataDeferred.await()
 
-                allUiData = createAllUiData(itemAvailabilities, orders)
+                allUiData = createAllUiData(itemAvailabilities, orderHeaders)
                 _visibleUiData.value = filterVisibleItems(allUiData)
             } catch (t:Throwable){
                 println(t.message)
@@ -78,65 +81,89 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
 
 
 
-    private fun createAllUiData(itemAvailabilitys: List<ItemAvailability>, orders: List<Order>): ArrayList<DailyOrdersUiModel> {
-        var allUiData = ArrayList<DailyOrdersUiModel>()
+    private fun createAllUiData(itemAvailabilitys: List<ItemAvailability>, orderHeaders: List<OrderHeader>): ArrayList<DailyOrderHeaderUiModel> {
+        val allUiData = ArrayList<DailyOrderHeaderUiModel>()
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
         val jsonAdapter: JsonAdapter<Item> = moshi.adapter(Item::class.java)
 
-        orders.forEach { order ->
-            var uiElement = DailyOrdersUiModel()
-            var item = Item()
-            try {
-                item = jsonAdapter.fromJson(order.orderDescription) ?: Item()
-            } catch (e: Exception){
-                Log.e("Parse Error", e.message)
-            }
 
-            // Check item availability for the order. freezed etc
-            itemAvailabilitys.forEach { availability ->
-                if (availability.itemAvailabilityId != null) {
-                    if (availability.itemAvailabilityId.equals(order.itemAvailabilityId)) {
-                        uiElement.isFreezed = availability.isFreezed ?: false
-                        uiElement.availableQuantity = availability.availableQuantity ?: 0.0
+        orderHeaders.forEach { orderHeader ->
+            val headerUiElement = DailyOrderHeaderUiModel()
+            headerUiElement.deliveryDate = orderHeader.deliveryDate ?: ""
+            headerUiElement.orderHeaderId = orderHeader.orderHeaderId?: -1
+            headerUiElement.totalAmount = orderHeader.finalAmount?: 0.0
+            headerUiElement.packingNumber = orderHeader.packingNumber?: -1
+
+            val uiElements  = ArrayList<DailyOrders>()
+            orderHeader.orders.forEach {order ->
+                val uiElement = DailyOrders()
+
+                var item = Item()
+                try {
+                    item = jsonAdapter.fromJson(order.orderDescription) ?: Item()
+                } catch (e: Exception) {
+                    Log.e("Parse Error", e.message ?: "")
+                }
+
+                // Check item availability for the order. freezed etc
+                itemAvailabilitys.forEach { availability ->
+                    if (availability.itemAvailabilityId != null) {
+                        if (availability.itemAvailabilityId.equals(order.itemAvailabilityId)) {
+                            uiElement.isFreezed = availability.isFreezed ?: false
+                            uiElement.availableQuantity = availability.availableQuantity ?: 0.0
+                        }
                     }
                 }
+
+                if (item != null) {
+                    uiElement.itemId = item.itemId ?: -1
+                    uiElement.itemName = item.itemName ?: ""
+                    uiElement.itemDescription = item.description ?: ""
+                    uiElement.itemUom = item.uom ?: ""
+                    uiElement.farmerName = item.farmerUserName ?: ""
+                    uiElement.price = item.pricePerUnit ?: 0.0
+                    uiElement.orderQtyJump = item.orderQtyJump ?: 0.0
+                    uiElement.itemImageLink = item.imageLink ?: ""
+                }
+                uiElement.orderedDate = df.format(df.parse(order.orderedDate))
+                uiElement.orderedQuantity = order.orderedQuantity ?: 0.0
+                uiElement.confirmedQuantity = order.confirmedQuantity ?: 0.0
+                uiElement.orderId = order.orderId ?: -1L
+                uiElement.orderAmount = order.orderedAmount ?: 0.0
+                uiElement.discountAmount = order.discountAmount ?: 0.0
+                uiElement.orderStatus = order.orderStatus ?: ""
+                uiElement.paymentStatus = order.paymentStatus ?: ""
+                uiElements.add(uiElement)
             }
 
-            if (item != null) {
-                uiElement.itemId = item.itemId ?: -1
-                uiElement.itemName = item.itemName ?: ""
-                uiElement.itemDescription = item.description ?: ""
-                uiElement.itemUom = item.uom ?: ""
-                uiElement.farmerName = item.farmerUserName ?: ""
-                uiElement.price = item.pricePerUnit ?: 0.0
-                uiElement.orderQtyJump = item.orderQtyJump ?: 0.0
-                uiElement.itemImageLink = item.imageLink ?: ""
-            }
-            uiElement.orderedDate = df.format(df.parse(order.orderedDate))
-            uiElement.orderedQuantity = order.orderedQuantity ?: 0.0
-            uiElement.confirmedQuantity = order.confirmedQuantity ?: 0.0
-            uiElement.orderId = order.orderId ?: -1L
-            uiElement.orderAmount = order.orderedAmount ?: 0.0
-            uiElement.discountAmount = order.discountAmount ?: 0.0
-            uiElement.orderStatus = order.orderStatus ?: ""
-            uiElement.paymentStatus = order.paymentStatus ?: ""
+            uiElements.sortBy { it.orderId }
+            uiElements.sortByDescending { it.orderedQuantity }
+            headerUiElement.orders = uiElements
+            headerUiElement.serviceOrders = ArrayList()
+                orderHeader.serviceOrders.forEach {
+                    val service = ServiceOrder()
+                    service.orderId = it.serviceOrderId?:-1
+                    service.amount = it.amount?:0.0
+                    service.name = it.name?:""
+                    service.description = it.description?:""
+                    headerUiElement.serviceOrders.add(service)
+                }
 
-            allUiData.add(uiElement)
+            allUiData.add(headerUiElement)
+
         }
 
-        allUiData.sortBy { it.itemName }
-        allUiData.sortByDescending { it.orderedQuantity }
+
         return allUiData
     }
 
 
 
-    private fun filterVisibleItems(elements: ArrayList<DailyOrdersUiModel>): ArrayList<DailyOrdersUiModel> {
-        var filteredItems = elements
-        filteredItems.sortByDescending { df.parse(it.orderedDate).time }
-        return filteredItems
+    private fun filterVisibleItems(elements: ArrayList<DailyOrderHeaderUiModel>): ArrayList<DailyOrderHeaderUiModel> {
+        elements.sortByDescending { df.parse(it.deliveryDate).time }
+        return elements
     }
 
     private suspend fun retrieveSession() : SessionEntity {
@@ -155,43 +182,59 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
 
 
     // increase order qty till max available qty
-    fun increaseOrderQuantity(updateElement: DailyOrdersUiModel){
-        _visibleUiData.value?.forEach { uiElement ->
-            if (uiElement.orderId.equals(updateElement.orderId)){
-                uiElement.orderedQuantity = uiElement.orderedQuantity.plus(uiElement.orderQtyJump)
-                uiElement.quantityChange = uiElement.quantityChange.plus(uiElement.orderQtyJump)
+    fun increaseOrderQuantity(uiElement: DailyOrders){
+//        _visibleUiData.value?.forEach { uiElement ->
+//            if (uiElement.orderId.equals(updateElement.orderId)){
+//                uiElement.orderedQuantity = uiElement.orderedQuantity.plus(uiElement.orderQtyJump)
+//                uiElement.quantityChange = uiElement.quantityChange.plus(uiElement.orderQtyJump)
+//
+//                // logic to prevent increasing quantity beyond maximum
+//                if (uiElement.quantityChange > uiElement.availableQuantity) {
+//                    uiElement.orderedQuantity = uiElement.orderedQuantity.minus(uiElement.orderQtyJump)
+//                    uiElement.quantityChange = uiElement.quantityChange.minus(uiElement.orderQtyJump)
+//                    _toastMessage.value = "No more stock"
+//                }
+//
+//                uiElement.orderAmount = calculateOrderAmount(uiElement)
+//            }
+//        }
 
-                // logic to prevent increasing quantity beyond maximum
-                if (uiElement.quantityChange > uiElement.availableQuantity) {
-                    uiElement.orderedQuantity = uiElement.orderedQuantity.minus(uiElement.orderQtyJump)
-                    uiElement.quantityChange = uiElement.quantityChange.minus(uiElement.orderQtyJump)
-                    _toastMessage.value = "No more stock"
-                }
+        uiElement.orderedQuantity = uiElement.orderedQuantity.plus(uiElement.orderQtyJump)
+        uiElement.quantityChange = uiElement.quantityChange.plus(uiElement.orderQtyJump)
 
-                uiElement.orderAmount = calculateOrderAmount(uiElement)
-            }
+        // logic to prevent increasing quantity beyond maximum
+        if (uiElement.quantityChange > uiElement.availableQuantity) {
+            uiElement.orderedQuantity = uiElement.orderedQuantity.minus(uiElement.orderQtyJump)
+            uiElement.quantityChange = uiElement.quantityChange.minus(uiElement.orderQtyJump)
+            _toastMessage.value = "No more stock"
         }
+
+        uiElement.orderAmount = calculateOrderAmount(uiElement)
         _visibleUiData.value = _visibleUiData.value
     }
 
 
     // decrease order qty till min 0
-    fun decreaseOrderQuantity(updateElement: DailyOrdersUiModel){
-        _visibleUiData.value?.forEach { uiElement ->
-            if (uiElement.orderId.equals(updateElement.orderId)){
-                uiElement.orderedQuantity = uiElement.orderedQuantity.minus(uiElement.orderQtyJump)
-                uiElement.quantityChange = uiElement.quantityChange.minus(uiElement.orderQtyJump)
-                if (uiElement.orderedQuantity < 0) uiElement.orderedQuantity = 0.0
-                uiElement.orderAmount = calculateOrderAmount(uiElement)
-            }
-        }
+    fun decreaseOrderQuantity(uiElement: DailyOrders){
+//        _visibleUiData.value?.forEach { uiElement ->
+//            if (uiElement.orderId.equals(updateElement.orderId)){
+//                uiElement.orderedQuantity = uiElement.orderedQuantity.minus(uiElement.orderQtyJump)
+//                uiElement.quantityChange = uiElement.quantityChange.minus(uiElement.orderQtyJump)
+//                if (uiElement.orderedQuantity < 0) uiElement.orderedQuantity = 0.0
+//                uiElement.orderAmount = calculateOrderAmount(uiElement)
+//            }
+//        }
+        uiElement.orderedQuantity = uiElement.orderedQuantity.minus(uiElement.orderQtyJump)
+        uiElement.quantityChange = uiElement.quantityChange.minus(uiElement.orderQtyJump)
+        if (uiElement.orderedQuantity < 0) uiElement.orderedQuantity = 0.0
+        uiElement.orderAmount = calculateOrderAmount(uiElement)
+
         _visibleUiData.value = _visibleUiData.value
     }
 
-    fun moreDetailsButtonClicked(element: DailyOrdersUiModel) {
+    fun moreDetailsButtonClicked(element: DailyOrders) {
         if(element.isMoreDetailsDisplayed){
-            _visibleUiData.value?.filter { data -> data.orderId.equals(element.orderId) }
-                ?.firstOrNull()?.isMoreDetailsDisplayed = false
+            element.isMoreDetailsDisplayed = false
             _visibleUiData.value = _visibleUiData.value
             return
         }
@@ -199,19 +242,17 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         // Do API call to fetch comments
         fetchCommentsForOrder(element)
 
-        _visibleUiData.value?.filter { data -> data.orderId.equals(element.orderId) }
-            ?.firstOrNull()?.isMoreDetailsDisplayed = true
+        element.isMoreDetailsDisplayed = true
         _visibleUiData.value = _visibleUiData.value
     }
 
-    private fun fetchCommentsForOrder(element: DailyOrdersUiModel) {
+    private fun fetchCommentsForOrder(element: DailyOrders) {
         setCommentProgressBar(true, element)
         coroutineScope.launch {
-            var getCommentsDataDeferred = CommentApi.retrofitService.getComments(element.orderId)
+            val getCommentsDataDeferred = CommentApi.retrofitService.getComments(element.orderId)
             try {
                 val comments: List<Comment> = getCommentsDataDeferred.await()
-                _visibleUiData.value?.filter { data -> data.orderId.equals(element.orderId) }
-                    ?.firstOrNull()?.comments = ArrayList(comments)
+                element.comments = ArrayList(comments)
                 _visibleUiData.value = _visibleUiData.value
             } catch (t: Throwable) {
                 println(t.message)
@@ -221,7 +262,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     }
 
 
-    fun onSendCommentButtonClicked(element: DailyOrdersUiModel){
+    fun onSendCommentButtonClicked(element: DailyOrders){
         if(element.newComment.isNullOrBlank()){
             return
         }
@@ -237,7 +278,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
 
         setCommentProgressBar(true, element)
         coroutineScope.launch {
-            var createCommentsDataDeferred = CommentApi.retrofitService.createComment(request)
+            val createCommentsDataDeferred = CommentApi.retrofitService.createComment(request)
             try{
                 createCommentsDataDeferred.await()
                 // Do API call to refresh comments
@@ -252,19 +293,17 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     }
 
 
-    private fun setCommentProgressBar(isProgressActive: Boolean, element: DailyOrdersUiModel){
-        _visibleUiData.value?.filter { data -> data.orderId.equals(element.orderId) }
-            ?.firstOrNull()?.isCommentProgressBarActive = isProgressActive
+    private fun setCommentProgressBar(isProgressActive: Boolean, element: DailyOrders){
+        element.isCommentProgressBarActive = isProgressActive
         _visibleUiData.value = _visibleUiData.value
     }
 
-    private fun clearCommentTypeBox(element: DailyOrdersUiModel){
-        _visibleUiData.value?.filter { data -> data.orderId.equals(element.orderId) }
-            ?.firstOrNull()?.newComment = ""
+    private fun clearCommentTypeBox(element: DailyOrders){
+        element.newComment = ""
         _visibleUiData.value = _visibleUiData.value
     }
 
-    private fun calculateOrderAmount(uiElement: DailyOrdersUiModel): Double {
+    private fun calculateOrderAmount(uiElement: DailyOrders): Double {
         return uiElement.orderedQuantity.times(uiElement.price)
     }
 
@@ -272,15 +311,17 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
     fun onClickSaveButton() {
         _isProgressBarActive.value = true
         var orderUpdates = arrayListOf<OrderUpdateRequest>()
-        _visibleUiData.value?.forEach { uiElement ->
-            var orderUpdate = OrderUpdateRequest(
-                orderId = uiElement.orderId,
-                orderStatus = uiElement.orderStatus,
-                discountAmount = uiElement.discountAmount,
-                orderedAmount = uiElement.orderAmount,
-                orderedQuantity = uiElement.orderedQuantity
-            )
-            orderUpdates.add(orderUpdate)
+        _visibleUiData.value?.forEach { header ->
+            header.orders.forEach { uiElement ->
+                var orderUpdate = OrderUpdateRequest(
+                    orderId = uiElement.orderId,
+                    orderStatus = uiElement.orderStatus,
+                    discountAmount = uiElement.discountAmount,
+                    orderedAmount = uiElement.orderAmount,
+                    orderedQuantity = uiElement.orderedQuantity
+                )
+                orderUpdates.add(orderUpdate)
+            }
         }
 
         coroutineScope.launch {

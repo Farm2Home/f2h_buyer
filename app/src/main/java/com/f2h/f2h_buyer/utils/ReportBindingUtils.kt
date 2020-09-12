@@ -17,7 +17,6 @@ import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_ORDERED
 import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_REJECTED
 import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PAID
 import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PENDING
-import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
 import com.f2h.f2h_buyer.screens.report.ReportItemsModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
