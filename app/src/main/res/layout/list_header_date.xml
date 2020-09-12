@@ -10,6 +10,9 @@
     <variable
         name="amount"
         type="Double" />
+    <variable
+        name="packingNumber"
+        type="Long" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,13 +26,25 @@
             android:paddingLeft="20dp"
             android:paddingTop="20dp"
             android:paddingRight="10dp"
-            android:paddingBottom="5dp"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:headerAmountFormatter="@{amount}"
             app:headerDateFormatter="@{date}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/packingNumberText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:packingNumberFormatter="@{packingNumber}"
+            app:layout_constraintStart_toStartOf="@+id/dateHeaderTextView"
+            app:layout_constraintTop_toBottomOf="@+id/dateHeaderTextView" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="uiModel"
+            type="com.f2h.f2h_buyer.screens.group.daily_orders.ServiceOrder" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <TextView
+                        android:id="@+id/serviceName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="10dp"
+
+                        android:text="@{uiModel.name}"
+                        android:textSize="15sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/serviceDescription"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@{uiModel.description}"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="@+id/serviceName"
+                        app:layout_constraintTop_toBottomOf="@+id/serviceName" />
+
+
+                    <TextView
+                        android:id="@+id/total"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginBottom="10dp"
+                        app:layout_constraintStart_toEndOf="@+id/serviceName"
+                        app:layout_constraintTop_toTopOf="@+id/serviceName"
+                        app:servicePriceFormatted="@{uiModel}" />
+
+                    <TextView
+                        android:id="@+id/blank"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="@+id/serviceDescription"
+                        app:layout_constraintTop_toBottomOf="@+id/serviceDescription" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                    android:id="@+id/moreDetailsLayout"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:visibility="visible"-->
+<!--                    app:moreDetailsLayoutFormatted="@{uiModel}">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/dailyOrdersComments"-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginStart="20dp"-->
+<!--                        android:layout_marginTop="5dp"-->
+<!--                        android:layout_marginEnd="20dp"-->
+<!--                        android:layout_marginBottom="5dp"-->
+<!--                        android:textSize="12sp"-->
+<!--                        app:commentFormatted="@{uiModel}"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/addCommentText" />-->
+
+<!--                    <EditText-->
+<!--                        android:id="@+id/addCommentText"-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginStart="20dp"-->
+<!--                        android:ems="10"-->
+<!--                        android:hint="Add a comment"-->
+<!--                        android:inputType="textPersonName"-->
+<!--                        android:text="@={uiModel.newComment}"-->
+<!--                        app:layout_constraintEnd_toStartOf="@+id/sendCommentButton"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--                    <ImageButton-->
+<!--                        android:id="@+id/sendCommentButton"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="0dp"-->
+<!--                        android:layout_marginEnd="20dp"-->
+<!--                        android:onClick="@{() -> sendCommentButtonClickListener.onClick(uiModel)}"-->
+<!--                        app:layout_constraintBottom_toBottomOf="@+id/addCommentText"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="@+id/addCommentText"-->
+<!--                        app:srcCompat="@drawable/send_icon" />-->
+
+<!--                    <ProgressBar-->
+<!--                        android:id="@+id/isCommentInProgress"-->
+<!--                        style="?android:attr/progressBarStyle"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent"-->
+<!--                        app:progressBarVisibility="@{uiModel.isCommentProgressBarActive}" />-->
+<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="0.5dp"
+                    android:background="@color/grey" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
