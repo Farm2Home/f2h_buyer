@@ -124,6 +124,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
                 preOrderItem.isFreezed = availability.isFreezed ?: false
                 preOrderItem.itemUom = item.uom ?: ""
                 preOrderItem.orderQuantityJump = item.orderQtyJump ?: 0.0
+                preOrderItem.minimumQuantity = item.minimumQty ?: 0.0
 
                 var order = orders.filter { it.itemAvailabilityId!!.equals(availability.itemAvailabilityId) }
                 if (order.isNotEmpty()) {
@@ -196,13 +197,23 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     fun increaseOrderQuantity(selectedPreOrder: PreOrderItemsModel){
         _preOrderItems.value?.forEach { preOrderUiElement ->
             if (preOrderUiElement.itemAvailabilityId.equals(selectedPreOrder.itemAvailabilityId)){
-                preOrderUiElement.orderedQuantity = preOrderUiElement.orderedQuantity.plus(preOrderUiElement.orderQuantityJump)
-                preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.plus(preOrderUiElement.orderQuantityJump)
+                var increaseQty = preOrderUiElement.orderQuantityJump
+                if (preOrderUiElement.minimumQuantity>0.0 && preOrderUiElement.orderedQuantity < preOrderUiElement.minimumQuantity){
+                    increaseQty = preOrderUiElement.minimumQuantity - preOrderUiElement.orderedQuantity
+                    if (increaseQty > preOrderUiElement.availableQuantity){
+                        increaseQty = preOrderUiElement.availableQuantity
+                    }
+                }
+
+                preOrderUiElement.orderedQuantity =
+                    preOrderUiElement.orderedQuantity.plus(increaseQty)
+                preOrderUiElement.quantityChange =
+                    preOrderUiElement.quantityChange.plus(increaseQty)
 
                 // logic to prevent increasing quantity beyond maximum
                 if (preOrderUiElement.quantityChange > preOrderUiElement.availableQuantity) {
-                    preOrderUiElement.orderedQuantity = preOrderUiElement.orderedQuantity.minus(preOrderUiElement.orderQuantityJump)
-                    preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.minus(preOrderUiElement.orderQuantityJump)
+                    preOrderUiElement.orderedQuantity = preOrderUiElement.orderedQuantity.minus(increaseQty)
+                    preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.minus(increaseQty)
                     _toastMessage.value = "No more stock"
                 }
             }
@@ -214,13 +225,21 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     // decrease order qty till min 0
     fun decreaseOrderQuantity(selectedPreOrder: PreOrderItemsModel){
         _preOrderItems.value?.forEach { preOrderUiElement ->
+            var decreaseQty = preOrderUiElement.orderQuantityJump
             if (preOrderUiElement.itemAvailabilityId.equals(selectedPreOrder.itemAvailabilityId)){
-                preOrderUiElement.orderedQuantity = preOrderUiElement.orderedQuantity.minus(preOrderUiElement.orderQuantityJump)
-                preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.minus(preOrderUiElement.orderQuantityJump)
+                if (preOrderUiElement.minimumQuantity>0.0 &&
+                    preOrderUiElement.orderedQuantity <= preOrderUiElement.minimumQuantity){
+                    decreaseQty = preOrderUiElement.orderedQuantity
+                }
+
+                preOrderUiElement.orderedQuantity =
+                    preOrderUiElement.orderedQuantity.minus(decreaseQty)
+                preOrderUiElement.quantityChange =
+                    preOrderUiElement.quantityChange.minus(decreaseQty)
 
                 if (preOrderUiElement.orderedQuantity < 0) {
                     preOrderUiElement.orderedQuantity = 0.0
-                    preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.plus(preOrderUiElement.orderQuantityJump)
+                    preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.plus(decreaseQty)
                 }
             }
         }
