@@ -20,7 +20,8 @@ data class Order (
     @Json(name = "created_by") val createdBy: String? = "",
     @Json(name = "updated_by") val updatedBy: String? = "",
     @Json(name = "delivery_location") val deliveryLocation: String? = "",
-    @Json(name = "order_comment") val orderComment: String? = ""
+    @Json(name = "order_comment") val orderComment: String? = "",
+    @Json(name = "number_of_packets") val numberOfPackets: Int? = 1
 )
 
 data class ServiceOrder (
