@@ -17,5 +17,6 @@ data class Item (
     @Json(name = "price_per_unit") var pricePerUnit: Double? = 0.0,
     @Json(name = "confirm_qty_jump") var confirmQtyJump: Double? = 0.0,
     @Json(name = "order_qty_jump") var orderQtyJump: Double? = 0.0,
+    @Json(name = "minimum_qty") var minimumQty: Double? = 0.0,
     @Json(name = "item_availability") var itemAvailability: List<ItemAvailability> = listOf()
 ): Parcelable
