@@ -42,7 +42,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="10dp"
-
                         android:text="@{uiModel.name}"
                         android:textSize="15sp"
                         app:layout_constraintStart_toStartOf="parent"
