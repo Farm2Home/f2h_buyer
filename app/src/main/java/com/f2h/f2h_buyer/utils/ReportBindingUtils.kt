@@ -17,6 +17,7 @@ import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_ORDERED
 import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_REJECTED
 import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PAID
 import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PENDING
+import com.f2h.f2h_buyer.screens.report.ReportItemsHeaderModel
 import com.f2h.f2h_buyer.screens.report.ReportItemsModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -47,7 +48,7 @@ fun TextView.setCommentFormatted(data: ReportItemsModel){
     data.comments.sortByDescending { comment -> parser.parse(comment.createdAt) }
     data.comments.forEach { comment ->
         parser.setTimeZone(TimeZone.getTimeZone("UTC"));
-        var date = formatter.format(parser.parse(comment.createdAt))
+        val date = formatter.format(parser.parse(comment.createdAt))
         displayText = String.format("%s%s : %s - %s\n\n", displayText, date, comment.commenter, comment.comment)
     }
     text = displayText
@@ -111,7 +112,7 @@ fun TextView.setDiscountFormatted(data: ReportItemsModel){
 
 @BindingAdapter("addressFormatted")
 fun TextView.setAddressFormatted(data: ReportItemsModel){
-    var address = String.format("%s - %s",data.buyerName, data.deliveryAddress)
+    val address = String.format("%s", data.deliveryAddress)
     text = address
 }
 
@@ -161,19 +162,21 @@ fun TextView.setTotalPriceFormatted(data: ReportItemsModel){
 
 
 @BindingAdapter("aggregationFormatted")
-fun TextView.setAggregationFormatted(list: List<ReportItemsModel>?){
+fun TextView.setAggregationFormatted(list: List<ReportItemsHeaderModel>?){
     if (list != null) {
         var totalAmount = (0).toDouble()
         var totalQuantity: Double? = (0).toDouble()
         var uom = ""
         list.forEach { element ->
-            totalAmount += (element.orderAmount)
-            totalQuantity = totalQuantity?.plus((element.displayQuantity))
-            uom = element.itemUom
+            totalAmount += (element.totalAmount)
+            element.orders.forEach {
+                totalQuantity = totalQuantity?.plus((it.displayQuantity))
+                uom = it.itemUom
+            }
         }
 
         //If there are multiple items do not show the UOM/Quantity
-        if (list.map { x -> x.itemName }.distinct().count() == 1){
+        if (list.flatMap {  x-> x.orders.map { x -> x.itemName }}.distinct().count() == 1){
             text = String.format("₹%.0f - %s %s", totalAmount, getFormattedQtyNumber(totalQuantity), uom)
         } else {
             text = String.format("₹%.0f", totalAmount)
@@ -186,7 +189,7 @@ fun TextView.setAggregationFormatted(list: List<ReportItemsModel>?){
 @BindingAdapter("statusFormatted")
 fun TextView.setStatusFormatted(data: ReportItemsModel){
 
-    var displayedStatus: String = data.orderStatus
+    val displayedStatus: String = data.orderStatus
 
     val colouredText = SpannableString(displayedStatus)
     var color = Color.DKGRAY
@@ -203,9 +206,9 @@ fun TextView.setStatusFormatted(data: ReportItemsModel){
 
 
 private fun isChangeQuantityButtonsEnabled(data: ReportItemsModel) : Boolean {
-    if (data.isFreezed.equals(false) &&
-        (data.orderStatus.equals(ORDER_STATUS_ORDERED) ||
-                data.orderStatus.isBlank())){
+    if (!data.isFreezed && (data.orderStatus == ORDER_STATUS_ORDERED ||
+                data.orderStatus.isBlank())
+    ){
         return false
     }
     return true
