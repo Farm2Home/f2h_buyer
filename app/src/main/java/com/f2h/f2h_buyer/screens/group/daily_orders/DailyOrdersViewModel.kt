@@ -312,13 +312,14 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
         _isProgressBarActive.value = true
         var orderUpdates = arrayListOf<OrderUpdateRequest>()
         _visibleUiData.value?.forEach { header ->
-            header.orders.forEach { uiElement ->
+            header.orders.filter { it -> it.orderStatus.equals("ORDERED") }.forEach { uiElement ->
                 var orderUpdate = OrderUpdateRequest(
                     orderId = uiElement.orderId,
                     orderStatus = uiElement.orderStatus,
                     discountAmount = uiElement.discountAmount,
                     orderedAmount = uiElement.orderAmount,
-                    orderedQuantity = uiElement.orderedQuantity
+                    orderedQuantity = uiElement.orderedQuantity,
+                    paymentStatus = uiElement.paymentStatus
                 )
                 orderUpdates.add(orderUpdate)
             }

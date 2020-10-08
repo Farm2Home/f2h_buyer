@@ -55,6 +55,7 @@ data class OrderHeader (
 data class OrderUpdateRequest (
     @Json(name = "order_id") var orderId: Long?,
     @Json(name = "order_status") var orderStatus: String?,
+    @Json(name = "payment_status") var paymentStatus: String?,
     @Json(name = "ordered_quantity") var orderedQuantity: Double?,
     @Json(name = "ordered_amount") var orderedAmount: Double?,
     @Json(name = "discount_amount") var discountAmount: Double?
