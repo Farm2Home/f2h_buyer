@@ -6,8 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.f2h.f2h_buyer.database.SessionDatabaseDao
 import com.f2h.f2h_buyer.database.SessionEntity
-import com.f2h.f2h_buyer.network.ItemApi
-import com.f2h.f2h_buyer.network.ItemAvailabilityApi
 import com.f2h.f2h_buyer.network.OrderApi
 import com.f2h.f2h_buyer.network.UserApi
 import com.f2h.f2h_buyer.network.models.*
@@ -43,7 +41,8 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     private val preOrderDaysMax = 10
     private var startDate = ""
     private var endDate = ""
-    private var selectedItemId = 0L
+    private var selectedItem = Item()
+    private var farmerDetails = listOf<UserDetails>()
 
     private val df: DateFormat = SimpleDateFormat("yyyy-MM-dd")
     private var sessionData = SessionEntity()
@@ -53,37 +52,41 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
 
     init {
         setPreOrderDateRange()
-        createPreOrderUiElements(Item(), arrayListOf(), arrayListOf(), arrayListOf())
+        createPreOrderUiElements(Item(), arrayListOf())
+        createPreOrderUiModel(Item(), arrayListOf())
+    }
+
+    fun setItemAndFarmer(item: Item){
+        selectedItem = item
+        coroutineScope.launch {
+            sessionData = retrieveSession()
+            try {
+                val getUserDetailsDataDeferred = UserApi.retrofitService
+                    .getUserDetailsByUserIds(arrayListOf(item.farmerUserId ?: -1))
+                farmerDetails = getUserDetailsDataDeferred.await()
+                createPreOrderUiModel(selectedItem, farmerDetails)
+
+            } catch (t:Throwable){
+                println(t.message)
+            }
+        }
+
     }
 
 
-    fun fetchAllData(itemId: Long) {
-        selectedItemId = itemId
+    fun fetchOrderData() {
         _orderSuccessful.value = false
         _isProgressBarActive.value = true
         coroutineScope.launch {
             sessionData = retrieveSession()
             try {
-                // Fetch Item Data
-                val getItemDataDeferred = ItemApi.retrofitService.getItem(itemId)
-                val item = getItemDataDeferred.await()
-
                 //Fetch existing Orders Data
-                val getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupUserAndItem(item.groupId ?: 0,
-                    sessionData.userId, itemId, startDate, endDate)
+                val getOrdersDataDeferred = OrderApi.retrofitService.getOrdersForGroupUserAndItem(selectedItem.groupId ?: 0,
+                    sessionData.userId, selectedItem.itemId, startDate, endDate)
                 val orders = ArrayList(getOrdersDataDeferred.await())
 
-                //Fetch all availabilities for the item
-                val getItemAvailabilitiesDeferred = ItemAvailabilityApi.retrofitService.getItemAvailabilitiesByItemId(item.itemId!!)
-                val itemAvailabilities = ArrayList(getItemAvailabilitiesDeferred.await())
-
-                //Fetch farmer details
-                var getUserDetailsDataDeferred = UserApi.retrofitService
-                    .getUserDetailsByUserIds(arrayListOf(item.farmerUserId ?: -1))
-                var farmerDetails = getUserDetailsDataDeferred.await()
-
                 //Create the UI Model to populate UI
-                _preOrderItems.value = createPreOrderUiElements(item, orders, itemAvailabilities, farmerDetails)
+                _preOrderItems.value = createPreOrderUiElements(selectedItem, orders)
 
             } catch (t:Throwable){
                 println(t.message)
@@ -92,13 +95,8 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         }
     }
 
-
-    private fun createPreOrderUiElements(item: Item, orders: ArrayList<Order>,
-                                         itemAvailabilities: ArrayList<ItemAvailability>,
-                                         farmerDetails: List<UserDetails>): ArrayList<PreOrderItemsModel> {
-        var list = arrayListOf<PreOrderItemsModel>()
-
-        var uiModel = PreOrderUiModel()
+    private fun createPreOrderUiModel(item: Item, farmerDetails: List<UserDetails>){
+        val uiModel = PreOrderUiModel()
         uiModel.itemId = item.itemId ?: -1
         uiModel.itemName = item.itemName ?: ""
         uiModel.itemDescription = item.description ?: ""
@@ -108,11 +106,15 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         uiModel.farmerName = item.farmerUserName ?: ""
         uiModel.farmerMobile = farmerDetails.firstOrNull()?.mobile ?: ""
         _preOrderUiModel.value = uiModel
+    }
 
-        itemAvailabilities.filter { compareDates(it.availableDate, startDate) >= 0 &&
+    private fun createPreOrderUiElements(item: Item, orders: ArrayList<Order>): ArrayList<PreOrderItemsModel> {
+        val list = arrayListOf<PreOrderItemsModel>()
+
+        item.itemAvailability.filter { compareDates(it.availableDate, startDate) >= 0 &&
                 compareDates(it.availableDate, endDate) <= 0 }
             .forEach { availability ->
-                var preOrderItem = PreOrderItemsModel()
+                val preOrderItem = PreOrderItemsModel()
                 preOrderItem.itemAvailabilityId = availability.itemAvailabilityId ?: -1L
                 preOrderItem.availableDate = availability.availableDate ?: ""
                 preOrderItem.availableTimeSlot = availability.availableTimeSlot ?: ""
@@ -120,8 +122,10 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
                 preOrderItem.isFreezed = availability.isFreezed ?: false
                 preOrderItem.itemUom = item.uom ?: ""
                 preOrderItem.orderQuantityJump = item.orderQtyJump ?: 0.0
+                preOrderItem.minimumQuantity = item.minimumQty ?: 0.0
 
-                var order = orders.filter { it.itemAvailabilityId!!.equals(availability.itemAvailabilityId) }
+//                orderHeaders.forEach { orderHeaders
+                val order = orders.filter { it.itemAvailabilityId!! == availability.itemAvailabilityId }
                 if (order.isNotEmpty()) {
                     preOrderItem.orderedQuantity = order.first().orderedQuantity ?: 0.0
                     preOrderItem.confirmedQuantity = order.first().confirmedQuantity ?: 0.0
@@ -174,16 +178,14 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
 
     private fun getStartDate(): String {
         val date: Calendar = Calendar.getInstance()
-        val startDate: String = df_iso.format(date.time)
-        return startDate
+        return df_iso.format(date.time)
     }
 
 
     private fun getEndDate(): String {
         val date: Calendar = Calendar.getInstance()
         date.add(Calendar.DATE, preOrderDaysMax)
-        val endDate: String = df_iso.format(date.time)
-        return endDate
+        return df_iso.format(date.time)
     }
 
 
@@ -192,13 +194,23 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     fun increaseOrderQuantity(selectedPreOrder: PreOrderItemsModel){
         _preOrderItems.value?.forEach { preOrderUiElement ->
             if (preOrderUiElement.itemAvailabilityId.equals(selectedPreOrder.itemAvailabilityId)){
-                preOrderUiElement.orderedQuantity = preOrderUiElement.orderedQuantity.plus(preOrderUiElement.orderQuantityJump)
-                preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.plus(preOrderUiElement.orderQuantityJump)
+                var increaseQty = preOrderUiElement.orderQuantityJump
+                if (preOrderUiElement.minimumQuantity>0.0 && preOrderUiElement.orderedQuantity < preOrderUiElement.minimumQuantity){
+                    increaseQty = preOrderUiElement.minimumQuantity - preOrderUiElement.orderedQuantity
+                    if (increaseQty > preOrderUiElement.availableQuantity){
+                        increaseQty = preOrderUiElement.availableQuantity
+                    }
+                }
+
+                preOrderUiElement.orderedQuantity =
+                    preOrderUiElement.orderedQuantity.plus(increaseQty)
+                preOrderUiElement.quantityChange =
+                    preOrderUiElement.quantityChange.plus(increaseQty)
 
                 // logic to prevent increasing quantity beyond maximum
                 if (preOrderUiElement.quantityChange > preOrderUiElement.availableQuantity) {
-                    preOrderUiElement.orderedQuantity = preOrderUiElement.orderedQuantity.minus(preOrderUiElement.orderQuantityJump)
-                    preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.minus(preOrderUiElement.orderQuantityJump)
+                    preOrderUiElement.orderedQuantity = preOrderUiElement.orderedQuantity.minus(increaseQty)
+                    preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.minus(increaseQty)
                     _toastMessage.value = "No more stock"
                 }
             }
@@ -210,13 +222,21 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
     // decrease order qty till min 0
     fun decreaseOrderQuantity(selectedPreOrder: PreOrderItemsModel){
         _preOrderItems.value?.forEach { preOrderUiElement ->
+            var decreaseQty = preOrderUiElement.orderQuantityJump
             if (preOrderUiElement.itemAvailabilityId.equals(selectedPreOrder.itemAvailabilityId)){
-                preOrderUiElement.orderedQuantity = preOrderUiElement.orderedQuantity.minus(preOrderUiElement.orderQuantityJump)
-                preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.minus(preOrderUiElement.orderQuantityJump)
+                if (preOrderUiElement.minimumQuantity>0.0 &&
+                    preOrderUiElement.orderedQuantity <= preOrderUiElement.minimumQuantity){
+                    decreaseQty = preOrderUiElement.orderedQuantity
+                }
+
+                preOrderUiElement.orderedQuantity =
+                    preOrderUiElement.orderedQuantity.minus(decreaseQty)
+                preOrderUiElement.quantityChange =
+                    preOrderUiElement.quantityChange.minus(decreaseQty)
 
                 if (preOrderUiElement.orderedQuantity < 0) {
                     preOrderUiElement.orderedQuantity = 0.0
-                    preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.plus(preOrderUiElement.orderQuantityJump)
+                    preOrderUiElement.quantityChange = preOrderUiElement.quantityChange.plus(decreaseQty)
                 }
             }
         }
@@ -225,8 +245,8 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
 
     fun onClickSaveButton() {
         _isProgressBarActive.value = true
-        var newOrders: ArrayList<OrderCreateRequest> = arrayListOf()
-        var updatedOrders: ArrayList<OrderUpdateRequest> = arrayListOf()
+        val newOrders: ArrayList<OrderCreateRequest> = arrayListOf()
+        val updatedOrders: ArrayList<OrderUpdateRequest> = arrayListOf()
         _preOrderItems.value?.forEach { preOrder ->
 
             if(preOrder.quantityChange.equals(0.0)){
@@ -243,8 +263,8 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
         }
 
         coroutineScope.launch {
-            var updateOrdersDataDeferred = OrderApi.retrofitService.updateOrders(updatedOrders)
-            var createOrdersDataDeferred = OrderApi.retrofitService.createOrders(newOrders)
+            val updateOrdersDataDeferred = OrderApi.retrofitService.updateOrders(updatedOrders)
+            val createOrdersDataDeferred = OrderApi.retrofitService.createOrders(newOrders)
             try{
                 updateOrdersDataDeferred.await()
                 createOrdersDataDeferred.await()
@@ -255,13 +275,13 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
             }
 
             // Refresh the screen
-            fetchAllData(selectedItemId)
+            fetchOrderData()
         }
     }
 
 
     private fun createNewOrder(preOrder: PreOrderItemsModel): OrderCreateRequest {
-        var newOrder = OrderCreateRequest(
+        return OrderCreateRequest(
             buyerUserId = sessionData.userId,
             itemAvailabilityId = preOrder.itemAvailabilityId,
             orderDescription = "Successfully created new order",
@@ -274,24 +294,23 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
             createdBy = "BUYER-" + sessionData.userName,
             updatedBy = "BUYER-" + sessionData.userName
         )
-        return newOrder
     }
 
 
     private fun createUpdateOrder(preOrder: PreOrderItemsModel): OrderUpdateRequest {
-        var updatedOrders = OrderUpdateRequest(
+
+        return OrderUpdateRequest(
             orderId = preOrder.orderId,
             orderStatus = preOrder.orderStatus,
             discountAmount = null,
             orderedAmount = calculateOrderAmount(preOrder.orderedQuantity),
-            orderedQuantity = preOrder.orderedQuantity
+            orderedQuantity = preOrder.orderedQuantity,
+            paymentStatus = null
         )
-
-        return updatedOrders
     }
 
     private fun calculateOrderAmount(orderedQuantity: Double): Double {
-        return orderedQuantity.times(preOrderUiModel.value?.itemPrice ?: 0.0)
+        return orderedQuantity.times(selectedItem.pricePerUnit ?: 0.0)
     }
 
 }

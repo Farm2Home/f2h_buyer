@@ -18,8 +18,9 @@ import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_ORDERED
 import com.f2h.f2h_buyer.constants.F2HConstants.ORDER_STATUS_REJECTED
 import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PAID
 import com.f2h.f2h_buyer.constants.F2HConstants.PAYMENT_STATUS_PENDING
-import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrdersUiModel
-import kotlinx.android.synthetic.main.list_all_items.view.*
+import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrderHeaderUiModel
+import com.f2h.f2h_buyer.screens.group.daily_orders.DailyOrders
+import com.f2h.f2h_buyer.screens.group.daily_orders.ServiceOrder
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,16 +35,30 @@ fun TextView.setHeaderFormatted(date: String?, amount: Double?){
     }
 }
 
+@BindingAdapter("packingNumberFormatter")
+fun TextView.setPackingNumberFormatter(packingNumber: Long?){
+    packingNumber?.let {
+        text = "Packing Number : " + String.format("%d", packingNumber)
+    }
+}
+
 @BindingAdapter("priceFormatted")
-fun TextView.setPriceFormatted(data: DailyOrdersUiModel?){
+fun TextView.setPriceFormatted(data: DailyOrders){
     data?.let {
         text = "₹ " + String.format("%.0f", data.price) + "/" + data.itemUom
     }
 }
 
+@BindingAdapter("servicePriceFormatted")
+fun TextView.setServicePriceFormatted(data: ServiceOrder?){
+    data?.let {
+        text = " ₹ " + String.format("%.0f", data.amount)
+    }
+}
+
 
 @BindingAdapter("orderedQuantityFormatted")
-fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
+fun TextView.setOrderedQuantityFormatted(data: DailyOrders){
     var freezeString = ""
 
     if (isFreezeStringDisplayed(data)){
@@ -59,7 +74,7 @@ fun TextView.setOrderedQuantityFormatted(data: DailyOrdersUiModel){
     text = orderedString
 }
 
-private fun isFreezeStringDisplayed(data: DailyOrdersUiModel) =
+private fun isFreezeStringDisplayed(data: DailyOrders) =
     !isChangeQuantityButtonsEnabled(data) && (ORDER_STATUS_ORDERED.equals(data.orderStatus) || data.orderStatus.isBlank())
 
 private fun getFormattedQtyNumber(number: Double): String {
@@ -72,7 +87,7 @@ private fun getFormattedQtyNumber(number: Double): String {
 
 
 @BindingAdapter("discountFormatted")
-fun TextView.setDiscountFormatted(data: DailyOrdersUiModel){
+fun TextView.setDiscountFormatted(data: DailyOrders){
     if (data.discountAmount > 0) {
         text = String.format("Discount  ₹%.0f", data.discountAmount)
     } else {
@@ -82,7 +97,7 @@ fun TextView.setDiscountFormatted(data: DailyOrdersUiModel){
 
 
 @BindingAdapter("commentFormatted")
-fun TextView.setCommentFormatted(data: DailyOrdersUiModel){
+fun TextView.setCommentFormatted(data: DailyOrders){
     val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'")
     val formatter: DateFormat = SimpleDateFormat("dd-MMMM, hh:mm a")
     var displayText = ""
@@ -97,7 +112,7 @@ fun TextView.setCommentFormatted(data: DailyOrdersUiModel){
 
 
 @BindingAdapter("moreDetailsLayoutFormatted")
-fun ConstraintLayout.setMoreDetailsLayoutFormatted(data: DailyOrdersUiModel){
+fun ConstraintLayout.setMoreDetailsLayoutFormatted(data: DailyOrders){
     if(data.isMoreDetailsDisplayed){
         visibility = View.VISIBLE
         return
@@ -108,7 +123,7 @@ fun ConstraintLayout.setMoreDetailsLayoutFormatted(data: DailyOrdersUiModel){
 
 
 @BindingAdapter("totalPriceFormatted")
-fun TextView.setTotalPriceFormatted(data: DailyOrdersUiModel){
+fun TextView.setTotalPriceFormatted(data: DailyOrders){
 
     if(data.orderAmount <= 0) {
         text = ""
@@ -153,7 +168,7 @@ fun TextView.setTotalPriceFormatted(data: DailyOrdersUiModel){
 
 
 @BindingAdapter("totalAmountFormatted")
-fun TextView.setTotalAmountFormatted(list: List<DailyOrdersUiModel>?){
+fun TextView.setTotalAmountFormatted(list: List<DailyOrders>?){
     if (list != null) {
         var totalAmount = (0).toDouble()
         list.forEach { element ->
@@ -165,7 +180,7 @@ fun TextView.setTotalAmountFormatted(list: List<DailyOrdersUiModel>?){
 
 
 @BindingAdapter("textVisibility")
-fun TextView.setNoOrdersVisibility(list: List<DailyOrdersUiModel>?){
+fun TextView.setNoOrdersVisibility(list: List<DailyOrderHeaderUiModel>?){
     if (list.isNullOrEmpty()) {
         visibility = View.VISIBLE
     } else {
@@ -175,7 +190,7 @@ fun TextView.setNoOrdersVisibility(list: List<DailyOrdersUiModel>?){
 
 
 @BindingAdapter("statusFormatted")
-fun TextView.setStatusFormatted(data: DailyOrdersUiModel){
+fun TextView.setStatusFormatted(data: DailyOrders){
 
     var displayedStatus: String = data.orderStatus
 
@@ -199,7 +214,7 @@ fun TextView.setStatusFormatted(data: DailyOrdersUiModel){
 
 
 @BindingAdapter("buttonVisibilityFormatted")
-fun Button.setButtonVisibilityFormatted(data: DailyOrdersUiModel){
+fun Button.setButtonVisibilityFormatted(data: DailyOrders){
     if(isChangeQuantityButtonsEnabled(data)){
         isEnabled = true
         visibility = View.VISIBLE
@@ -210,7 +225,7 @@ fun Button.setButtonVisibilityFormatted(data: DailyOrdersUiModel){
 }
 
 
-private fun isChangeQuantityButtonsEnabled(data: DailyOrdersUiModel) : Boolean {
+private fun isChangeQuantityButtonsEnabled(data: DailyOrders) : Boolean {
     if (data.isFreezed.equals(false) &&
         (data.orderStatus.equals(ORDER_STATUS_ORDERED) ||
                 data.orderStatus.isBlank())){
