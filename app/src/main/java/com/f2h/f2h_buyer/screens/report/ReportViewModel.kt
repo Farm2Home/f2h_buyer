@@ -49,9 +49,17 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
     private var allUiData = ArrayList<ReportItemsHeaderModel>()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+    private val utcFormatter: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+
 
     init {
         getOrdersReportForGroup()
+    }
+
+    private fun fetchOrderDate(dateOffset: Int): String {
+        var date = Calendar.getInstance()
+        date.add(Calendar.DATE, dateOffset)
+        return utcFormatter.format(date.time)
     }
 
     private fun getOrdersReportForGroup() {
@@ -59,7 +67,7 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
         coroutineScope.launch {
             sessionData.value = retrieveSession()
             val getOrdersDataDeferred = OrderApi.retrofitService.getOrderHeadersForGroupUserAndItem(sessionData.value!!.groupId,
-                sessionData.value!!.userId, null, null, null)
+                sessionData.value!!.userId, null, fetchOrderDate(-30), fetchOrderDate(30))
             try {
                 val orderHeaders = getOrdersDataDeferred.await()
 
