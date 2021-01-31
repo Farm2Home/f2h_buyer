@@ -6,6 +6,7 @@ data class DailyOrders (
     var itemId: Long = 0,
     var orderedDate: String = "",
     var itemName: String = "",
+    var currency: String = "",
     var itemDescription: String = "",
     var farmerName: String = "",
     var farmerMobile: String = "",
@@ -32,6 +33,7 @@ data class DailyOrders (
 data class ServiceOrder (
     var orderId: Long = 0,
     var name: String = "",
+    var currency: String = "",
     var description: String = "",
     var amount: Double = 0.0
 )
@@ -40,6 +42,7 @@ data class DailyOrderHeaderUiModel (
     var orderHeaderId: Long = 0,
     var deliveryDate: String = "",
     var packingNumber: Long = 0,
+    var currency: String = "",
     var totalAmount: Double = 0.0,
     var orders: ArrayList<DailyOrders> = arrayListOf(),
     var serviceOrders: ArrayList<ServiceOrder> = arrayListOf()

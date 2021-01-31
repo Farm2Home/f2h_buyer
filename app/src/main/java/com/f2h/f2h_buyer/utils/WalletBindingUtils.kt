@@ -1,30 +1,28 @@
 package com.f2h.f2h_buyer.utils
 
-import android.graphics.Color
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
-import android.text.style.StrikethroughSpan
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.f2h.f2h_buyer.R
+import com.f2h.f2h_buyer.network.models.Wallet
+import com.f2h.f2h_buyer.screens.group.group_wallet.GroupWalletViewModel
 import com.f2h.f2h_buyer.screens.group.group_wallet.WalletItemsModel
-import com.f2h.f2h_buyer.screens.report.ReportItemsModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 
 @BindingAdapter("walletBalanceFormatted")
-fun TextView.setWalletBalanceFormatted(balance: Double?) {
-    text = String.format("Balance : ₹%.0f", balance)
+fun TextView.setWalletBalanceFormatted(data: Wallet?) {
+    text = String.format("Balance : %s%.0f", data?.currency, data?.balance)
 }
 
 
 @BindingAdapter("transactionAmountFormatted")
 fun TextView.setPriceFormatted(data: WalletItemsModel?){
     data?.let {
-        val colouredText = SpannableString(String.format("₹ %.0f", data.amount))
+        val colouredText = SpannableString(String.format("%s %.0f", data.currency, data.amount))
 
         if (data.amount > 0){
             colouredText.setSpan(ForegroundColorSpan(ContextCompat.getColor(context, R.color.green_status)),0, colouredText.length,0)

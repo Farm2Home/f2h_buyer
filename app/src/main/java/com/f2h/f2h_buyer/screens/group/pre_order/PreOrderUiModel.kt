@@ -7,6 +7,7 @@ data class PreOrderUiModel (
     var itemDescription: String = "",
     var itemUom: String = "",
     var itemImageLink: String = "",
+    var currency: String = "",
     var itemPrice: Double = 0.0,
     var farmerName: String = "",
     var farmerMobile: String = ""

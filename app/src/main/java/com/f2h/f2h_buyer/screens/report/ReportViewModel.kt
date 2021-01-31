@@ -132,6 +132,7 @@ class ReportViewModel(val database: SessionDatabaseDao, application: Application
                     }
                 }
 
+                uiElement.currency = sessionData.value?.groupCurrency ?: ""
                 uiElement.itemId = item.itemId ?: -1
                 uiElement.itemName = item.itemName ?: ""
                 uiElement.itemDescription = item.description ?: ""

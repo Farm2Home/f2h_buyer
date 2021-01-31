@@ -7,6 +7,7 @@ data class ReportItemsModel (
     var itemId: Long = 0,
     var orderedDate: String = "",
     var itemName: String = "",
+    var currency: String = "",
     var itemDescription: String = "",
     var sellerName: String= "",
     var price: Double = 0.0,

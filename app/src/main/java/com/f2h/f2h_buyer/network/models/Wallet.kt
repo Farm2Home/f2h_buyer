@@ -6,7 +6,8 @@ data class Wallet (
     @Json(name = "wallet_id") val walletId: Long? = -1,
     @Json(name = "user_id") val userId: Long? = -1,
     @Json(name = "group_id") val groupId: Long? = -1,
-    @Json(name = "balance") val balance: Double? = 0.0
+    @Json(name = "balance") val balance: Double? = 0.0,
+    @Json(name = "currency") var currency: String? = ""
 )
 
 

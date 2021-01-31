@@ -51,7 +51,7 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
             val amountForDay = header.totalAmount
 
             itemsListWithHeaders.add(DataItem.Header(header.deliveryDate, amountForDay,
-                header.orderHeaderId, header.packingNumber))
+                header.orderHeaderId, header.packingNumber, header.currency))
             itemsListWithHeaders.addAll(ordersForDate)
             itemsListWithHeaders.addAll(serviceForDate)
         }
@@ -69,7 +69,7 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
             }
             is HeaderViewHolder -> {
                 val header = getItem(position) as DataItem.Header
-                holder.bind(header.date, header.amount, header.packingNumber)
+                holder.bind(header.date, header.amount, header.packingNumber, header.currency)
             }
             is ServiceViewHolder -> {
                 val service = getItem(position) as DataItem.ServiceOrderItem
@@ -101,10 +101,12 @@ class OrderedItemsAdapter(val clickListener: OrderedItemClickListener,
         fun bind(
             date: String,
             amount: Double,
-            packingNumber: Long
+            packingNumber: Long,
+            currency: String
         ) {
             binding.date = date
             binding.amount = amount
+            binding.currency = currency
             binding.packingNumber = packingNumber
             binding.executePendingBindings()
         }
@@ -200,7 +202,7 @@ sealed class DataItem {
 //        override val id = dailyOrderHeadersUiModel.orderHeaderId
 //    }
 
-    data class Header(val date: String, val amount: Double, val orderHeaderId: Long, val packingNumber: Long) : DataItem() {
+    data class Header(val date: String, val amount: Double, val orderHeaderId: Long, val packingNumber: Long, val currency: String) : DataItem() {
         override val id = orderHeaderId
     }
 

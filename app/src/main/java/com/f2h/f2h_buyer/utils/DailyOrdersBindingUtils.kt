@@ -26,12 +26,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-@BindingAdapter(value = ["headerDateFormatter", "headerAmountFormatter"])
-fun TextView.setHeaderFormatted(date: String?, amount: Double?){
+@BindingAdapter(value = ["headerDateFormatter", "headerAmountFormatter", "currency"])
+fun TextView.setHeaderFormatted(date: String?, amount: Double?, currency: String?){
     date?.let {
         val parser: DateFormat = SimpleDateFormat("yyyy-MM-dd")
         val formatter: DateFormat = SimpleDateFormat("EEEE dd-MMMM")
-        text = "Delivery on " + formatter.format(parser.parse(date)) + ", Total ₹" + String.format("%.0f", amount)
+        text = "Delivery on " + formatter.format(parser.parse(date)) + ", Total " + String.format("%s%.0f", currency, amount)
     }
 }
 
@@ -45,14 +45,14 @@ fun TextView.setPackingNumberFormatter(packingNumber: Long?){
 @BindingAdapter("priceFormatted")
 fun TextView.setPriceFormatted(data: DailyOrders){
     data?.let {
-        text = "₹ " + String.format("%.0f", data.price) + "/" + data.itemUom
+        text = String.format("%s %.0f",data.currency, data.price) + "/" + data.itemUom
     }
 }
 
 @BindingAdapter("servicePriceFormatted")
 fun TextView.setServicePriceFormatted(data: ServiceOrder?){
     data?.let {
-        text = " ₹ " + String.format("%.0f", data.amount)
+        text = String.format(" %s %.0f", data.currency, data.amount)
     }
 }
 
@@ -89,7 +89,7 @@ private fun getFormattedQtyNumber(number: Double): String {
 @BindingAdapter("discountFormatted")
 fun TextView.setDiscountFormatted(data: DailyOrders){
     if (data.discountAmount > 0) {
-        text = String.format("Discount  ₹%.0f", data.discountAmount)
+        text = String.format("Discount  %s%.0f", data.currency, data.discountAmount)
     } else {
         text = ""
     }
@@ -132,10 +132,10 @@ fun TextView.setTotalPriceFormatted(data: DailyOrders){
 
     var markupPrice = ""
     if (data.discountAmount > 0) {
-        markupPrice = String.format("₹%.0f", data.orderAmount + data.discountAmount)
+        markupPrice = String.format("%s%.0f",data.currency, data.orderAmount + data.discountAmount)
     }
 
-    val payableString = String.format("Payable  %s ₹%.0f \n%s", markupPrice, data.orderAmount, data.paymentStatus)
+    val payableString = String.format("Payable  %s %s%.0f \n%s", markupPrice, data.currency, data.orderAmount, data.paymentStatus)
     val payableStringFormatted = SpannableString(payableString)
     payableStringFormatted.setSpan(StrikethroughSpan(),9,10+markupPrice.length,0)
     payableStringFormatted.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),9,10+markupPrice.length,0)
@@ -171,10 +171,12 @@ fun TextView.setTotalPriceFormatted(data: DailyOrders){
 fun TextView.setTotalAmountFormatted(list: List<DailyOrders>?){
     if (list != null) {
         var totalAmount = (0).toDouble()
+        var currency = ""
         list.forEach { element ->
+            currency = element.currency
             totalAmount += (element.orderAmount)
         }
-        text = String.format("₹%.0f", totalAmount)
+        text = String.format("%s%.0f", currency, totalAmount)
     }
 }
 
