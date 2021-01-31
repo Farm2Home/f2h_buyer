@@ -91,6 +91,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
 
         orderHeaders.forEach { orderHeader ->
             val headerUiElement = DailyOrderHeaderUiModel()
+            headerUiElement.currency = sessionData.value?.groupCurrency ?: ""
             headerUiElement.deliveryDate = orderHeader.deliveryDate ?: ""
             headerUiElement.orderHeaderId = orderHeader.orderHeaderId?: -1
             headerUiElement.totalAmount = orderHeader.finalAmount?: 0.0
@@ -127,6 +128,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
                     uiElement.orderQtyJump = item.orderQtyJump ?: 0.0
                     uiElement.itemImageLink = item.imageLink ?: ""
                 }
+                uiElement.currency = sessionData.value?.groupCurrency ?: ""
                 uiElement.orderedDate = df.format(df.parse(order.orderedDate))
                 uiElement.orderedQuantity = order.orderedQuantity ?: 0.0
                 uiElement.confirmedQuantity = order.confirmedQuantity ?: 0.0
@@ -144,6 +146,7 @@ class DailyOrdersViewModel(val database: SessionDatabaseDao, application: Applic
             headerUiElement.serviceOrders = ArrayList()
                 orderHeader.serviceOrders.forEach {
                     val service = ServiceOrder()
+                    service.currency = sessionData.value?.groupCurrency ?: ""
                     service.orderId = it.serviceOrderId?:-1
                     service.amount = it.amount?:0.0
                     service.name = it.name?:""

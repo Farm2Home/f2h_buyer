@@ -49,7 +49,7 @@
                         android:textAlignment="center"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        app:walletBalanceFormatted="@{viewModel.wallet.balance}" />
+                        app:walletBalanceFormatted="@{viewModel.wallet}" />
 
 
                 </LinearLayout>

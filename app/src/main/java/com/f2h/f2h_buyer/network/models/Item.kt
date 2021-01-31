@@ -8,6 +8,7 @@ import kotlinx.android.parcel.Parcelize
 data class Item (
     @Json(name = "item_id") var itemId: Long? = -1,
     @Json(name = "group_id") var groupId: Long? = -1,
+    @Json(name = "currency") var currency: String? = "",
     @Json(name = "farmer_user_id") var farmerUserId: Long? = -1,
     @Json(name = "farmer_user_name") var farmerUserName: String? = "",
     @Json(name = "image_link") var imageLink: String? = "",

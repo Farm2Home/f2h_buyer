@@ -47,12 +47,14 @@ class GroupWalletViewModel(val database: SessionDatabaseDao, application: Applic
                 val activeWalletTransactionData = WalletApi.retrofitService.getWalletTransactionDetails(walletData.walletId ?: -1).await()
                 val walletTransactions: List<WalletTransaction> = activeWalletTransactionData
                 _wallet.value = walletData
+                _wallet.value!!.currency = userSession.groupCurrency
                 val walletItemUiData =  ArrayList<WalletItemsModel>()
                 walletTransactions.forEach { transaction ->
                     walletItemUiData.add(WalletItemsModel(
                             transaction.walletLedgerId ?: -1,
                             transaction.transactionDate ?: "",
                             transaction.transactionDescription?.trim() ?: "",
+                        userSession.groupCurrency ?: "",
                             transaction.amount ?: 0.0
                             )
                     )

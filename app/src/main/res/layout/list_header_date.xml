@@ -8,6 +8,9 @@
         name="date"
         type="String"/>
     <variable
+        name="currency"
+        type="String"/>
+    <variable
         name="amount"
         type="Double" />
     <variable
@@ -30,6 +33,7 @@
             android:textStyle="bold"
             app:headerAmountFormatter="@{amount}"
             app:headerDateFormatter="@{date}"
+            app:currency="@{currency}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
