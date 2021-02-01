@@ -97,6 +97,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
 
     private fun createPreOrderUiModel(item: Item, farmerDetails: List<UserDetails>){
         val uiModel = PreOrderUiModel()
+        uiModel.currency = sessionData.groupCurrency
         uiModel.itemId = item.itemId ?: -1
         uiModel.itemName = item.itemName ?: ""
         uiModel.itemDescription = item.description ?: ""
@@ -115,6 +116,7 @@ class PreOrderViewModel(val database: SessionDatabaseDao, application: Applicati
                 compareDates(it.availableDate, endDate) <= 0 }
             .forEach { availability ->
                 val preOrderItem = PreOrderItemsModel()
+                preOrderItem.currency = sessionData.groupCurrency
                 preOrderItem.itemAvailabilityId = availability.itemAvailabilityId ?: -1L
                 preOrderItem.availableDate = availability.availableDate ?: ""
                 preOrderItem.availableTimeSlot = availability.availableTimeSlot ?: ""

@@ -5,6 +5,7 @@ data class PreOrderItemsModel (
     var availableDate: String = "",
     var availableTimeSlot: String = "",
     var itemUom: String = "",
+    var currency: String = "",
     var orderId: Long = -1,
     var orderedQuantity: Double = 0.0,
     var quantityChange: Double = 0.0,

@@ -71,6 +71,7 @@ class AllItemsViewModel(val database: SessionDatabaseDao, application: Applicati
         var freezedItems = ArrayList<Item>()
         var notAvailableItems = ArrayList<Item>()
         items.forEach {item ->
+            item.currency = _sessionData.value?.groupCurrency
             if(!item.itemAvailability.isEmpty()) {
                 var earliestItemAvailability = fetchEarliestItemAvailability(item)
                 if (earliestItemAvailability.itemId!!.equals(-1L)){

@@ -27,7 +27,7 @@ import java.util.*
 @BindingAdapter("priceFormatted")
 fun TextView.setPriceFormatted(data: ReportItemsModel?){
     data?.let {
-        text =  String.format("₹ %.0f /%s", data.price, data.itemUom)
+        text =  data.currency + String.format(" %.0f /%s", data.price, data.itemUom)
     }
 }
 
@@ -103,7 +103,7 @@ private fun getFormattedQtyNumber(number: Double?): String {
 @BindingAdapter("discountFormatted")
 fun TextView.setDiscountFormatted(data: ReportItemsModel){
     if (data.discountAmount > 0) {
-        text = String.format("Discount  ₹%.0f", data.discountAmount)
+        text = "Discount "+ data.currency + String.format("%.0f", data.discountAmount)
     } else {
         text = ""
     }
@@ -127,10 +127,10 @@ fun TextView.setTotalPriceFormatted(data: ReportItemsModel){
 
     var markupPrice = ""
     if (data.discountAmount > 0) {
-        markupPrice = String.format("₹%.0f", data.orderAmount + data.discountAmount)
+        markupPrice = String.format("%s%.0f", data.currency, data.orderAmount + data.discountAmount)
     }
 
-    val receivableString = String.format("Payable  %s ₹%.0f \n%s", markupPrice, data.orderAmount, data.paymentStatus)
+    val receivableString = String.format("Payable  %s %s%.0f \n%s", markupPrice, data.currency, data.orderAmount, data.paymentStatus)
     val receivaableStringFormatted = SpannableString(receivableString)
     receivaableStringFormatted.setSpan(StrikethroughSpan(),9,10+markupPrice.length,0)
     receivaableStringFormatted.setSpan(ForegroundColorSpan(Color.parseColor("#dbdbdb")),9,10+markupPrice.length,0)
@@ -166,20 +166,22 @@ fun TextView.setAggregationFormatted(list: List<ReportItemsHeaderModel>?){
     if (list != null) {
         var totalAmount = (0).toDouble()
         var totalQuantity: Double? = (0).toDouble()
+        var currency: String? = ""
         var uom = ""
         list.forEach { element ->
             totalAmount += (element.totalAmount)
             element.orders.forEach {
                 totalQuantity = totalQuantity?.plus((it.displayQuantity))
                 uom = it.itemUom
+                currency = it.currency
             }
         }
 
         //If there are multiple items do not show the UOM/Quantity
         if (list.flatMap {  x-> x.orders.map { x -> x.itemName }}.distinct().count() == 1){
-            text = String.format("₹%.0f - %s %s", totalAmount, getFormattedQtyNumber(totalQuantity), uom)
+            text = String.format("%s%.0f - %s %s", currency, totalAmount, getFormattedQtyNumber(totalQuantity), uom)
         } else {
-            text = String.format("₹%.0f", totalAmount)
+            text = String.format("%s%.0f", currency, totalAmount)
         }
 
     }
