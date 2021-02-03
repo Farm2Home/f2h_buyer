@@ -1,10 +1,7 @@
 package com.f2h.f2h_buyer.utils
 
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -23,6 +20,15 @@ fun TextView.setPriceFormattedFromItem(data: Item?){
 
 @BindingAdapter("progressBarVisibility")
 fun ProgressBar.setProgressBarVisibility(isVisible: Boolean){
+    if (isVisible){
+        visibility = View.VISIBLE
+    } else {
+        visibility = View.GONE
+    }
+}
+
+@BindingAdapter("spinnerVisibility")
+fun Spinner.setVisibility(isVisible: Boolean){
     if (isVisible){
         visibility = View.VISIBLE
     } else {

@@ -6,6 +6,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -50,6 +51,21 @@ class SignUpFragment: Fragment() {
         binding.viewModel = viewModel
         binding.setLifecycleOwner(this)
 
+        binding.countryCodeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                viewModel.countryCode.value = "+91"
+            }
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if(position == 0) viewModel.countryCode.value = "+91"
+                if(position == 1) viewModel.countryCode.value = "+61"
+            }
+        }
+
         viewModel.isSignUpComplete.observe(viewLifecycleOwner, Observer { isSignUpComplete ->
             if (isSignUpComplete){
                 onSignUpComplete()
@@ -88,15 +104,13 @@ class SignUpFragment: Fragment() {
             }
         })
 
-
-
         return binding.root
     }
 
     private fun startPhoneNumberVerification(phoneNumber: String) {
         // [START start_phone_auth]
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-            "+91"+phoneNumber, // Phone number to verify
+            viewModel.countryCode.value+phoneNumber, // Phone number to verify
             60,             // Timeout duration
             TimeUnit.SECONDS,   // Unit of timeout
             requireActivity(),           // Activity (for callback binding)
@@ -107,7 +121,7 @@ class SignUpFragment: Fragment() {
     private fun resendVerificationCode(phoneNumber: String,
                                        token: PhoneAuthProvider.ForceResendingToken?) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-            "+91"+phoneNumber, // Phone number to verify
+            viewModel.countryCode.value+phoneNumber, // Phone number to verify
             60, // Timeout duration
             TimeUnit.SECONDS, // Unit of timeout
             requireActivity(), // Activity (for callback binding)
