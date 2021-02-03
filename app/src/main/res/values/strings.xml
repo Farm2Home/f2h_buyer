@@ -26,4 +26,9 @@
         <item>Afternoon</item>
         <item>Evening</item>
     </string-array>
+
+    <string-array name="country_codes">
+        <item>+91</item>
+        <item>+61</item>
+    </string-array>
 </resources>
