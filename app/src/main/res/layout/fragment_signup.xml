@@ -224,12 +224,14 @@
                 android:id="@+id/countryCodeSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="10dp"
                 android:entries="@array/country_codes"
-                app:spinnerVisibility="@{viewModel.isEnteringMobile()}"
                 app:layout_constraintBottom_toBottomOf="@+id/mobile"
                 app:layout_constraintEnd_toStartOf="@+id/mobile"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/mobile" />
+                app:layout_constraintTop_toTopOf="@+id/mobile"
+                app:spinnerVisibility="@{viewModel.isEnteringMobile()}" />
 <!--            <EditText-->
 <!--                android:id="@+id/textView12"-->
 <!--                android:layout_width="wrap_content"-->
